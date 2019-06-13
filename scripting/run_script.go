@@ -4,12 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-
-	output "github.com/pivotal/pcf/internal/output"
 )
 
 func RunScript(lines []string, prereqs []string, onlyWriteFile bool) error {
-	path, err := output.WriteTempFile(lines...)
+	path, err := WriteTempFile(lines...)
 	if err != nil {
 		return err
 	}

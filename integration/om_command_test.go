@@ -8,7 +8,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"github.com/pivotal/pcf/internal/testhelpers"
 )
 
 var _ = Describe("OM", func() {
@@ -25,7 +24,7 @@ var _ = Describe("OM", func() {
 			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(string(contents)).To(Equal(testhelpers.LoadFixture("om_script.sh")))
+			Expect(string(contents)).To(Equal(LoadFixture("om_script.sh")))
 		})
 	})
 
@@ -44,7 +43,7 @@ var _ = Describe("OM", func() {
 			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(string(contents)).To(Equal(testhelpers.LoadFixture("om_script_json.sh")))
+			Expect(string(contents)).To(Equal(LoadFixture("om_script_json.sh")))
 		})
 	})
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pivotal/pcf/internal/scripting"
+	"github.com/pivotal/pcf/scripting"
 )
 
 type BoshCommand struct {

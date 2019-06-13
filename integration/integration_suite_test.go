@@ -10,7 +10,7 @@ import (
 
 func TestCommand(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Command Suite")
+	RunSpecs(t, "Integration Suite")
 }
 
 var pathToPcf string

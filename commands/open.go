@@ -3,7 +3,7 @@ package commands
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf/internal/scripting"
+	"github.com/pivotal/pcf/scripting"
 )
 
 type OpenCommand struct {

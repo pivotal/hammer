@@ -9,7 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
-	"github.com/pivotal/pcf/internal/testhelpers"
 )
 
 var _ = Describe("Open", func() {
@@ -29,7 +28,7 @@ var _ = Describe("Open", func() {
 		contents, err := ioutil.ReadFile(pathToFile)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(string(contents)).To(Equal(testhelpers.LoadFixture("open_script.sh")))
+		Expect(string(contents)).To(Equal(LoadFixture("open_script.sh")))
 	})
 
 	When("run with the --show flag", func() {

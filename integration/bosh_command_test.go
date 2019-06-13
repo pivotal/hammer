@@ -8,7 +8,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"github.com/pivotal/pcf/internal/testhelpers"
 )
 
 var _ = Describe("BOSH", func() {
@@ -25,7 +24,7 @@ var _ = Describe("BOSH", func() {
 			contents, err := ioutil.ReadFile(output)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(string(contents)).To(Equal(testhelpers.LoadFixture("bosh_creds_script.sh")))
+			Expect(string(contents)).To(Equal(LoadFixture("bosh_creds_script.sh")))
 		})
 	})
 
@@ -42,7 +41,7 @@ var _ = Describe("BOSH", func() {
 			contents, err := ioutil.ReadFile(output)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(string(contents)).To(Equal(testhelpers.LoadFixture("bosh_cmd_script.sh")))
+			Expect(string(contents)).To(Equal(LoadFixture("bosh_cmd_script.sh")))
 		})
 	})
 })

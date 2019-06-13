@@ -9,7 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
-	"github.com/pivotal/pcf/internal/testhelpers"
 )
 
 var _ = Describe("CF", func() {
@@ -28,6 +27,6 @@ var _ = Describe("CF", func() {
 		contents, err := ioutil.ReadFile(pathToFile)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(string(contents)).To(Equal(testhelpers.LoadFixture("cf_script.sh")))
+		Expect(string(contents)).To(Equal(LoadFixture("cf_script.sh")))
 	})
 })
