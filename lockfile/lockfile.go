@@ -3,10 +3,11 @@ package lockfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/go-version"
 	"io/ioutil"
 	"net"
 	"net/url"
+
+	"github.com/hashicorp/go-version"
 )
 
 type OpsManager struct {
