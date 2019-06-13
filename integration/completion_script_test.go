@@ -1,4 +1,4 @@
-package cmdtests_test
+package integration
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -9,14 +9,14 @@ import (
 	"os/exec"
 )
 
-var _ = Describe("Version", func() {
-	It("prints the version", func() {
-		command := exec.Command(pathToPcf, "version")
+var _ = Describe("Completion Script", func() {
+	It("prints something that looks like a script", func() {
+		command := exec.Command(pathToPcf, "completion", "bash")
 		session, err := Start(command, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 
 		Eventually(session).Should(Exit(0))
 		Eventually(string(session.Err.Contents())).Should(Equal(""))
-		Eventually(session.Out).Should(Say("Version: development build \\(unknown date\\)"))
+		Eventually(session.Out).Should(Say("GO_FLAGS_COMPLETION"))
 	})
 })

@@ -1,4 +1,4 @@
-package cmdtests_test
+package integration
 
 import (
 	"testing"
@@ -12,6 +12,7 @@ func TestCommand(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Command Suite")
 }
+
 var pathToPcf string
 
 var _ = BeforeSuite(func() {

@@ -1,4 +1,4 @@
-package cmdtests_test
+package integration
 
 import (
 	"io/ioutil"

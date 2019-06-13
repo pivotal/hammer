@@ -1,3 +1,3 @@
-package subcommands
+package commands
 
 const boshCredsPath = "/api/v0/deployed/director/credentials/bosh_commandline_credentials"
