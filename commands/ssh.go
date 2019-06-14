@@ -3,37 +3,34 @@ package commands
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf/scripting"
+	"github.com/pivotal/pcf/lockfile"
 )
 
+//go:generate counterfeiter . SSHScripter
+type SSHScripter interface {
+	Generate(data lockfile.Lockfile) []string
+}
+
 type SSHCommand struct {
-	Env  EnvReader `group:"environment"`
-	File bool      `short:"f" long:"file" description:"write a script file but do not run it"`
+	Lockfile string `short:"l" long:"lockfile" env:"ENVIRONMENT_LOCK_METADATA" description:"path to a lockfile"`
+	File     bool   `short:"f" long:"file" description:"write a script file but do not run it"`
+
+	SSHScripter  SSHScripter
+	Env          EnvReader
+	ScriptRunner ScriptRunner
 }
 
 func (c *SSHCommand) Execute(args []string) error {
-	data, err := c.Env.Read()
+	data, err := c.Env.Read(c.Lockfile)
 	if err != nil {
 		return err
 	}
 
 	fmt.Printf("Connecting to: %s\n", data.Name)
 
-	sshCommand := fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"%s"`, data.OpsManager.IP.String())
-
-	lines := []string{
-		fmt.Sprintf(`ssh_key_path=$(mktemp)`),
-		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
-		fmt.Sprintf(`trap 'rm -f ${ssh_key_path}' EXIT`),
-		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
-		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p %s)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, boshCredsPath),
-		fmt.Sprintf(`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`),
-		fmt.Sprintf(`echo "$bosh"`),
-		fmt.Sprintf(`shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"`),
-		fmt.Sprintf(`%s "$shell"`, sshCommand),
-	}
+	lines := c.SSHScripter.Generate(data)
 
 	dependencies := []string{"ssh", "om"}
 
-	return scripting.RunScript(lines, dependencies, c.File)
+	return c.ScriptRunner.RunScript(lines, dependencies, c.File)
 }

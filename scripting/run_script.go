@@ -6,7 +6,9 @@ import (
 	"os/exec"
 )
 
-func RunScript(lines []string, prereqs []string, onlyWriteFile bool) error {
+type ScriptRunner struct{}
+
+func (s ScriptRunner) RunScript(lines []string, prereqs []string, onlyWriteFile bool) error {
 	path, err := WriteTempFile(lines...)
 	if err != nil {
 		return err

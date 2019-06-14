@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pivotal/pcf/scripting"
+
+	"github.com/pivotal/pcf/actions"
+
 	"github.com/pivotal/pcf/commands"
 
 	flags "github.com/jessevdk/go-flags"
@@ -31,7 +35,41 @@ type options struct {
 }
 
 func main() {
-	var opts options
+	envReader := commands.NewEnvReader()
+	scriptRunner := scripting.ScriptRunner{}
+
+	opts := options{
+		Bosh: commands.BoshCommand{
+			BoshScripter: actions.NewBoshScripter(),
+			Env:          &envReader,
+			ScriptRunner: &scriptRunner,
+		},
+		CFLogin: commands.CFLoginCommand{
+			CFLoginScripter: actions.NewCFLoginScripter(),
+			Env:             &envReader,
+			ScriptRunner:    &scriptRunner,
+		},
+		OM: commands.OMCommand{
+			OMScripter:   actions.NewOMScripter(),
+			Env:          &envReader,
+			ScriptRunner: &scriptRunner,
+		},
+		Open: commands.OpenCommand{
+			OpenScripter: actions.NewOpenScripter(),
+			Env:          &envReader,
+			ScriptRunner: &scriptRunner,
+		},
+		SSH: commands.SSHCommand{
+			SSHScripter:  actions.NewSSHScripter(),
+			Env:          &envReader,
+			ScriptRunner: &scriptRunner,
+		},
+		Sshuttle: commands.SshuttleCommand{
+			SshuttleScripter: actions.NewSshuttleScripter(),
+			Env:              &envReader,
+			ScriptRunner:     &scriptRunner,
+		},
+	}
 
 	if _, err := flags.Parse(&opts); err != nil {
 		if flagsErr, ok := err.(*flags.Error); ok {

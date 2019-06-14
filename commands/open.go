@@ -3,17 +3,26 @@ package commands
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf/scripting"
+	"github.com/pivotal/pcf/lockfile"
 )
 
+//go:generate counterfeiter . OpenScripter
+type OpenScripter interface {
+	Generate(data lockfile.Lockfile) []string
+}
+
 type OpenCommand struct {
-	Env  EnvReader `group:"environment"`
-	File bool      `short:"f" long:"file" description:"write a script file but do not run it"`
-	Show bool      `short:"s" long:"show" description:"only show the credentials"`
+	Lockfile string `short:"l" long:"lockfile" env:"ENVIRONMENT_LOCK_METADATA" description:"path to a lockfile"`
+	File     bool   `short:"f" long:"file" description:"write a script file but do not run it"`
+	Show     bool   `short:"s" long:"show" description:"only show the credentials"`
+
+	OpenScripter OpenScripter
+	Env          EnvReader
+	ScriptRunner ScriptRunner
 }
 
 func (c *OpenCommand) Execute(args []string) error {
-	data, err := c.Env.Read()
+	data, err := c.Env.Read(c.Lockfile)
 	if err != nil {
 		return err
 	}
@@ -30,10 +39,7 @@ func (c *OpenCommand) Execute(args []string) error {
 
 	fmt.Println("Password is in the clipboard")
 
-	lines := []string{
-		fmt.Sprintf(`open "%s"`, data.OpsManager.URL.String()),
-		fmt.Sprintf(`echo "%s" | pbcopy`, data.OpsManager.Password),
-	}
+	lines := c.OpenScripter.Generate(data)
 
-	return scripting.RunScript(lines, []string{"open", "pbcopy"}, c.File)
+	return c.ScriptRunner.RunScript(lines, []string{"open", "pbcopy"}, c.File)
 }

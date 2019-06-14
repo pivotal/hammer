@@ -1,41 +1,20 @@
 package commands
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 
 	"github.com/pivotal/pcf/lockfile"
 )
 
-type EnvReader struct {
-	Lockfile string `short:"l" long:"lockfile" env:"ENVIRONMENT_LOCK_METADATA" description:"path to a lockfile"`
+type envReader struct{}
+
+func NewEnvReader() envReader {
+	return envReader{}
 }
 
-func (er *EnvReader) ReadRaw(result interface{}) error {
-	if err := er.processParameters(); err != nil {
-		return err
+func (er *envReader) Read(lockfilePath string) (lockfile.Lockfile, error) {
+	if lockfilePath == "" {
+		return lockfile.Lockfile{}, fmt.Errorf("You must specify the lockfile path (--lockfile | -l) flag")
 	}
-
-	contents, err := ioutil.ReadFile(er.Lockfile)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(contents, result)
-}
-
-func (er *EnvReader) Read() (lockfile.Lockfile, error) {
-	if err := er.processParameters(); err != nil {
-		return lockfile.Lockfile{}, err
-	}
-
-	return lockfile.FromFile(er.Lockfile)
-}
-
-func (er *EnvReader) processParameters() error {
-	if er.Lockfile == "" {
-		return fmt.Errorf("You must specify the lockfile path (--lockfile | -l) flag")
-	}
-
-	return nil
+	return lockfile.FromFile(lockfilePath)
 }
