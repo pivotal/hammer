@@ -6,9 +6,19 @@ import (
 	"os/exec"
 )
 
-type ScriptRunner struct{}
+//go:generate counterfeiter . ScriptRunner
 
-func (s ScriptRunner) RunScript(lines []string, prereqs []string, onlyWriteFile bool) error {
+type ScriptRunner interface {
+	RunScript(lines []string, prereqs []string, onlyWriteFile bool) error
+}
+
+type scriptRunner struct{}
+
+func NewScriptRunner() scriptRunner {
+	return scriptRunner{}
+}
+
+func (s scriptRunner) RunScript(lines []string, prereqs []string, onlyWriteFile bool) error {
 	path, err := WriteTempFile(lines...)
 	if err != nil {
 		return err

@@ -1,18 +1,17 @@
-package actions
+package sshuttle
 
 import (
 	"fmt"
 
 	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/scripting"
 )
 
-type SshuttleScripter struct{}
-
-func NewSshuttleScripter() SshuttleScripter {
-	return SshuttleScripter{}
+type Runner struct {
+	ScriptRunner scripting.ScriptRunner
 }
 
-func (b SshuttleScripter) Generate(data lockfile.Lockfile) []string {
+func (b Runner) Run(data lockfile.Lockfile, dryRun bool, args ...string) error {
 	sshuttleCommandLines := []string{
 		fmt.Sprintf(`ssh_key_path=$(mktemp)`),
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
@@ -21,5 +20,5 @@ func (b SshuttleScripter) Generate(data lockfile.Lockfile) []string {
 		fmt.Sprintf(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"%s" %s %s %s`, data.OpsManager.IP.String(), data.OpsManager.CIDR.String(), data.PasCIDR.String(), data.ServicesCIDR.String()),
 	}
 
-	return sshuttleCommandLines
+	return b.ScriptRunner.RunScript(sshuttleCommandLines, []string{"jq", "om", "sshuttle"}, dryRun)
 }

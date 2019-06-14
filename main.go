@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pivotal/pcf/scripting"
-
-	"github.com/pivotal/pcf/actions"
-
-	"github.com/pivotal/pcf/commands"
-
 	flags "github.com/jessevdk/go-flags"
+
+	"github.com/pivotal/pcf/bosh"
+	"github.com/pivotal/pcf/cf"
+	"github.com/pivotal/pcf/commands"
+	"github.com/pivotal/pcf/om"
+	"github.com/pivotal/pcf/open"
+	"github.com/pivotal/pcf/scripting"
+	"github.com/pivotal/pcf/ssh"
+	"github.com/pivotal/pcf/sshuttle"
 )
 
 var (
@@ -36,38 +39,44 @@ type options struct {
 
 func main() {
 	envReader := commands.NewEnvReader()
-	scriptRunner := scripting.ScriptRunner{}
+	scriptRunner := scripting.NewScriptRunner()
 
 	opts := options{
 		Bosh: commands.BoshCommand{
-			BoshScripter: actions.NewBoshScripter(),
-			Env:          &envReader,
-			ScriptRunner: &scriptRunner,
+			Env: &envReader,
+			BoshRunner: &bosh.Runner{
+				ScriptRunner: scriptRunner,
+			},
 		},
 		CFLogin: commands.CFLoginCommand{
-			CFLoginScripter: actions.NewCFLoginScripter(),
-			Env:             &envReader,
-			ScriptRunner:    &scriptRunner,
+			Env: &envReader,
+			CFLoginRunner: &cf.LoginRunner{
+				ScriptRunner: scriptRunner,
+			},
 		},
 		OM: commands.OMCommand{
-			OMScripter:   actions.NewOMScripter(),
-			Env:          &envReader,
-			ScriptRunner: &scriptRunner,
+			Env: &envReader,
+			OMRunner: &om.Runner{
+				ScriptRunner: scriptRunner,
+			},
 		},
 		Open: commands.OpenCommand{
-			OpenScripter: actions.NewOpenScripter(),
-			Env:          &envReader,
-			ScriptRunner: &scriptRunner,
+			Env: &envReader,
+			OpenRunner: &open.Runner{
+				ScriptRunner: scriptRunner,
+			},
 		},
 		SSH: commands.SSHCommand{
-			SSHScripter:  actions.NewSSHScripter(),
-			Env:          &envReader,
-			ScriptRunner: &scriptRunner,
+			Env: &envReader,
+			SSHRunner: &ssh.Runner{
+				ScriptRunner: scriptRunner,
+			},
 		},
 		Sshuttle: commands.SshuttleCommand{
-			SshuttleScripter: actions.NewSshuttleScripter(),
-			Env:              &envReader,
-			ScriptRunner:     &scriptRunner,
+			Env: &envReader,
+			SshuttleRunner: &sshuttle.Runner{
+				ScriptRunner: scriptRunner,
+			},
 		},
 	}
 

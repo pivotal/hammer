@@ -1,18 +1,18 @@
-package actions
+package cf
 
 import (
 	"fmt"
 
+	"github.com/pivotal/pcf/scripting"
+
 	"github.com/pivotal/pcf/lockfile"
 )
 
-type CFLoginScripter struct{}
-
-func NewCFLoginScripter() CFLoginScripter {
-	return CFLoginScripter{}
+type LoginRunner struct {
+	ScriptRunner scripting.ScriptRunner
 }
 
-func (b CFLoginScripter) Generate(data lockfile.Lockfile) []string {
+func (r LoginRunner) Run(data lockfile.Lockfile, dryRun bool, args ...string) error {
 	lines := []string{
 		fmt.Sprintf(`prods="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/staged/products)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
 		fmt.Sprintf(`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`),
@@ -22,5 +22,5 @@ func (b CFLoginScripter) Generate(data lockfile.Lockfile) []string {
 		fmt.Sprintf(`cf login -a "api.%s" -u "$user" -p "$pass" --skip-ssl-validation`, data.CFDomain),
 	}
 
-	return lines
+	return r.ScriptRunner.RunScript(lines, []string{"jq", "om", "cf"}, dryRun)
 }

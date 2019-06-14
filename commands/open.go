@@ -2,23 +2,15 @@ package commands
 
 import (
 	"fmt"
-
-	"github.com/pivotal/pcf/lockfile"
 )
-
-//go:generate counterfeiter . OpenScripter
-type OpenScripter interface {
-	Generate(data lockfile.Lockfile) []string
-}
 
 type OpenCommand struct {
 	Lockfile string `short:"l" long:"lockfile" env:"ENVIRONMENT_LOCK_METADATA" description:"path to a lockfile"`
 	File     bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 	Show     bool   `short:"s" long:"show" description:"only show the credentials"`
 
-	OpenScripter OpenScripter
-	Env          EnvReader
-	ScriptRunner ScriptRunner
+	Env        EnvReader
+	OpenRunner ToolRunner
 }
 
 func (c *OpenCommand) Execute(args []string) error {
@@ -39,7 +31,5 @@ func (c *OpenCommand) Execute(args []string) error {
 
 	fmt.Println("Password is in the clipboard")
 
-	lines := c.OpenScripter.Generate(data)
-
-	return c.ScriptRunner.RunScript(lines, []string{"open", "pbcopy"}, c.File)
+	return c.OpenRunner.Run(data, c.File)
 }

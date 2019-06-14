@@ -1,19 +1,19 @@
-package actions
+package bosh
 
 import (
 	"fmt"
 	"strings"
 
+	"github.com/pivotal/pcf/scripting"
+
 	"github.com/pivotal/pcf/lockfile"
 )
 
-type BoshScripter struct{}
-
-func NewBoshScripter() BoshScripter {
-	return BoshScripter{}
+type Runner struct {
+	ScriptRunner scripting.ScriptRunner
 }
 
-func (b BoshScripter) Generate(data lockfile.Lockfile, boshArgs []string) []string {
+func (r Runner) Run(data lockfile.Lockfile, dryRun bool, boshArgs ...string) error {
 	lines := []string{
 		fmt.Sprintf(`ssh_key_path=$(mktemp)`),
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
@@ -23,7 +23,7 @@ func (b BoshScripter) Generate(data lockfile.Lockfile, boshArgs []string) []stri
 		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"%s" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`, data.OpsManager.IP.String()),
 		fmt.Sprintf(`chmod 0600 "${bosh_ca_path}"`),
 
-		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p %s)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, boshCredsPath),
+		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
 		fmt.Sprintf(`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`),
 
 		fmt.Sprintf(`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`),
@@ -57,5 +57,5 @@ func (b BoshScripter) Generate(data lockfile.Lockfile, boshArgs []string) []stri
 		)
 	}
 
-	return lines
+	return r.ScriptRunner.RunScript(lines, []string{"jq", "om", "ssh", "bosh"}, dryRun)
 }
