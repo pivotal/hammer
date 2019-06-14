@@ -5,16 +5,16 @@ import (
 )
 
 type OpenCommand struct {
-	Lockfile string `short:"l" long:"lockfile" env:"ENVIRONMENT_LOCK_METADATA" description:"path to a lockfile"`
-	File     bool   `short:"f" long:"file" description:"write a script file but do not run it"`
-	Show     bool   `short:"s" long:"show" description:"only show the credentials"`
+	TargetConfig string `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" description:"path to the target environment config"`
+	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
+	Show         bool   `short:"s" long:"show" description:"only show the credentials"`
 
 	Env        EnvReader
 	OpenRunner ToolRunner
 }
 
 func (c *OpenCommand) Execute(args []string) error {
-	data, err := c.Env.Read(c.Lockfile)
+	data, err := c.Env.Read(c.TargetConfig)
 	if err != nil {
 		return err
 	}

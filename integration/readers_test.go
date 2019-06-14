@@ -20,9 +20,9 @@ var _ = Describe("Readers", func() {
 		Entry("sshuttle", "sshuttle"),
 	}
 
-	DescribeTable("failure when the lockfile path is not found",
+	DescribeTable("failure when the environment path is not found",
 		func(subcmd string) {
-			session := runPcf([]string{}, subcmd, "-l", "/this/should/not/exist")
+			session := runPcf([]string{}, subcmd, "-t", "/this/should/not/exist")
 
 			Eventually(session).Should(Exit(1))
 			Eventually(session.Err).Should(Say("open /this/should/not/exist: no such file or directory"))
@@ -31,9 +31,9 @@ var _ = Describe("Readers", func() {
 		readers...,
 	)
 
-	DescribeTable("accepting the `-l` flag before the subcommand",
+	DescribeTable("accepting the `-t` flag before the subcommand",
 		func(subcmd string) {
-			session := runPcf([]string{}, "-l", "/also/should/not/exist", subcmd)
+			session := runPcf([]string{}, "-t", "/also/should/not/exist", subcmd)
 
 			Eventually(session).Should(Exit(1))
 			Eventually(session.Err).Should(Say("open /also/should/not/exist: no such file or directory"))
@@ -42,9 +42,9 @@ var _ = Describe("Readers", func() {
 		readers...,
 	)
 
-	DescribeTable("reading the lockfile from $ENVIRONMENT_LOCK_METADATA",
+	DescribeTable("reading the environment from $TARGET_ENVIRONMENT_CONFIG",
 		func(subcmd string) {
-			env := []string{"ENVIRONMENT_LOCK_METADATA=fixtures/claim_manatee_response.json"}
+			env := []string{"TARGET_ENVIRONMENT_CONFIG=fixtures/claim_manatee_response.json"}
 			session := runPcf(env, subcmd, "-f")
 
 			Eventually(session).Should(Exit(0))
@@ -53,12 +53,12 @@ var _ = Describe("Readers", func() {
 		readers...,
 	)
 
-	DescribeTable("failure to specify the `-l` flags",
+	DescribeTable("failure to specify the `-t` flags",
 		func(subcmd string) {
 			session := runPcf([]string{}, subcmd)
 
 			Eventually(session).Should(Exit(1))
-			Eventually(string(session.Err.Contents())).Should(Equal("You must specify the lockfile path (--lockfile | -l) flag\n"))
+			Eventually(string(session.Err.Contents())).Should(Equal("You must specify the target environment config path (--target | -t) flag\n"))
 			Eventually(string(session.Out.Contents())).Should(Equal(""))
 		},
 		readers...,

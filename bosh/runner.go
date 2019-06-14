@@ -6,14 +6,14 @@ import (
 
 	"github.com/pivotal/pcf/scripting"
 
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 )
 
 type Runner struct {
 	ScriptRunner scripting.ScriptRunner
 }
 
-func (r Runner) Run(data lockfile.Lockfile, dryRun bool, boshArgs ...string) error {
+func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) error {
 	lines := []string{
 		fmt.Sprintf(`ssh_key_path=$(mktemp)`),
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),

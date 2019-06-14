@@ -13,7 +13,7 @@ import (
 var _ = Describe("BOSH", func() {
 	When("getting the BOSH credentials", func() {
 		It("generates the correct script", func() {
-			command := exec.Command(pathToPcf, "bosh", "-l", "fixtures/claim_manatee_response.json", "-f")
+			command := exec.Command(pathToPcf, "bosh", "-t", "fixtures/claim_manatee_response.json", "-f")
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 
@@ -30,7 +30,7 @@ var _ = Describe("BOSH", func() {
 
 	When("running a BOSH command", func() {
 		It("generates the correct script", func() {
-			command := exec.Command(pathToPcf, "bosh", "-l", "fixtures/claim_manatee_response.json", "-f", "deployments")
+			command := exec.Command(pathToPcf, "bosh", "-t", "fixtures/claim_manatee_response.json", "-f", "deployments")
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pivotal/pcf/environment"
+
 	flags "github.com/jessevdk/go-flags"
 
 	"github.com/pivotal/pcf/bosh"
@@ -23,22 +25,22 @@ var (
 
 type versionCommand struct{}
 
-type lockfilePath struct{}
+type targetConfigPath struct{}
 
 type options struct {
-	Bosh       commands.BoshCommand       `command:"bosh" description:"display BOSH credentials, or run a BOSH command"`
-	CFLogin    commands.CFLoginCommand    `command:"cf-login" description:"log in to cf on the environment"`
-	Open       commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
-	OM         commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
-	SSH        commands.SSHCommand        `command:"ssh" description:"open an ssh connection to ops manager on this environment"`
-	Sshuttle   commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
-	Version    versionCommand             `command:"version" alias:"ver" description:"version of command"`
-	Completion commands.CompletionCommand `command:"completion" description:"command completion script"`
-	Lockfile   lockfilePath               `short:"l" long:"lockfile" hidden:"true"`
+	Bosh         commands.BoshCommand       `command:"bosh" description:"display BOSH credentials, or run a BOSH command"`
+	CFLogin      commands.CFLoginCommand    `command:"cf-login" description:"log in to cf on the environment"`
+	Open         commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
+	OM           commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
+	SSH          commands.SSHCommand        `command:"ssh" description:"open an ssh connection to ops manager on this environment"`
+	Sshuttle     commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
+	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
+	Completion   commands.CompletionCommand `command:"completion" description:"command completion script"`
+	TargetConfig targetConfigPath           `short:"t" long:"target" hidden:"true"`
 }
 
 func main() {
-	envReader := commands.NewEnvReader()
+	envReader := environment.Reader{}
 	scriptRunner := scripting.NewScriptRunner()
 
 	opts := options{
@@ -100,13 +102,13 @@ func (c *versionCommand) Execute(args []string) error {
 	return nil
 }
 
-// If `-l` is specified on the pcf command (rather than a subcommand)
-// then set `ENVIRONMENT_LOCK_METADATA` so the subcommand can read it
-func (e *lockfilePath) UnmarshalFlag(path string) error {
-	return os.Setenv("ENVIRONMENT_LOCK_METADATA", path)
+// If `-t` is specified on the pcf command (rather than a subcommand)
+// then set `TARGET_ENVIRONMENT_CONFIG` so the subcommand can read it
+func (e *targetConfigPath) UnmarshalFlag(path string) error {
+	return os.Setenv("TARGET_ENVIRONMENT_CONFIG", path)
 }
 
 func printDoubleDashMessage() {
 	fmt.Fprintf(os.Stderr, "\nIf passing flags to 'bosh' or 'om', use a double dash '--', for example:\n")
-	fmt.Fprintf(os.Stderr, "\n  pcf -l lockfile-path bosh -- -d deployment manifest\n")
+	fmt.Fprintf(os.Stderr, "\n  pcf -t environment-path bosh -- -d deployment manifest\n")
 }

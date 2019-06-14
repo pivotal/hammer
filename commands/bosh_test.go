@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	fakes "github.com/pivotal/pcf/commands/commandsfakes"
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 
 	. "github.com/pivotal/pcf/commands"
 )
@@ -39,7 +39,7 @@ var _ = Describe("Bosh command", func() {
 
 	When("envReader returns an error", func() {
 		BeforeEach(func() {
-			envReader.ReadReturns(lockfile.Lockfile{}, fmt.Errorf("env-reader-error"))
+			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
 		It("doesn't call boshRunner", func() {
@@ -53,14 +53,14 @@ var _ = Describe("Bosh command", func() {
 
 	When("envReader succeeds", func() {
 		BeforeEach(func() {
-			envReader.ReadReturns(lockfile.Lockfile{Name: "env-name"}, nil)
+			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
 		It("passes env data, args and dry run flag to boshRunner", func() {
 			Expect(boshRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := boshRunner.RunArgsForCall(0)
-			Expect(environmentConfig).To(BeEquivalentTo(lockfile.Lockfile{Name: "env-name"}))
+			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
 			Expect(dryRun).To(BeTrue())
 			Expect(args).To(BeEquivalentTo([]string{"arg1", "arg2"}))
 		})

@@ -1,4 +1,4 @@
-package lockfile_test
+package environment_test
 
 import (
 	"net"
@@ -11,13 +11,13 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
 
-	. "github.com/pivotal/pcf/lockfile"
+	. "github.com/pivotal/pcf/environment"
 )
 
-var _ = Describe("Lockfile", func() {
+var _ = Describe("Config", func() {
 
 	AfterEach(func() {
-		os.Unsetenv("ENVIRONMENT_LOCK_METADATA")
+		os.Unsetenv("TARGET_ENVIRONMENT_CONFIG")
 	})
 
 	Describe("FromFile", func() {
@@ -46,7 +46,7 @@ func mustParseCIDR(c string) net.IPNet {
 	return *cidr
 }
 
-func checkMatchLemon(e Lockfile) {
+func checkMatchLemon(e Config) {
 	Expect(e).To(MatchAllFields(Fields{
 		"Name":          Equal("lemon"),
 		"Version":       Equal(*version.Must(version.NewVersion("1.11"))),

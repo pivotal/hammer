@@ -5,28 +5,28 @@ import (
 	"sync"
 
 	"github.com/pivotal/pcf/commands"
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 )
 
 type FakeEnvReader struct {
-	ReadStub        func(string) (lockfile.Lockfile, error)
+	ReadStub        func(string) (environment.Config, error)
 	readMutex       sync.RWMutex
 	readArgsForCall []struct {
 		arg1 string
 	}
 	readReturns struct {
-		result1 lockfile.Lockfile
+		result1 environment.Config
 		result2 error
 	}
 	readReturnsOnCall map[int]struct {
-		result1 lockfile.Lockfile
+		result1 environment.Config
 		result2 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeEnvReader) Read(arg1 string) (lockfile.Lockfile, error) {
+func (fake *FakeEnvReader) Read(arg1 string) (environment.Config, error) {
 	fake.readMutex.Lock()
 	ret, specificReturn := fake.readReturnsOnCall[len(fake.readArgsForCall)]
 	fake.readArgsForCall = append(fake.readArgsForCall, struct {
@@ -50,7 +50,7 @@ func (fake *FakeEnvReader) ReadCallCount() int {
 	return len(fake.readArgsForCall)
 }
 
-func (fake *FakeEnvReader) ReadCalls(stub func(string) (lockfile.Lockfile, error)) {
+func (fake *FakeEnvReader) ReadCalls(stub func(string) (environment.Config, error)) {
 	fake.readMutex.Lock()
 	defer fake.readMutex.Unlock()
 	fake.ReadStub = stub
@@ -63,28 +63,28 @@ func (fake *FakeEnvReader) ReadArgsForCall(i int) string {
 	return argsForCall.arg1
 }
 
-func (fake *FakeEnvReader) ReadReturns(result1 lockfile.Lockfile, result2 error) {
+func (fake *FakeEnvReader) ReadReturns(result1 environment.Config, result2 error) {
 	fake.readMutex.Lock()
 	defer fake.readMutex.Unlock()
 	fake.ReadStub = nil
 	fake.readReturns = struct {
-		result1 lockfile.Lockfile
+		result1 environment.Config
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeEnvReader) ReadReturnsOnCall(i int, result1 lockfile.Lockfile, result2 error) {
+func (fake *FakeEnvReader) ReadReturnsOnCall(i int, result1 environment.Config, result2 error) {
 	fake.readMutex.Lock()
 	defer fake.readMutex.Unlock()
 	fake.ReadStub = nil
 	if fake.readReturnsOnCall == nil {
 		fake.readReturnsOnCall = make(map[int]struct {
-			result1 lockfile.Lockfile
+			result1 environment.Config
 			result2 error
 		})
 	}
 	fake.readReturnsOnCall[i] = struct {
-		result1 lockfile.Lockfile
+		result1 environment.Config
 		result2 error
 	}{result1, result2}
 }

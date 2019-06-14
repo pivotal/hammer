@@ -1,4 +1,4 @@
-package lockfile_test
+package environment_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestReader(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Lockfile Suite")
+	RunSpecs(t, "Config Suite")
 }

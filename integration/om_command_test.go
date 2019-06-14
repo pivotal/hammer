@@ -13,7 +13,7 @@ import (
 var _ = Describe("OM", func() {
 	When("run with parameters", func() {
 		It("generates the correct script", func() {
-			command := exec.Command(pathToPcf, "om", "-l", "fixtures/claim_manatee_response.json", "-f", "--", "foo")
+			command := exec.Command(pathToPcf, "om", "-t", "fixtures/claim_manatee_response.json", "-f", "--", "foo")
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 
@@ -30,7 +30,7 @@ var _ = Describe("OM", func() {
 
 	When("run with parameters including JSON", func() {
 		It("generates the correct script", func() {
-			command := exec.Command(pathToPcf, "om", "-l", "fixtures/claim_manatee_response.json", "-f", "--", "configure-product",
+			command := exec.Command(pathToPcf, "om", "-t", "fixtures/claim_manatee_response.json", "-f", "--", "configure-product",
 				"--product-name", "p-rabbitmq", "--product-properties",
 				`{".rabbitmq-server.server_admin_credentials":{"value":{"identity":"admin","password":"admin"}}}`)
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
@@ -49,7 +49,7 @@ var _ = Describe("OM", func() {
 
 	When("run with no parameters", func() {
 		It("generates the correct script", func() {
-			command := exec.Command(pathToPcf, "om", "-l", "fixtures/claim_manatee_response.json")
+			command := exec.Command(pathToPcf, "om", "-t", "fixtures/claim_manatee_response.json")
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 

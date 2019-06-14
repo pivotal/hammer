@@ -13,7 +13,7 @@ import (
 var _ = Describe("sshuttle", func() {
 	When("running shuttle", func() {
 		It("generates the correct script", func() {
-			command := exec.Command(pathToPcf, "sshuttle", "-l", "fixtures/claim_manatee_response.json", "-f")
+			command := exec.Command(pathToPcf, "sshuttle", "-t", "fixtures/claim_manatee_response.json", "-f")
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 

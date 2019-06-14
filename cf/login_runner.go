@@ -5,14 +5,14 @@ import (
 
 	"github.com/pivotal/pcf/scripting"
 
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 )
 
 type LoginRunner struct {
 	ScriptRunner scripting.ScriptRunner
 }
 
-func (r LoginRunner) Run(data lockfile.Lockfile, dryRun bool, args ...string) error {
+func (r LoginRunner) Run(data environment.Config, dryRun bool, args ...string) error {
 	lines := []string{
 		fmt.Sprintf(`prods="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/staged/products)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
 		fmt.Sprintf(`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`),

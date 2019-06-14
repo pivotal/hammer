@@ -5,14 +5,14 @@ import (
 	"sync"
 
 	"github.com/pivotal/pcf/commands"
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 )
 
 type FakeToolRunner struct {
-	RunStub        func(lockfile.Lockfile, bool, ...string) error
+	RunStub        func(environment.Config, bool, ...string) error
 	runMutex       sync.RWMutex
 	runArgsForCall []struct {
-		arg1 lockfile.Lockfile
+		arg1 environment.Config
 		arg2 bool
 		arg3 []string
 	}
@@ -26,11 +26,11 @@ type FakeToolRunner struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeToolRunner) Run(arg1 lockfile.Lockfile, arg2 bool, arg3 ...string) error {
+func (fake *FakeToolRunner) Run(arg1 environment.Config, arg2 bool, arg3 ...string) error {
 	fake.runMutex.Lock()
 	ret, specificReturn := fake.runReturnsOnCall[len(fake.runArgsForCall)]
 	fake.runArgsForCall = append(fake.runArgsForCall, struct {
-		arg1 lockfile.Lockfile
+		arg1 environment.Config
 		arg2 bool
 		arg3 []string
 	}{arg1, arg2, arg3})
@@ -52,13 +52,13 @@ func (fake *FakeToolRunner) RunCallCount() int {
 	return len(fake.runArgsForCall)
 }
 
-func (fake *FakeToolRunner) RunCalls(stub func(lockfile.Lockfile, bool, ...string) error) {
+func (fake *FakeToolRunner) RunCalls(stub func(environment.Config, bool, ...string) error) {
 	fake.runMutex.Lock()
 	defer fake.runMutex.Unlock()
 	fake.RunStub = stub
 }
 
-func (fake *FakeToolRunner) RunArgsForCall(i int) (lockfile.Lockfile, bool, []string) {
+func (fake *FakeToolRunner) RunArgsForCall(i int) (environment.Config, bool, []string) {
 	fake.runMutex.RLock()
 	defer fake.runMutex.RUnlock()
 	argsForCall := fake.runArgsForCall[i]

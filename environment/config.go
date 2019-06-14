@@ -1,4 +1,4 @@
-package lockfile
+package environment
 
 import (
 	"encoding/json"
@@ -19,7 +19,7 @@ type OpsManager struct {
 	PrivateKey string
 }
 
-type Lockfile struct {
+type Config struct {
 	Name          string
 	Version       version.Version
 	CFDomain      string
@@ -52,53 +52,53 @@ type environmentReader struct {
 	} `json:"ops_manager"`
 }
 
-func FromFile(path string) (Lockfile, error) {
+func FromFile(path string) (Config, error) {
 	contents, err := ioutil.ReadFile(path)
 	if err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
 	var data environmentReader
 
 	if err := json.Unmarshal(contents, &data); err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
 	return newLockfile(data)
 }
 
-func newLockfile(data environmentReader) (Lockfile, error) {
+func newLockfile(data environmentReader) (Config, error) {
 	version, err := version.NewVersion(data.Version)
 	if err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
 	url, err := url.Parse(data.OpsManager.URL)
 	if err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
 	ip := net.ParseIP(data.IP)
 	if ip == nil {
-		return Lockfile{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
+		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
 	}
 
 	_, opsManCIDR, err := net.ParseCIDR(data.OpsManCIDR)
 	if err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
 	_, pasCIDR, err := net.ParseCIDR(data.PasCIDR)
 	if err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
 	_, servicesCIDR, err := net.ParseCIDR(data.ServicesCIDR)
 	if err != nil {
-		return Lockfile{}, err
+		return Config{}, err
 	}
 
-	return Lockfile{
+	return Config{
 		Name:          data.Name,
 		Version:       *version,
 		CFDomain:      data.SysDomain,

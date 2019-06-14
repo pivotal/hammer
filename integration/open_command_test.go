@@ -13,7 +13,7 @@ import (
 
 var _ = Describe("Open", func() {
 	It("generates the correct script", func() {
-		command := exec.Command(pathToPcf, "open", "-l", "fixtures/claim_manatee_response.json", "-f")
+		command := exec.Command(pathToPcf, "open", "-t", "fixtures/claim_manatee_response.json", "-f")
 		session, err := Start(command, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 
@@ -33,7 +33,7 @@ var _ = Describe("Open", func() {
 
 	When("run with the --show flag", func() {
 		It("prints the credentials to the screen", func() {
-			command := exec.Command(pathToPcf, "open", "-l", "fixtures/claim_manatee_response.json", "--show")
+			command := exec.Command(pathToPcf, "open", "-t", "fixtures/claim_manatee_response.json", "--show")
 			session, err := Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 

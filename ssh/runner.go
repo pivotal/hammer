@@ -3,7 +3,7 @@ package ssh
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 	"github.com/pivotal/pcf/scripting"
 )
 
@@ -11,7 +11,7 @@ type Runner struct {
 	ScriptRunner scripting.ScriptRunner
 }
 
-func (b Runner) Run(data lockfile.Lockfile, dryRun bool, args ...string) error {
+func (b Runner) Run(data environment.Config, dryRun bool, args ...string) error {
 	sshCommand := fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"%s"`, data.OpsManager.IP.String())
 
 	sshCommandLines := []string{

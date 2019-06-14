@@ -13,7 +13,7 @@ import (
 
 var _ = Describe("SSH", func() {
 	It("generates the correct scriptp", func() {
-		command := exec.Command(pathToPcf, "ssh", "-l", "fixtures/claim_manatee_response.json", "-f")
+		command := exec.Command(pathToPcf, "ssh", "-t", "fixtures/claim_manatee_response.json", "-f")
 		session, err := Start(command, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 

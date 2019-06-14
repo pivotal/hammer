@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pivotal/pcf/lockfile"
+	"github.com/pivotal/pcf/environment"
 	"github.com/pivotal/pcf/scripting"
 )
 
@@ -12,7 +12,7 @@ type Runner struct {
 	ScriptRunner scripting.ScriptRunner
 }
 
-func (r Runner) Run(data lockfile.Lockfile, dryRun bool, omArgs ...string) error {
+func (r Runner) Run(data environment.Config, dryRun bool, omArgs ...string) error {
 	var omCommandLines []string
 
 	if len(omArgs) > 0 {
