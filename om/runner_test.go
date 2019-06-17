@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/pivotal/pcf/om"
+	"github.com/pivotal/pcf-cli/om"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/pivotal/pcf/environment"
-	"github.com/pivotal/pcf/scripting/scriptingfakes"
+	"github.com/pivotal/pcf-cli/environment"
+	"github.com/pivotal/pcf-cli/scripting/scriptingfakes"
 )
 
 var _ = Describe("om runner", func() {

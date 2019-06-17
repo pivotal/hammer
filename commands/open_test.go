@@ -5,10 +5,10 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	fakes "github.com/pivotal/pcf/commands/commandsfakes"
-	"github.com/pivotal/pcf/environment"
+	fakes "github.com/pivotal/pcf-cli/commands/commandsfakes"
+	"github.com/pivotal/pcf-cli/environment"
 
-	. "github.com/pivotal/pcf/commands"
+	. "github.com/pivotal/pcf-cli/commands"
 )
 
 var _ = Describe("open command", func() {

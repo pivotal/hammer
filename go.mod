@@ -1,4 +1,4 @@
-module github.com/pivotal/pcf
+module github.com/pivotal/pcf-cli
 
 go 1.12
 

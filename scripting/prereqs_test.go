@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/pivotal/pcf/scripting"
+	. "github.com/pivotal/pcf-cli/scripting"
 )
 
 var _ = Describe("CheckPrereqs", func() {

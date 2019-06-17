@@ -3,9 +3,9 @@ package open
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf/scripting"
+	"github.com/pivotal/pcf-cli/scripting"
 
-	"github.com/pivotal/pcf/environment"
+	"github.com/pivotal/pcf-cli/environment"
 )
 
 type Runner struct {

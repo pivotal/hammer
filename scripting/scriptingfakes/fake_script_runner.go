@@ -4,7 +4,7 @@ package scriptingfakes
 import (
 	"sync"
 
-	"github.com/pivotal/pcf/scripting"
+	"github.com/pivotal/pcf-cli/scripting"
 )
 
 type FakeScriptRunner struct {

@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pivotal/pcf/environment"
+	"github.com/pivotal/pcf-cli/environment"
 
 	flags "github.com/jessevdk/go-flags"
 
-	"github.com/pivotal/pcf/bosh"
-	"github.com/pivotal/pcf/cf"
-	"github.com/pivotal/pcf/commands"
-	"github.com/pivotal/pcf/om"
-	"github.com/pivotal/pcf/open"
-	"github.com/pivotal/pcf/scripting"
-	"github.com/pivotal/pcf/ssh"
-	"github.com/pivotal/pcf/sshuttle"
+	"github.com/pivotal/pcf-cli/bosh"
+	"github.com/pivotal/pcf-cli/cf"
+	"github.com/pivotal/pcf-cli/commands"
+	"github.com/pivotal/pcf-cli/om"
+	"github.com/pivotal/pcf-cli/open"
+	"github.com/pivotal/pcf-cli/scripting"
+	"github.com/pivotal/pcf-cli/ssh"
+	"github.com/pivotal/pcf-cli/sshuttle"
 )
 
 var (

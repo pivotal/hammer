@@ -3,8 +3,8 @@ package ssh
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf/environment"
-	"github.com/pivotal/pcf/scripting"
+	"github.com/pivotal/pcf-cli/environment"
+	"github.com/pivotal/pcf-cli/scripting"
 )
 
 type Runner struct {

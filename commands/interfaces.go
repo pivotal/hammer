@@ -1,6 +1,6 @@
 package commands
 
-import "github.com/pivotal/pcf/environment"
+import "github.com/pivotal/pcf-cli/environment"
 
 //go:generate counterfeiter . EnvReader
 

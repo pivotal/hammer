@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/pivotal/pcf/cf"
+	"github.com/pivotal/pcf-cli/cf"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/pivotal/pcf/environment"
-	"github.com/pivotal/pcf/scripting/scriptingfakes"
+	"github.com/pivotal/pcf-cli/environment"
+	"github.com/pivotal/pcf-cli/scripting/scriptingfakes"
 )
 
 var _ = Describe("cf login runner", func() {

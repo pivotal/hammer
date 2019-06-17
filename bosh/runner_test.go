@@ -7,9 +7,9 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/pivotal/pcf/bosh"
-	"github.com/pivotal/pcf/environment"
-	"github.com/pivotal/pcf/scripting/scriptingfakes"
+	"github.com/pivotal/pcf-cli/bosh"
+	"github.com/pivotal/pcf-cli/environment"
+	"github.com/pivotal/pcf-cli/scripting/scriptingfakes"
 )
 
 var _ = Describe("bosh runner", func() {
