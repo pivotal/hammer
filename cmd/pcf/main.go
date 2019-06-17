@@ -36,7 +36,7 @@ type options struct {
 	Sshuttle     commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
 	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
 	Completion   commands.CompletionCommand `command:"completion" description:"command completion script"`
-	TargetConfig targetConfigPath           `short:"t" long:"target" hidden:"true"`
+	TargetConfig targetConfigPath           `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" description:"path to the target environment config"`
 }
 
 func main() {
