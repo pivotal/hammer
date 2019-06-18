@@ -8,7 +8,7 @@ resources:
     private_key: ((private_key))
 
 jobs:
-- name: test
+- name: test-pcf-cli
   plan:
   - get: pcf-cli
     resource: pcf-cli-master

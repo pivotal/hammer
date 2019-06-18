@@ -1,5 +1,6 @@
 ---
 platform: linux
+
 image_resource:
   type: docker-image
   source:
@@ -9,4 +10,5 @@ image_resource:
 inputs:
 - name: pcf-cli
 
-run: pcf-cli/ci/scripts/run-test.sh
+run:
+  path: pcf-cli/ci/scripts/run-test.sh
