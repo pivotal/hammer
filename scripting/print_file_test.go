@@ -17,6 +17,7 @@ var _ = Describe("WriteTempFile", func() {
 		defer os.Remove(path)
 
 		contents, err := ioutil.ReadFile(path)
+		Expect(err).NotTo(HaveOccurred())
 		Expect(string(contents)).To(BeEmpty())
 	})
 
@@ -26,6 +27,7 @@ var _ = Describe("WriteTempFile", func() {
 		defer os.Remove(path)
 
 		contents, err := ioutil.ReadFile(path)
+		Expect(err).NotTo(HaveOccurred())
 		Expect(string(contents)).To(Equal("line1\nline2\nline3\n"))
 	})
 })
