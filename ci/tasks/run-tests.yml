@@ -11,4 +11,4 @@ inputs:
 - name: pcf-cli
 
 run:
-  path: pcf-cli/ci/scripts/run-test.sh
+  path: pcf-cli/ci/scripts/run-tests.sh
