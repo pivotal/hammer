@@ -1,0 +1,17 @@
+---
+resources:
+- name: pcf-cli-master
+  type: git
+  source:
+    branch: master
+    uri: git@github.com:pivotal/pcf-cli.git
+    private_key: ((private_key))
+
+jobs:
+- name: test
+  plan:
+  - get: pcf-cli
+    resource: pcf-cli-master
+    trigger: true
+  - task: run-tests
+    file: pcf-cli/ci/tasks/run-tests.yml
