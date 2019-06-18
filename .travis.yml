@@ -1,0 +1,12 @@
+---
+language: go
+
+go:
+- "1.12"
+
+install:
+- go get github.com/onsi/ginkgo/ginkgo
+- go mod download
+
+script:
+- ginkgo -r .
