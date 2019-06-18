@@ -60,7 +60,7 @@ var _ = Describe("om runner", func() {
 					`echo "export OM_PASSWORD=password"`,
 				))
 
-				Expect(prereqs).To(Equal([]string{"om"}))
+				Expect(prereqs).To(HaveLen(0))
 				Expect(dryRun).To(Equal(true))
 			})
 

@@ -14,11 +14,13 @@ type Runner struct {
 
 func (r Runner) Run(data environment.Config, dryRun bool, omArgs ...string) error {
 	var omCommandLines []string
+	var omPrereqs []string
 
 	if len(omArgs) > 0 {
 		omCommandLines = []string{
 			fmt.Sprintf(`om -t '%s' -k -u '%s' -p '%s' %s`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, quoteArgs(omArgs)),
 		}
+		omPrereqs = []string{"om"}
 	} else {
 		omCommandLines = []string{
 			fmt.Sprintf(`echo "export OM_TARGET=%s"`, data.OpsManager.URL.String()),
@@ -27,7 +29,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, omArgs ...string) erro
 		}
 	}
 
-	return r.ScriptRunner.RunScript(omCommandLines, []string{"om"}, dryRun)
+	return r.ScriptRunner.RunScript(omCommandLines, omPrereqs, dryRun)
 }
 
 func quoteArgs(args []string) string {
