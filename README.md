@@ -1,4 +1,5 @@
 # pcf - wrapper CLI for interacting with OM, BOSH and others for PCF environments
+[![Build Status](https://travis-ci.com/pivotal/pcf-cli.svg?token=jUqzM7hyJNi7CRu5xyLL&branch=master)](https://travis-ci.com/pivotal/pcf-cli)
 
 ## Installation
 
@@ -13,5 +14,4 @@ Unit and integration tests can be run if you have [Ginkgo](https://github.com/on
 ```bash
 $ ginkgo -r .
 ```
-
 
