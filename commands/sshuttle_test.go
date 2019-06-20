@@ -24,16 +24,15 @@ var _ = Describe("sshuttle command", func() {
 		envReader = new(fakes.FakeEnvReader)
 		sshuttleRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
-		dryRun = true
-	})
 
-	JustBeforeEach(func() {
 		command = &SshuttleCommand{
 			Env:            envReader,
 			SshuttleRunner: sshuttleRunner,
-			File:           dryRun,
+			File:           true,
 		}
+	})
 
+	JustBeforeEach(func() {
 		err = command.Execute(args)
 	})
 

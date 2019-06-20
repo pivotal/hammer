@@ -24,16 +24,15 @@ var _ = Describe("ssh command", func() {
 		envReader = new(fakes.FakeEnvReader)
 		sshRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
-		dryRun = true
-	})
 
-	JustBeforeEach(func() {
 		command = &SSHCommand{
 			Env:       envReader,
 			SSHRunner: sshRunner,
-			File:      dryRun,
+			File:      true,
 		}
+	})
 
+	JustBeforeEach(func() {
 		err = command.Execute(args)
 	})
 

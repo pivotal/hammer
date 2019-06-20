@@ -24,16 +24,15 @@ var _ = Describe("om command", func() {
 		envReader = new(fakes.FakeEnvReader)
 		omRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
-		dryRun = true
-	})
 
-	JustBeforeEach(func() {
 		command = &OMCommand{
 			Env:      envReader,
 			OMRunner: omRunner,
-			File:     dryRun,
+			File:     true,
 		}
+	})
 
+	JustBeforeEach(func() {
 		err = command.Execute(args)
 	})
 

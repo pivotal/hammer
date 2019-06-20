@@ -24,16 +24,15 @@ var _ = Describe("Bosh command", func() {
 		envReader = new(fakes.FakeEnvReader)
 		boshRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
-		dryRun = true
-	})
 
-	JustBeforeEach(func() {
 		command = &BoshCommand{
 			Env:        envReader,
 			BoshRunner: boshRunner,
-			File:       dryRun,
+			File:       true,
 		}
+	})
 
+	JustBeforeEach(func() {
 		err = command.Execute(args)
 	})
 

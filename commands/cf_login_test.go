@@ -24,16 +24,15 @@ var _ = Describe("cf login command", func() {
 		envReader = new(fakes.FakeEnvReader)
 		cfLoginRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
-		dryRun = true
-	})
 
-	JustBeforeEach(func() {
 		command = &CFLoginCommand{
 			Env:           envReader,
 			CFLoginRunner: cfLoginRunner,
-			File:          dryRun,
+			File:          true,
 		}
+	})
 
+	JustBeforeEach(func() {
 		err = command.Execute(args)
 	})
 

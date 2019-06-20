@@ -24,16 +24,15 @@ var _ = Describe("open command", func() {
 		envReader = new(fakes.FakeEnvReader)
 		openRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
-		dryRun = true
-	})
 
-	JustBeforeEach(func() {
 		command = &OpenCommand{
 			Env:        envReader,
 			OpenRunner: openRunner,
-			File:       dryRun,
+			File:       true,
 		}
+	})
 
+	JustBeforeEach(func() {
 		err = command.Execute(args)
 	})
 
