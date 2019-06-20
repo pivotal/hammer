@@ -13,13 +13,14 @@ import (
 )
 
 var _ = Describe("cf login runner", func() {
+	var (
+		err           error
+		cfLoginRunner cf.LoginRunner
+		scriptRunner  *scriptingfakes.FakeScriptRunner
 
-	var err error
-	var cfLoginRunner cf.LoginRunner
-	var scriptRunner *scriptingfakes.FakeScriptRunner
-
-	var data environment.Config
-	var dryRun bool
+		data   environment.Config
+		dryRun bool
+	)
 
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)

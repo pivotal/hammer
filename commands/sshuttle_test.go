@@ -12,13 +12,14 @@ import (
 )
 
 var _ = Describe("sshuttle command", func() {
-	var err error
-	var command *SshuttleCommand
+	var (
+		err     error
+		command *SshuttleCommand
 
-	var envReader *fakes.FakeEnvReader
-	var sshuttleRunner *fakes.FakeToolRunner
-	var args []string
-	var dryRun bool
+		envReader      *fakes.FakeEnvReader
+		sshuttleRunner *fakes.FakeToolRunner
+		args           []string
+	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)

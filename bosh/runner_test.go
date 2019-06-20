@@ -13,14 +13,15 @@ import (
 )
 
 var _ = Describe("bosh runner", func() {
+	var (
+		err          error
+		boshRunner   bosh.Runner
+		scriptRunner *scriptingfakes.FakeScriptRunner
 
-	var err error
-	var boshRunner bosh.Runner
-	var scriptRunner *scriptingfakes.FakeScriptRunner
-
-	var data environment.Config
-	var dryRun bool
-	var boshArgs []string
+		data     environment.Config
+		dryRun   bool
+		boshArgs []string
+	)
 
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)

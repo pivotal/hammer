@@ -14,13 +14,14 @@ import (
 )
 
 var _ = Describe("ssh runner", func() {
+	var (
+		err          error
+		sshRunner    ssh.Runner
+		scriptRunner *scriptingfakes.FakeScriptRunner
 
-	var err error
-	var sshRunner ssh.Runner
-	var scriptRunner *scriptingfakes.FakeScriptRunner
-
-	var data environment.Config
-	var dryRun bool
+		data   environment.Config
+		dryRun bool
+	)
 
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)

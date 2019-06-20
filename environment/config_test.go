@@ -15,7 +15,6 @@ import (
 )
 
 var _ = Describe("Config", func() {
-
 	AfterEach(func() {
 		os.Unsetenv("TARGET_ENVIRONMENT_CONFIG")
 	})

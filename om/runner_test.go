@@ -13,14 +13,15 @@ import (
 )
 
 var _ = Describe("om runner", func() {
+	var (
+		err          error
+		omRunner     om.Runner
+		scriptRunner *scriptingfakes.FakeScriptRunner
 
-	var err error
-	var omRunner om.Runner
-	var scriptRunner *scriptingfakes.FakeScriptRunner
-
-	var data environment.Config
-	var dryRun bool
-	var omArgs []string
+		data   environment.Config
+		dryRun bool
+		omArgs []string
+	)
 
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)

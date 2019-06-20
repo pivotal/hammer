@@ -12,13 +12,14 @@ import (
 )
 
 var _ = Describe("ssh command", func() {
-	var err error
-	var command *SSHCommand
+	var (
+		err     error
+		command *SSHCommand
 
-	var envReader *fakes.FakeEnvReader
-	var sshRunner *fakes.FakeToolRunner
-	var args []string
-	var dryRun bool
+		envReader *fakes.FakeEnvReader
+		sshRunner *fakes.FakeToolRunner
+		args      []string
+	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)

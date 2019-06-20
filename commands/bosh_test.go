@@ -12,13 +12,14 @@ import (
 )
 
 var _ = Describe("Bosh command", func() {
-	var err error
-	var command *BoshCommand
+	var (
+		err     error
+		command *BoshCommand
 
-	var envReader *fakes.FakeEnvReader
-	var boshRunner *fakes.FakeToolRunner
-	var args []string
-	var dryRun bool
+		envReader  *fakes.FakeEnvReader
+		boshRunner *fakes.FakeToolRunner
+		args       []string
+	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)

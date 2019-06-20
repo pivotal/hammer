@@ -12,13 +12,14 @@ import (
 )
 
 var _ = Describe("cf login command", func() {
-	var err error
-	var command *CFLoginCommand
+	var (
+		err     error
+		command *CFLoginCommand
 
-	var envReader *fakes.FakeEnvReader
-	var cfLoginRunner *fakes.FakeToolRunner
-	var args []string
-	var dryRun bool
+		envReader     *fakes.FakeEnvReader
+		cfLoginRunner *fakes.FakeToolRunner
+		args          []string
+	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
