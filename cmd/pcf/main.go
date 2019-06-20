@@ -25,7 +25,18 @@ var (
 
 type versionCommand struct{}
 
+func (c *versionCommand) Execute(args []string) error {
+	fmt.Printf("Version: %s (%s)\n", version, date)
+	return nil
+}
+
 type targetConfigPath struct{}
+
+// If `-t` is specified on the pcf command (rather than a subcommand)
+// then set `TARGET_ENVIRONMENT_CONFIG` so the subcommand can read it
+func (e *targetConfigPath) UnmarshalFlag(path string) error {
+	return os.Setenv("TARGET_ENVIRONMENT_CONFIG", path)
+}
 
 type options struct {
 	Bosh         commands.BoshCommand       `command:"bosh" description:"display BOSH credentials, or run a BOSH command"`
@@ -95,17 +106,6 @@ func main() {
 
 		os.Exit(1)
 	}
-}
-
-func (c *versionCommand) Execute(args []string) error {
-	fmt.Printf("Version: %s (%s)\n", version, date)
-	return nil
-}
-
-// If `-t` is specified on the pcf command (rather than a subcommand)
-// then set `TARGET_ENVIRONMENT_CONFIG` so the subcommand can read it
-func (e *targetConfigPath) UnmarshalFlag(path string) error {
-	return os.Setenv("TARGET_ENVIRONMENT_CONFIG", path)
 }
 
 func printDoubleDashMessage() {
