@@ -14,7 +14,7 @@ type ScriptRunner interface {
 
 type scriptRunner struct{}
 
-func NewScriptRunner() scriptRunner {
+func NewScriptRunner() ScriptRunner {
 	return scriptRunner{}
 }
 
