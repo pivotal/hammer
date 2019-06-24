@@ -51,9 +51,17 @@ var _ = Describe("ssh runner", func() {
 		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-		Expect(lines).To(ContainElement(`echo "private-key-contents" >"$ssh_key_path"`))
-		Expect(lines).To(ContainElement(`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`))
-		Expect(lines).To(ContainElement(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"10.0.0.6" "$shell"`))
+		Expect(lines).To(Equal([]string{
+			`ssh_key_path=$(mktemp)`,
+			`echo "private-key-contents" >"$ssh_key_path"`,
+			`trap 'rm -f ${ssh_key_path}' EXIT`,
+			`chmod 0600 "${ssh_key_path}"`,
+			`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+			`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
+			`echo "$bosh"`,
+			`shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"`,
+			`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"10.0.0.6" "$shell"`,
+		}))
 
 		Expect(prereqs).To(ConsistOf("ssh", "om"))
 		Expect(dryRun).To(Equal(true))

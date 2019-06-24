@@ -54,11 +54,11 @@ var _ = Describe("om runner", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ConsistOf(
+			Expect(lines).To(Equal([]string{
 				`echo "export OM_TARGET=www.test-url.io"`,
 				`echo "export OM_USERNAME=username"`,
 				`echo "export OM_PASSWORD=password"`,
-			))
+			}))
 
 			Expect(prereqs).To(HaveLen(0))
 			Expect(dryRun).To(Equal(true))
@@ -79,7 +79,9 @@ var _ = Describe("om runner", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ConsistOf(`om -t 'www.test-url.io' -k -u 'username' -p 'password' 'arg1' 'arg2' 'arg3'`))
+			Expect(lines).To(Equal([]string{
+				`om -t 'www.test-url.io' -k -u 'username' -p 'password' 'arg1' 'arg2' 'arg3'`,
+			}))
 
 			Expect(prereqs).To(ConsistOf("om"))
 			Expect(dryRun).To(Equal(false))

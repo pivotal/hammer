@@ -49,9 +49,14 @@ var _ = Describe("cf login runner", func() {
 		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-		Expect(lines).To(ContainElement(`prods="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`))
-		Expect(lines).To(ContainElement(`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`))
-		Expect(lines).To(ContainElement(`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`))
+
+		Expect(lines).To(Equal([]string{
+			`prods="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
+			`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`,
+			`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, `user="$(echo "$creds" | jq -r .credential.value.identity)"`,
+			`pass="$(echo "$creds" | jq -r .credential.value.password)"`,
+			`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`,
+		}))
 
 		Expect(prereqs).To(ConsistOf("jq", "om", "cf"))
 		Expect(dryRun).To(Equal(true))

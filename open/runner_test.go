@@ -47,10 +47,10 @@ var _ = Describe("open runner", func() {
 		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-		Expect(lines).To(ConsistOf(
+		Expect(lines).To(Equal([]string{
 			`open "www.test-url.io"`,
 			`echo "password" | pbcopy`,
-		))
+		}))
 
 		Expect(prereqs).To(ConsistOf("open", "pbcopy"))
 		Expect(dryRun).To(Equal(true))

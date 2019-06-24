@@ -53,8 +53,13 @@ var _ = Describe("sshuttle runner", func() {
 		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-		Expect(lines).To(ContainElement(`echo "private-key-contents" >"$ssh_key_path"`))
-		Expect(lines).To(ContainElement(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" 10.0.0.0/24 10.0.4.0/24 10.0.8.0/24`))
+		Expect(lines).To(Equal([]string{
+			`ssh_key_path=$(mktemp)`,
+			`echo "private-key-contents" >"$ssh_key_path"`,
+			`trap 'rm -f ${ssh_key_path}' EXIT`,
+			`chmod 0600 "${ssh_key_path}"`,
+			`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" 10.0.0.0/24 10.0.4.0/24 10.0.8.0/24`,
+		}))
 
 		Expect(prereqs).To(ConsistOf("jq", "om", "sshuttle"))
 		Expect(dryRun).To(Equal(false))

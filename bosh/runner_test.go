@@ -57,11 +57,36 @@ var _ = Describe("bosh runner", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ContainElement(`echo "private-key-contents" >"$ssh_key_path"`))
-			Expect(lines).To(ContainElement(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`))
-			Expect(lines).To(ContainElement(`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`))
-			Expect(lines).To(ContainElement(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`))
-			Expect(lines).To(ContainElement(`echo "export BOSH_ENV_NAME=env-name"`))
+			Expect(lines).To(Equal([]string{
+				`ssh_key_path=$(mktemp)`,
+				`echo "private-key-contents" >"$ssh_key_path"`,
+				`chmod 0600 "${ssh_key_path}"`,
+
+				`bosh_ca_path=$(mktemp)`,
+				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
+				`chmod 0600 "${bosh_ca_path}"`,
+
+				`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
+
+				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
+				`bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
+				`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
+				`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
+				`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`,
+
+				`echo "export BOSH_ENV_NAME=env-name"`,
+				`echo "export $bosh_client"`,
+				`echo "export $bosh_env"`,
+				`echo "export $bosh_secret"`,
+				`echo "export $bosh_ca_cert"`,
+				`echo "export $bosh_proxy"`,
+				`echo "export CREDHUB_SERVER=\"\${BOSH_ENVIRONMENT}:8844\""`,
+				`echo "export CREDHUB_PROXY=\"\${BOSH_ALL_PROXY}\""`,
+				`echo "export CREDHUB_CLIENT=\"\${BOSH_CLIENT}\""`,
+				`echo "export CREDHUB_SECRET=\"\${BOSH_CLIENT_SECRET}\""`,
+				`echo "export CREDHUB_CA_CERT=\"\${BOSH_CA_CERT}\""`,
+			}))
 
 			Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
 			Expect(dryRun).To(Equal(true))
@@ -80,11 +105,29 @@ var _ = Describe("bosh runner", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ContainElement(`echo "private-key-contents" >"$ssh_key_path"`))
-			Expect(lines).To(ContainElement(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`))
-			Expect(lines).To(ContainElement(`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`))
-			Expect(lines).To(ContainElement(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`))
-			Expect(lines).To(ContainElement(`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh arg1 arg2 arg3`))
+
+			Expect(lines).To(Equal([]string{
+				`ssh_key_path=$(mktemp)`,
+				`echo "private-key-contents" >"$ssh_key_path"`,
+				`chmod 0600 "${ssh_key_path}"`,
+
+				`bosh_ca_path=$(mktemp)`,
+				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
+				`chmod 0600 "${bosh_ca_path}"`,
+
+				`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
+
+				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
+				`bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
+				`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
+				`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
+				`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`,
+
+				`trap 'rm -f ${ssh_key_path}' EXIT`,
+				`trap 'rm -f ${bosh_ca_path}' EXIT`,
+				`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh arg1 arg2 arg3`,
+			}))
 
 			Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
 			Expect(dryRun).To(Equal(false))
