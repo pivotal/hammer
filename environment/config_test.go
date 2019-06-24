@@ -26,6 +26,13 @@ var _ = Describe("Config", func() {
 			Expect(err).NotTo(HaveOccurred())
 			checkMatchLemon(env)
 		})
+
+		It("reads data from a config file that does not contain subnets, azs or version", func() {
+			env, err := FromFile(path.Join("fixtures", "reduced.json"))
+
+			Expect(err).NotTo(HaveOccurred())
+			checkMatchReduced(env)
+		})
 	})
 })
 
@@ -60,6 +67,23 @@ func checkMatchLemon(e Config) {
 			"Username":   Equal("pivotalcf"),
 			"Password":   Equal("fakePassword"),
 			"URL":        Equal(mustParseURL("https://pcf.lemon.cf-app.com")),
+			"IP":         Equal(net.ParseIP("35.225.148.133")),
+			"CIDR":       Equal(mustParseCIDR("10.0.0.0/24")),
+			"PrivateKey": ContainSubstring("BEGIN RSA"),
+		}),
+	}))
+}
+
+func checkMatchReduced(e Config) {
+	Expect(e).To(MatchFields(IgnoreExtras, Fields{
+		"Name":         Equal("reduced-config"),
+		"CFDomain":     Equal("sys.reduced-config.cf-app.com"),
+		"PasCIDR":      Equal(mustParseCIDR("10.0.4.0/24")),
+		"ServicesCIDR": Equal(mustParseCIDR("10.0.8.0/24")),
+		"OpsManager": MatchAllFields(Fields{
+			"Username":   Equal("pivotalcf"),
+			"Password":   Equal("fakePassword"),
+			"URL":        Equal(mustParseURL("https://pcf.reduced-config.cf-app.com")),
 			"IP":         Equal(net.ParseIP("35.225.148.133")),
 			"CIDR":       Equal(mustParseCIDR("10.0.0.0/24")),
 			"PrivateKey": ContainSubstring("BEGIN RSA"),
