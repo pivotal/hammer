@@ -102,6 +102,10 @@ func main() {
 		},
 	}
 
+	if len(os.Args) < 2 {
+		os.Args = append(os.Args, "--help")
+	}
+
 	if _, err := flags.Parse(&opts); err != nil {
 		if flagsErr, ok := err.(*flags.Error); ok {
 			if flagsErr.Type == flags.ErrHelp {
