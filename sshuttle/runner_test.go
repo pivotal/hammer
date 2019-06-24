@@ -49,30 +49,30 @@ var _ = Describe("sshuttle runner", func() {
 		err = sshuttleRunner.Run(data, dryRun)
 	})
 
-	Context("run", func() {
-		It("invokes script runner with a sshuttle to the opsman vm", func() {
-			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+	It("runs the script with a sshuttle to the opsman vm", func() {
+		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
-			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ContainElement(`echo "private-key-contents" >"$ssh_key_path"`))
-			Expect(lines).To(ContainElement(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" 10.0.0.0/24 10.0.4.0/24 10.0.8.0/24`))
+		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
+		Expect(lines).To(ContainElement(`echo "private-key-contents" >"$ssh_key_path"`))
+		Expect(lines).To(ContainElement(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" 10.0.0.0/24 10.0.4.0/24 10.0.8.0/24`))
 
-			Expect(prereqs).To(ConsistOf("jq", "om", "sshuttle"))
-			Expect(dryRun).To(Equal(false))
-		})
+		Expect(prereqs).To(ConsistOf("jq", "om", "sshuttle"))
+		Expect(dryRun).To(Equal(false))
+	})
 
+	When("running the script succeeds", func() {
 		It("doesn't error", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
+	})
 
-		When("script runner run script errors", func() {
-			BeforeEach(func() {
-				scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
-			})
+	When("running the script errors", func() {
+		BeforeEach(func() {
+			scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
+		})
 
-			It("propagates the error", func() {
-				Expect(err).To(MatchError("run-script-error"))
-			})
+		It("propagates the error", func() {
+			Expect(err).To(MatchError("run-script-error"))
 		})
 	})
 })

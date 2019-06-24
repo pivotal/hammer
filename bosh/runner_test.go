@@ -53,7 +53,7 @@ var _ = Describe("bosh runner", func() {
 			boshArgs = []string{}
 		})
 
-		It("invokes script runner with a series of bosh env var echos", func() {
+		It("runs the script with a series of bosh env var echos", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
@@ -76,7 +76,7 @@ var _ = Describe("bosh runner", func() {
 			dryRun = false
 		})
 
-		It("invokes script runner with a bosh command", func() {
+		It("runs the script with a bosh command", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
 			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
@@ -93,7 +93,7 @@ var _ = Describe("bosh runner", func() {
 		})
 	})
 
-	When("script runner run script errors", func() {
+	When("running the script errors", func() {
 		BeforeEach(func() {
 			scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
 		})

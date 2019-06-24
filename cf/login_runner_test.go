@@ -45,35 +45,31 @@ var _ = Describe("cf login runner", func() {
 		err = cfLoginRunner.Run(data, dryRun)
 	})
 
-	Context("run", func() {
-		BeforeEach(func() {
-			scriptRunner.RunScriptReturns(nil)
-		})
+	It("runs the script with a cf login", func() {
+		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
-		It("invokes script runner with a cf login", func() {
-			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
+		Expect(lines).To(ContainElement(`prods="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`))
+		Expect(lines).To(ContainElement(`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`))
+		Expect(lines).To(ContainElement(`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`))
 
-			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ContainElement(`prods="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`))
-			Expect(lines).To(ContainElement(`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`))
-			Expect(lines).To(ContainElement(`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`))
+		Expect(prereqs).To(ConsistOf("jq", "om", "cf"))
+		Expect(dryRun).To(Equal(true))
+	})
 
-			Expect(prereqs).To(ConsistOf("jq", "om", "cf"))
-			Expect(dryRun).To(Equal(true))
-		})
-
+	When("running the script succeeds", func() {
 		It("doesn't error", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
+	})
 
-		When("script runner run script errors", func() {
-			BeforeEach(func() {
-				scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
-			})
+	When("running the script errors", func() {
+		BeforeEach(func() {
+			scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
+		})
 
-			It("propagates the error", func() {
-				Expect(err).To(MatchError("run-script-error"))
-			})
+		It("propagates the error", func() {
+			Expect(err).To(MatchError("run-script-error"))
 		})
 	})
 })

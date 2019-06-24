@@ -43,32 +43,32 @@ var _ = Describe("open runner", func() {
 		err = openRunner.Run(data, dryRun)
 	})
 
-	Context("run", func() {
-		It("invokes script runner with opsman url open and copying of the password into the clipboard", func() {
-			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+	It("runs the script with opsman url open and copying of the password into the clipboard", func() {
+		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
-			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
-			Expect(lines).To(ConsistOf(
-				`open "www.test-url.io"`,
-				`echo "password" | pbcopy`,
-			))
+		lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
+		Expect(lines).To(ConsistOf(
+			`open "www.test-url.io"`,
+			`echo "password" | pbcopy`,
+		))
 
-			Expect(prereqs).To(ConsistOf("open", "pbcopy"))
-			Expect(dryRun).To(Equal(true))
-		})
+		Expect(prereqs).To(ConsistOf("open", "pbcopy"))
+		Expect(dryRun).To(Equal(true))
+	})
 
+	When("running the script succeeds", func() {
 		It("doesn't error", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
+	})
 
-		When("script runner run script errors", func() {
-			BeforeEach(func() {
-				scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
-			})
+	When("running the script errors", func() {
+		BeforeEach(func() {
+			scriptRunner.RunScriptReturns(fmt.Errorf("run-script-error"))
+		})
 
-			It("propagates the error", func() {
-				Expect(err).To(MatchError("run-script-error"))
-			})
+		It("propagates the error", func() {
+			Expect(err).To(MatchError("run-script-error"))
 		})
 	})
 })
