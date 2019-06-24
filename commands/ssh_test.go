@@ -37,12 +37,12 @@ var _ = Describe("ssh command", func() {
 		err = command.Execute(args)
 	})
 
-	When("envReader returns an error", func() {
+	When("retrieving the environment config errors", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't call sshRunner", func() {
+		It("doesn't attempt to run the ssh tool", func() {
 			Expect(sshRunner.RunCallCount()).To(Equal(0))
 		})
 
@@ -51,12 +51,12 @@ var _ = Describe("ssh command", func() {
 		})
 	})
 
-	When("envReader succeeds", func() {
+	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("passes env data and dry run flag but not args to sshRunner", func() {
+		It("runs the ssh tool using the retrieved environment config", func() {
 			Expect(sshRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := sshRunner.RunArgsForCall(0)
@@ -65,7 +65,7 @@ var _ = Describe("ssh command", func() {
 			Expect(args).To(HaveLen(0))
 		})
 
-		When("sshRunner succeeds", func() {
+		When("running the ssh tool is successful", func() {
 			BeforeEach(func() {
 				sshRunner.RunReturns(nil)
 			})
@@ -75,7 +75,7 @@ var _ = Describe("ssh command", func() {
 			})
 		})
 
-		When("sshRunner returns an error", func() {
+		When("running the ssh tool errors", func() {
 			BeforeEach(func() {
 				sshRunner.RunReturns(fmt.Errorf("ssh-runnner-error"))
 			})

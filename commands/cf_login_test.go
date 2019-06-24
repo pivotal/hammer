@@ -37,12 +37,12 @@ var _ = Describe("cf login command", func() {
 		err = command.Execute(args)
 	})
 
-	When("envReader returns an error", func() {
+	When("retrieving the environment config errors", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't call cfLoginRunner", func() {
+		It("doesn't attempt to run the cf login tool", func() {
 			Expect(cfLoginRunner.RunCallCount()).To(Equal(0))
 		})
 
@@ -51,12 +51,12 @@ var _ = Describe("cf login command", func() {
 		})
 	})
 
-	When("envReader succeeds", func() {
+	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("passes env data and dry run flag but not args to cfLoginRunner", func() {
+		It("runs the cf login tool using the retrieved environment config", func() {
 			Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := cfLoginRunner.RunArgsForCall(0)
@@ -65,7 +65,7 @@ var _ = Describe("cf login command", func() {
 			Expect(args).To(HaveLen(0))
 		})
 
-		When("cfLoginRunner succeeds", func() {
+		When("running the cf login tool is successful", func() {
 			BeforeEach(func() {
 				cfLoginRunner.RunReturns(nil)
 			})
@@ -75,7 +75,7 @@ var _ = Describe("cf login command", func() {
 			})
 		})
 
-		When("cfLoginRunner returns an error", func() {
+		When("running the cf login tool errors", func() {
 			BeforeEach(func() {
 				cfLoginRunner.RunReturns(fmt.Errorf("cf-login-runnner-error"))
 			})

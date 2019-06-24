@@ -37,12 +37,12 @@ var _ = Describe("open command", func() {
 		err = command.Execute(args)
 	})
 
-	When("envReader returns an error", func() {
+	When("retrieving the environment config errors", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't call openRunner", func() {
+		It("doesn't attempt to run the open tool", func() {
 			Expect(openRunner.RunCallCount()).To(Equal(0))
 		})
 
@@ -51,12 +51,12 @@ var _ = Describe("open command", func() {
 		})
 	})
 
-	When("envReader succeeds", func() {
+	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("passes env data and dry run flag but not args to openRunner", func() {
+		It("runs the open tool using the retrieved environment config", func() {
 			Expect(openRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := openRunner.RunArgsForCall(0)
@@ -65,7 +65,7 @@ var _ = Describe("open command", func() {
 			Expect(args).To(HaveLen(0))
 		})
 
-		When("openRunner succeeds", func() {
+		When("running the open tool is successful", func() {
 			BeforeEach(func() {
 				openRunner.RunReturns(nil)
 			})
@@ -75,7 +75,7 @@ var _ = Describe("open command", func() {
 			})
 		})
 
-		When("openRunner returns an error", func() {
+		When("running the open tool errors", func() {
 			BeforeEach(func() {
 				openRunner.RunReturns(fmt.Errorf("open-runnner-error"))
 			})

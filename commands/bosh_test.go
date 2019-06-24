@@ -37,12 +37,12 @@ var _ = Describe("Bosh command", func() {
 		err = command.Execute(args)
 	})
 
-	When("envReader returns an error", func() {
+	When("retrieving the environment config errors", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't call boshRunner", func() {
+		It("doesn't attempt to run the bosh tool", func() {
 			Expect(boshRunner.RunCallCount()).To(Equal(0))
 		})
 
@@ -51,12 +51,12 @@ var _ = Describe("Bosh command", func() {
 		})
 	})
 
-	When("envReader succeeds", func() {
+	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("passes env data, args and dry run flag to boshRunner", func() {
+		It("runs the bosh tool using the retrieved environment config", func() {
 			Expect(boshRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := boshRunner.RunArgsForCall(0)
@@ -65,7 +65,7 @@ var _ = Describe("Bosh command", func() {
 			Expect(args).To(BeEquivalentTo([]string{"arg1", "arg2"}))
 		})
 
-		When("boshRunner succeeds", func() {
+		When("running the bosh tool is successful", func() {
 			BeforeEach(func() {
 				boshRunner.RunReturns(nil)
 			})
@@ -75,7 +75,7 @@ var _ = Describe("Bosh command", func() {
 			})
 		})
 
-		When("boshRunner returns an error", func() {
+		When("running the bosh tool errors", func() {
 			BeforeEach(func() {
 				boshRunner.RunReturns(fmt.Errorf("bosh-runnner-error"))
 			})

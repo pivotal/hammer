@@ -37,12 +37,12 @@ var _ = Describe("om command", func() {
 		err = command.Execute(args)
 	})
 
-	When("envReader returns an error", func() {
+	When("retrieving the environment config errors", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't call omRunner", func() {
+		It("doesn't attempt to run the om tool", func() {
 			Expect(omRunner.RunCallCount()).To(Equal(0))
 		})
 
@@ -51,12 +51,12 @@ var _ = Describe("om command", func() {
 		})
 	})
 
-	When("envReader succeeds", func() {
+	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("passes env data, args and dry run flag to omRunner", func() {
+		It("runs the om tool using the retrieved environment config", func() {
 			Expect(omRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := omRunner.RunArgsForCall(0)
@@ -65,7 +65,7 @@ var _ = Describe("om command", func() {
 			Expect(args).To(BeEquivalentTo([]string{"arg1", "arg2"}))
 		})
 
-		When("omRunner succeeds", func() {
+		When("running the om tool is successful", func() {
 			BeforeEach(func() {
 				omRunner.RunReturns(nil)
 			})
@@ -75,7 +75,7 @@ var _ = Describe("om command", func() {
 			})
 		})
 
-		When("omRunner returns an error", func() {
+		When("running the om tool errors", func() {
 			BeforeEach(func() {
 				omRunner.RunReturns(fmt.Errorf("om-runnner-error"))
 			})

@@ -37,12 +37,12 @@ var _ = Describe("sshuttle command", func() {
 		err = command.Execute(args)
 	})
 
-	When("envReader returns an error", func() {
+	When("retrieving the environment config errors", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't call sshuttleRunner", func() {
+		It("doesn't attempt to run the sshuttle tool", func() {
 			Expect(sshuttleRunner.RunCallCount()).To(Equal(0))
 		})
 
@@ -51,12 +51,12 @@ var _ = Describe("sshuttle command", func() {
 		})
 	})
 
-	When("envReader succeeds", func() {
+	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("passes env data and dry run flag but not args to sshuttleRunner", func() {
+		It("runs the sshuttle tool using the retrieved environment config", func() {
 			Expect(sshuttleRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := sshuttleRunner.RunArgsForCall(0)
@@ -65,7 +65,7 @@ var _ = Describe("sshuttle command", func() {
 			Expect(args).To(HaveLen(0))
 		})
 
-		When("sshuttleRunner succeeds", func() {
+		When("running the sshuttle tool is successful", func() {
 			BeforeEach(func() {
 				sshuttleRunner.RunReturns(nil)
 			})
@@ -75,7 +75,7 @@ var _ = Describe("sshuttle command", func() {
 			})
 		})
 
-		When("sshuttleRunner returns an error", func() {
+		When("running the sshuttle tool errors", func() {
 			BeforeEach(func() {
 				sshuttleRunner.RunReturns(fmt.Errorf("sshuttle-runnner-error"))
 			})
