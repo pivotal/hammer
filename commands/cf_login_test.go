@@ -2,6 +2,7 @@ package commands_test
 
 import (
 	"fmt"
+	"net/url"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -17,17 +18,20 @@ var _ = Describe("cf login command", func() {
 		command *CFLoginCommand
 
 		envReader     *fakes.FakeEnvReader
+		ui            *fakes.FakeUI
 		cfLoginRunner *fakes.FakeToolRunner
 		args          []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
+		ui = new(fakes.FakeUI)
 		cfLoginRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
 
 		command = &CFLoginCommand{
 			Env:           envReader,
+			UI:            ui,
 			CFLoginRunner: cfLoginRunner,
 			File:          true,
 		}
@@ -53,14 +57,22 @@ var _ = Describe("cf login command", func() {
 
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
-			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+			url, _ := url.Parse("www.test-cf.io")
+			envReader.ReadReturns(environment.Config{OpsManager: environment.OpsManager{URL: *url}}, nil)
+		})
+
+		It("displays that the cf is being logged into", func() {
+			Expect(ui.DisplayTextCallCount()).To(Equal(1))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Logging in to: www.test-cf.io\n"))
 		})
 
 		It("runs the cf login tool using the retrieved environment config", func() {
 			Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := cfLoginRunner.RunArgsForCall(0)
-			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
+
+			expectedUrl, _ := url.Parse("www.test-cf.io")
+			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{OpsManager: environment.OpsManager{URL: *expectedUrl}}))
 			Expect(dryRun).To(BeTrue())
 			Expect(args).To(HaveLen(0))
 		})

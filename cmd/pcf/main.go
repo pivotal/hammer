@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pivotal/pcf-cli/ui"
+
 	"github.com/pivotal/pcf-cli/environment"
 
 	flags "github.com/jessevdk/go-flags"
@@ -52,6 +54,10 @@ type options struct {
 
 func main() {
 	envReader := environment.Reader{}
+	ui := ui.UI{
+		Out: os.Stdout,
+		Err: os.Stderr,
+	}
 	scriptRunner := scripting.NewScriptRunner()
 
 	opts := options{
@@ -63,6 +69,7 @@ func main() {
 		},
 		CFLogin: commands.CFLoginCommand{
 			Env: &envReader,
+			UI:  &ui,
 			CFLoginRunner: &cf.LoginRunner{
 				ScriptRunner: scriptRunner,
 			},
@@ -75,12 +82,14 @@ func main() {
 		},
 		Open: commands.OpenCommand{
 			Env: &envReader,
+			UI:  &ui,
 			OpenRunner: &open.Runner{
 				ScriptRunner: scriptRunner,
 			},
 		},
 		SSH: commands.SSHCommand{
 			Env: &envReader,
+			UI:  &ui,
 			SSHRunner: &ssh.Runner{
 				ScriptRunner: scriptRunner,
 			},

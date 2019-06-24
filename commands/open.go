@@ -10,6 +10,7 @@ type OpenCommand struct {
 	Show         bool   `short:"s" long:"show" description:"only show the credentials"`
 
 	Env        EnvReader
+	UI         UI
 	OpenRunner ToolRunner
 }
 
@@ -20,16 +21,15 @@ func (c *OpenCommand) Execute(args []string) error {
 	}
 
 	if c.Show {
-		fmt.Printf("%s\n", data.OpsManager.URL.String())
-		fmt.Printf("username: %s\n", data.OpsManager.Username)
-		fmt.Printf("password: %s\n", data.OpsManager.Password)
+		c.UI.DisplayText(fmt.Sprintf("%s\n", data.OpsManager.URL.String()))
+		c.UI.DisplayText(fmt.Sprintf("username: %s\n", data.OpsManager.Username))
+		c.UI.DisplayText(fmt.Sprintf("password: %s\n", data.OpsManager.Password))
 		return nil
 	}
 
-	fmt.Printf("Opening: %s\n", data.OpsManager.URL.String())
-	fmt.Printf("Username is: %s\n", data.OpsManager.Username)
-
-	fmt.Println("Password is in the clipboard")
+	c.UI.DisplayText(fmt.Sprintf("Opening: %s\n", data.OpsManager.URL.String()))
+	c.UI.DisplayText(fmt.Sprintf("Username is: %s\n", data.OpsManager.Username))
+	c.UI.DisplayText(fmt.Sprint("Password is in the clipboard\n"))
 
 	return c.OpenRunner.Run(data, c.File)
 }

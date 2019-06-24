@@ -9,6 +9,7 @@ type SSHCommand struct {
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env       EnvReader
+	UI        UI
 	SSHRunner ToolRunner
 }
 
@@ -18,7 +19,7 @@ func (c *SSHCommand) Execute(args []string) error {
 		return err
 	}
 
-	fmt.Printf("Connecting to: %s\n", data.Name)
+	c.UI.DisplayText(fmt.Sprintf("Connecting to: %s\n", data.Name))
 
 	return c.SSHRunner.Run(data, c.File)
 }

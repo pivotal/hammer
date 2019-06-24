@@ -13,3 +13,10 @@ type EnvReader interface {
 type ToolRunner interface {
 	Run(data environment.Config, dryRun bool, args ...string) error
 }
+
+//go:generate counterfeiter . UI
+
+type UI interface {
+	DisplayText(text string)
+	DisplayError(err error)
+}

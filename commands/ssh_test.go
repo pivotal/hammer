@@ -17,17 +17,20 @@ var _ = Describe("ssh command", func() {
 		command *SSHCommand
 
 		envReader *fakes.FakeEnvReader
+		ui        *fakes.FakeUI
 		sshRunner *fakes.FakeToolRunner
 		args      []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
+		ui = new(fakes.FakeUI)
 		sshRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
 
 		command = &SSHCommand{
 			Env:       envReader,
+			UI:        ui,
 			SSHRunner: sshRunner,
 			File:      true,
 		}
@@ -54,6 +57,11 @@ var _ = Describe("ssh command", func() {
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+		})
+
+		It("displays that the connection is being started", func() {
+			Expect(ui.DisplayTextCallCount()).To(Equal(1))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Connecting to: env-name\n"))
 		})
 
 		It("runs the ssh tool using the retrieved environment config", func() {

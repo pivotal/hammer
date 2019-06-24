@@ -2,6 +2,7 @@ package commands_test
 
 import (
 	"fmt"
+	"net/url"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -17,17 +18,20 @@ var _ = Describe("open command", func() {
 		command *OpenCommand
 
 		envReader  *fakes.FakeEnvReader
+		ui         *fakes.FakeUI
 		openRunner *fakes.FakeToolRunner
 		args       []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
+		ui = new(fakes.FakeUI)
 		openRunner = new(fakes.FakeToolRunner)
 		args = []string{"arg1", "arg2"}
 
 		command = &OpenCommand{
 			Env:        envReader,
+			UI:         ui,
 			OpenRunner: openRunner,
 			File:       true,
 		}
@@ -53,14 +57,35 @@ var _ = Describe("open command", func() {
 
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
-			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+			url, _ := url.Parse("www.test-cf.io")
+			envReader.ReadReturns(environment.Config{
+				OpsManager: environment.OpsManager{
+					URL:      *url,
+					Username: "test-username",
+					Password: "test-password"}},
+				nil)
+		})
+
+		It("prints out that it is opening the ops manager and details on username and password", func() {
+			Expect(ui.DisplayTextCallCount()).To(Equal(3))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Opening: www.test-cf.io\n"))
+			Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Username is: test-username\n"))
+			Expect(ui.DisplayTextArgsForCall(2)).To(Equal("Password is in the clipboard\n"))
 		})
 
 		It("runs the open tool using the retrieved environment config", func() {
 			Expect(openRunner.RunCallCount()).To(Equal(1))
 
 			environmentConfig, dryRun, args := openRunner.RunArgsForCall(0)
-			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
+
+			expectedUrl, _ := url.Parse("www.test-cf.io")
+			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{
+				OpsManager: environment.OpsManager{
+					URL:      *expectedUrl,
+					Username: "test-username",
+					Password: "test-password",
+				},
+			}))
 			Expect(dryRun).To(BeTrue())
 			Expect(args).To(HaveLen(0))
 		})
@@ -82,6 +107,19 @@ var _ = Describe("open command", func() {
 
 			It("propagates the error", func() {
 				Expect(err).To(MatchError("open-runnner-error"))
+			})
+		})
+
+		When("running in show mode", func() {
+			BeforeEach(func() {
+				command.Show = true
+			})
+
+			It("prints out the url, username and password for the ops manager", func() {
+				Expect(ui.DisplayTextCallCount()).To(Equal(3))
+				Expect(ui.DisplayTextArgsForCall(0)).To(Equal("www.test-cf.io\n"))
+				Expect(ui.DisplayTextArgsForCall(1)).To(Equal("username: test-username\n"))
+				Expect(ui.DisplayTextArgsForCall(2)).To(Equal("password: test-password\n"))
 			})
 		})
 	})
