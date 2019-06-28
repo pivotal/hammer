@@ -8,7 +8,9 @@ linters:
   - gochecknoinits
   - goconst
   - gocritic
+  - goimports
   - gosimple
+  - govet
   - ineffassign
   - interfacer
   - misspell
