@@ -13,7 +13,7 @@ $ git clone git@github.com:pivotal/hammer.git && cd hammer && go install
 
 ## Config
 
-In order to run the `hammer` tool against a given environment you need to create an environment config file in the following format:
+In order to run the `hammer` tool against a given environment you need to have an environment config file in the following format:
 ```json
 {
   "ert_cidr": "PAS-SUBNET-CIDR",
