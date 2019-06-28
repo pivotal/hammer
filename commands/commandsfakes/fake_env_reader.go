@@ -4,8 +4,8 @@ package commandsfakes
 import (
 	"sync"
 
-	"github.com/pivotal/pcf-cli/commands"
-	"github.com/pivotal/pcf-cli/environment"
+	"github.com/pivotal/hammer/commands"
+	"github.com/pivotal/hammer/environment"
 )
 
 type FakeEnvReader struct {

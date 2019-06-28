@@ -17,7 +17,7 @@ var pathToPcf string
 
 var _ = BeforeSuite(func() {
 	var err error
-	pathToPcf, err = Build("github.com/pivotal/pcf-cli/cmd/pcf")
+	pathToPcf, err = Build("github.com/pivotal/hammer/cmd/hammer")
 	Expect(err).NotTo(HaveOccurred())
 })
 

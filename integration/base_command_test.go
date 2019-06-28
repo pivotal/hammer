@@ -20,7 +20,7 @@ var _ = Describe("CLI", func() {
 
 			Eventually(session).Should(SatisfyAll(
 				Say(`Usage:`),
-				Say(`pcf \[OPTIONS\] <command>`),
+				Say(`hammer \[OPTIONS\] <command>`),
 				Say(`Application Options:`),
 				Say(`-t, --target= path to the target environment config`),
 				Say(`Help Options:`),
@@ -48,7 +48,7 @@ var _ = Describe("CLI", func() {
 
 			Eventually(session).Should(SatisfyAll(
 				Say(`Usage:`),
-				Say(`pcf \[OPTIONS\] <command>`),
+				Say(`hammer \[OPTIONS\] <command>`),
 				Say(`Application Options:`),
 				Say(`-t, --target= path to the target environment config`),
 				Say(`Help Options:`),

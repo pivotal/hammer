@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/pivotal/pcf-cli/sshuttle"
+	"github.com/pivotal/hammer/sshuttle"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/pivotal/pcf-cli/environment"
-	"github.com/pivotal/pcf-cli/scripting/scriptingfakes"
+	"github.com/pivotal/hammer/environment"
+	"github.com/pivotal/hammer/scripting/scriptingfakes"
 )
 
 var _ = Describe("sshuttle runner", func() {

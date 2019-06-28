@@ -1,19 +1,19 @@
-# pcf - wrapper CLI for interacting with PCF environments
-[![Build Status](https://travis-ci.com/pivotal/pcf-cli.svg?token=jUqzM7hyJNi7CRu5xyLL&branch=master)](https://travis-ci.com/pivotal/pcf-cli)
+# hammer - wrapper CLI for interacting with PCF environments
+[![Build Status](https://travis-ci.com/pivotal/hammer.svg?token=jUqzM7hyJNi7CRu5xyLL&branch=master)](https://travis-ci.com/pivotal/hammer)
 
 ## Installation
 
-The latest build of the `pcf` cli is available from the releases page.
+The latest build of the `hammer` cli is available from the releases page.
 Download the tar for your platform, untar it, and move it to your $PATH.
 
-Alternatively you can build `pcf` from source if you have Go:
+Alternatively you can build `hammer` from source if you have Go:
 ```bash
-$ git clone git@github.com:pivotal/pcf-cli.git && cd pcf-cli && go install github.com/pivotal/pcf-cli/cmd/pcf
+$ git clone git@github.com:pivotal/hammer.git && cd hammer && go install github.com/pivotal/hammer/cmd/hammer
 ```
 
 ## Config
 
-In order to run the `pcf` tool against a given environment you need to create an environment config file in the following format:
+In order to run the `hammer` tool against a given environment you need to create an environment config file in the following format:
 ```json
 {
   "ert_cidr": "PAS-SUBNET-CIDR",
@@ -30,7 +30,7 @@ In order to run the `pcf` tool against a given environment you need to create an
   "sys_domain": "PAS-SYSTEM-DOMAIN"
 }
 ```
-This file can then be passed into the tool via `pcf -t path-to-env-config.json <command>`.
+This file can then be passed into the tool via `hammer -t path-to-env-config.json <command>`.
 
 ## Development
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pivotal/pcf-cli/environment"
-	"github.com/pivotal/pcf-cli/scripting"
+	"github.com/pivotal/hammer/environment"
+	"github.com/pivotal/hammer/scripting"
 )
 
 type Runner struct {

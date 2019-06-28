@@ -1,10 +1,10 @@
 # Documentation at http://goreleaser.com
-project_name: pcf
+project_name: hammer
 before:
   hooks:
   - go mod download
 builds:
-- main: ./cmd/pcf/main.go
+- main: ./cmd/hammer/main.go
   goos:
   - darwin
   - linux

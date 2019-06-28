@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 
-	. "github.com/pivotal/pcf-cli/ui"
+	. "github.com/pivotal/hammer/ui"
 )
 
 var _ = Describe("ui", func() {

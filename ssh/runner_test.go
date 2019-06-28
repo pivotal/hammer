@@ -5,12 +5,12 @@ import (
 	"net"
 	"net/url"
 
-	"github.com/pivotal/pcf-cli/ssh"
+	"github.com/pivotal/hammer/ssh"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/pivotal/pcf-cli/environment"
-	"github.com/pivotal/pcf-cli/scripting/scriptingfakes"
+	"github.com/pivotal/hammer/environment"
+	"github.com/pivotal/hammer/scripting/scriptingfakes"
 )
 
 var _ = Describe("ssh runner", func() {

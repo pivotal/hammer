@@ -4,7 +4,7 @@ package commandsfakes
 import (
 	"sync"
 
-	"github.com/pivotal/pcf-cli/commands"
+	"github.com/pivotal/hammer/commands"
 )
 
 type FakeUI struct {

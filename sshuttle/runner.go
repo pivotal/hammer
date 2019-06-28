@@ -3,8 +3,8 @@ package sshuttle
 import (
 	"fmt"
 
-	"github.com/pivotal/pcf-cli/environment"
-	"github.com/pivotal/pcf-cli/scripting"
+	"github.com/pivotal/hammer/environment"
+	"github.com/pivotal/hammer/scripting"
 )
 
 type Runner struct {

@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
 
-	. "github.com/pivotal/pcf-cli/environment"
+	. "github.com/pivotal/hammer/environment"
 )
 
 var _ = Describe("Config", func() {

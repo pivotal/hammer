@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pivotal/pcf-cli/ui"
+	"github.com/pivotal/hammer/ui"
 
-	"github.com/pivotal/pcf-cli/environment"
+	"github.com/pivotal/hammer/environment"
 
 	flags "github.com/jessevdk/go-flags"
 
-	"github.com/pivotal/pcf-cli/bosh"
-	"github.com/pivotal/pcf-cli/cf"
-	"github.com/pivotal/pcf-cli/commands"
-	"github.com/pivotal/pcf-cli/om"
-	"github.com/pivotal/pcf-cli/open"
-	"github.com/pivotal/pcf-cli/scripting"
-	"github.com/pivotal/pcf-cli/ssh"
-	"github.com/pivotal/pcf-cli/sshuttle"
+	"github.com/pivotal/hammer/bosh"
+	"github.com/pivotal/hammer/cf"
+	"github.com/pivotal/hammer/commands"
+	"github.com/pivotal/hammer/om"
+	"github.com/pivotal/hammer/open"
+	"github.com/pivotal/hammer/scripting"
+	"github.com/pivotal/hammer/ssh"
+	"github.com/pivotal/hammer/sshuttle"
 )
 
 var (
@@ -34,7 +34,7 @@ func (c *versionCommand) Execute(args []string) error {
 
 type targetConfigPath struct{}
 
-// If `-t` is specified on the pcf command (rather than a subcommand)
+// If `-t` is specified on the hammer command (rather than a subcommand)
 // then set `TARGET_ENVIRONMENT_CONFIG` so the subcommand can read it
 func (e *targetConfigPath) UnmarshalFlag(path string) error {
 	return os.Setenv("TARGET_ENVIRONMENT_CONFIG", path)
@@ -123,5 +123,5 @@ func main() {
 
 func printDoubleDashMessage() {
 	fmt.Fprintf(os.Stderr, "\nIf passing flags to 'bosh' or 'om', use a double dash '--', for example:\n")
-	fmt.Fprintf(os.Stderr, "\n  pcf -t environment-path bosh -- -d deployment manifest\n")
+	fmt.Fprintf(os.Stderr, "\n  hammer -t environment-path bosh -- -d deployment manifest\n")
 }

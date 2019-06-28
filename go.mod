@@ -1,4 +1,4 @@
-module github.com/pivotal/pcf-cli
+module github.com/pivotal/hammer
 
 go 1.12
 

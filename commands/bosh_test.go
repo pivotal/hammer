@@ -5,10 +5,10 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	fakes "github.com/pivotal/pcf-cli/commands/commandsfakes"
-	"github.com/pivotal/pcf-cli/environment"
+	fakes "github.com/pivotal/hammer/commands/commandsfakes"
+	"github.com/pivotal/hammer/environment"
 
-	. "github.com/pivotal/pcf-cli/commands"
+	. "github.com/pivotal/hammer/commands"
 )
 
 var _ = Describe("Bosh command", func() {
