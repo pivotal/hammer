@@ -8,7 +8,7 @@ Download the tar for your platform, untar it, and move it to your $PATH.
 
 Alternatively you can build `hammer` from source if you have Go:
 ```bash
-$ git clone git@github.com:pivotal/hammer.git && cd hammer && go install github.com/pivotal/hammer/cmd/hammer
+$ git clone git@github.com:pivotal/hammer.git && cd hammer && go install
 ```
 
 ## Config

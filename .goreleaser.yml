@@ -4,7 +4,7 @@ before:
   hooks:
   - go mod download
 builds:
-- main: ./cmd/hammer/main.go
+- main: ./main.go
   goos:
   - darwin
   - linux
