@@ -31,7 +31,7 @@ var _ = Describe("CLI", func() {
 				Say(`completion  command completion script`),
 				Say(`om          run the 'om' command with credentials for this environment`),
 				Say(`open        open a browser to this environment`),
-				Say(`ssh         open an ssh connection to the ops manager of this environment`),
+				Say(`ssh         open an ssh connection to the ops manager or director of this environment`),
 				Say(`sshuttle    sshuttle to this environment`),
 				Say(`version     version of command \(aliases: ver\)`),
 			))
@@ -59,7 +59,7 @@ var _ = Describe("CLI", func() {
 				Say(`completion  command completion script`),
 				Say(`om          run the 'om' command with credentials for this environment`),
 				Say(`open        open a browser to this environment`),
-				Say(`ssh         open an ssh connection to the ops manager of this environment`),
+				Say(`ssh         open an ssh connection to the ops manager or director of this environment`),
 				Say(`sshuttle    sshuttle to this environment`),
 				Say(`version     version of command \(aliases: ver\)`),
 			))
