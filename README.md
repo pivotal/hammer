@@ -43,3 +43,7 @@ Linters can also be run using [golangci-lint](https://github.com/golangci/golang
 ```bash
 $ golangci-lint run
 ```
+
+---
+
+Special thanks to @blgm for letting an internal tool he created serve as the basis for this tool.
