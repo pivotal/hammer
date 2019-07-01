@@ -37,7 +37,6 @@ var _ = Describe("bosh runner", func() {
 				Password:   "password",
 			},
 		}
-		dryRun = true
 
 		boshRunner = bosh.Runner{
 			ScriptRunner: scriptRunner,
@@ -56,7 +55,7 @@ var _ = Describe("bosh runner", func() {
 		It("runs the script with a series of bosh env var echos", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
-			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
+			lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 			Expect(lines).To(Equal([]string{
 				`ssh_key_path=$(mktemp)`,
 				`echo "private-key-contents" >"$ssh_key_path"`,
@@ -88,9 +87,6 @@ var _ = Describe("bosh runner", func() {
 				`echo "export CREDHUB_CA_CERT=\"\${BOSH_CA_CERT}\""`,
 			}))
 
-			Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
-			Expect(dryRun).To(Equal(true))
-
 			Expect(err).NotTo(HaveOccurred())
 		})
 	})
@@ -98,13 +94,12 @@ var _ = Describe("bosh runner", func() {
 	When("one or more bosh args are passed to the bosh runner", func() {
 		BeforeEach(func() {
 			boshArgs = []string{"arg1", "arg2", "arg3"}
-			dryRun = false
 		})
 
 		It("runs the script with a bosh command", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
-			lines, prereqs, dryRun := scriptRunner.RunScriptArgsForCall(0)
+			lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 
 			Expect(lines).To(Equal([]string{
 				`ssh_key_path=$(mktemp)`,
@@ -129,10 +124,41 @@ var _ = Describe("bosh runner", func() {
 				`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh arg1 arg2 arg3`,
 			}))
 
-			Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
-			Expect(dryRun).To(Equal(false))
-
 			Expect(err).NotTo(HaveOccurred())
+		})
+	})
+
+	It("specifies the appropriate prerequisites when running the script", func() {
+		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+
+		_, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
+
+		Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
+	})
+
+	When("run with dry run set to false", func() {
+		BeforeEach(func() {
+			dryRun = false
+		})
+
+		It("runs the script in dry run mode", func() {
+			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+
+			_, _, dryRun := scriptRunner.RunScriptArgsForCall(0)
+			Expect(dryRun).To(Equal(false))
+		})
+	})
+
+	When("run with dry run set to true", func() {
+		BeforeEach(func() {
+			dryRun = true
+		})
+
+		It("runs the script in dry run mode", func() {
+			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+
+			_, _, dryRun := scriptRunner.RunScriptArgsForCall(0)
+			Expect(dryRun).To(Equal(true))
 		})
 	})
 
