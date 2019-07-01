@@ -4,20 +4,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pivotal/hammer/ui"
-
-	"github.com/pivotal/hammer/environment"
-
 	flags "github.com/jessevdk/go-flags"
 
 	"github.com/pivotal/hammer/bosh"
 	"github.com/pivotal/hammer/cf"
 	"github.com/pivotal/hammer/commands"
+	"github.com/pivotal/hammer/environment"
 	"github.com/pivotal/hammer/om"
 	"github.com/pivotal/hammer/open"
 	"github.com/pivotal/hammer/scripting"
 	"github.com/pivotal/hammer/ssh"
 	"github.com/pivotal/hammer/sshuttle"
+	"github.com/pivotal/hammer/ui"
 )
 
 var (
