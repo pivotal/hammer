@@ -23,6 +23,14 @@ var (
 	date    = "unknown date"
 )
 
+type timeCommand struct {
+}
+
+func (c *timeCommand) Execute(args []string) error {
+	fmt.Print("Can't touch this")
+	return nil
+}
+
 type versionCommand struct{}
 
 func (c *versionCommand) Execute(args []string) error {
@@ -45,6 +53,7 @@ type options struct {
 	OM           commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
 	SSH          commands.SSHCommand        `command:"ssh" description:"open an ssh connection to the ops manager of this environment"`
 	Sshuttle     commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
+	Time         timeCommand                `command:"time" description:"duuun dundundun" hidden:"true"`
 	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
 	Completion   commands.CompletionCommand `command:"completion" description:"command completion script"`
 	TargetConfig targetConfigPath           `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" description:"path to the target environment config"`
@@ -98,6 +107,7 @@ func main() {
 				ScriptRunner: scriptRunner,
 			},
 		},
+		Time: timeCommand{},
 	}
 
 	if len(os.Args) < 2 {
