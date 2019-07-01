@@ -13,10 +13,10 @@ import (
 	"github.com/pivotal/hammer/scripting/scriptingfakes"
 )
 
-var _ = Describe("ssh runner", func() {
+var _ = Describe("ops manager ssh runner", func() {
 	var (
 		err          error
-		sshRunner    ssh.Runner
+		sshRunner    ssh.OpsManagerRunner
 		scriptRunner *scriptingfakes.FakeScriptRunner
 
 		data   environment.Config
@@ -37,7 +37,7 @@ var _ = Describe("ssh runner", func() {
 			},
 		}
 
-		sshRunner = ssh.Runner{
+		sshRunner = ssh.OpsManagerRunner{
 			ScriptRunner: scriptRunner,
 		}
 	})

@@ -43,7 +43,7 @@ type options struct {
 	CFLogin      commands.CFLoginCommand    `command:"cf-login" description:"log in to the cf for the environment"`
 	Open         commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
 	OM           commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
-	SSH          commands.SSHCommand        `command:"ssh" description:"open an ssh connection to the ops manager of this environment"`
+	SSH          commands.SSHCommand        `command:"ssh" subcommands-optional:"true" choice:"opsman" choice:"director" description:"open an ssh connection to the ops manager or director of this environment"`
 	Sshuttle     commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
 	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
 	Completion   commands.CompletionCommand `command:"completion" description:"command completion script"`
@@ -86,10 +86,19 @@ func main() {
 			},
 		},
 		SSH: commands.SSHCommand{
-			Env: &envReader,
-			UI:  &ui,
-			SSHRunner: &ssh.Runner{
-				ScriptRunner: scriptRunner,
+			OpsManager: commands.SSHOpsManagerCommand{
+				Env: &envReader,
+				UI:  &ui,
+				SSHRunner: &ssh.OpsManagerRunner{
+					ScriptRunner: scriptRunner,
+				},
+			},
+			Director: commands.SSHDirectorCommand{
+				Env: &envReader,
+				UI:  &ui,
+				SSHRunner: &ssh.DirectorRunner{
+					ScriptRunner: scriptRunner,
+				},
 			},
 		},
 		Sshuttle: commands.SshuttleCommand{

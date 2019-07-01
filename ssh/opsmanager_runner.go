@@ -7,11 +7,11 @@ import (
 	"github.com/pivotal/hammer/scripting"
 )
 
-type Runner struct {
+type OpsManagerRunner struct {
 	ScriptRunner scripting.ScriptRunner
 }
 
-func (b Runner) Run(data environment.Config, dryRun bool, args ...string) error {
+func (b OpsManagerRunner) Run(data environment.Config, dryRun bool, args ...string) error {
 	sshCommand := fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"%s"`, data.OpsManager.IP.String())
 
 	sshCommandLines := []string{
