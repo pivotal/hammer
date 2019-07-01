@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 
 	"github.com/pivotal/hammer/bosh"
 	"github.com/pivotal/hammer/cf"
