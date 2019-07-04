@@ -16,15 +16,15 @@ var _ = Describe("om command", func() {
 		err     error
 		command *OMCommand
 
-		envReader *fakes.FakeEnvReader
-		omRunner  *fakes.FakeToolRunner
-		args      []string
+		envReader   *fakes.FakeEnvReader
+		omRunner    *fakes.FakeToolRunner
+		commandArgs []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
 		omRunner = new(fakes.FakeToolRunner)
-		args = []string{"arg1", "arg2"}
+		commandArgs = []string{"arg1", "arg2"}
 
 		command = &OMCommand{
 			Env:      envReader,
@@ -34,7 +34,7 @@ var _ = Describe("om command", func() {
 	})
 
 	JustBeforeEach(func() {
-		err = command.Execute(args)
+		err = command.Execute(commandArgs)
 	})
 
 	When("retrieving the environment config errors", func() {
@@ -59,9 +59,40 @@ var _ = Describe("om command", func() {
 		It("runs the om tool using the retrieved environment config", func() {
 			Expect(omRunner.RunCallCount()).To(Equal(1))
 
-			environmentConfig, dryRun, args := omRunner.RunArgsForCall(0)
+			environmentConfig, _, _ := omRunner.RunArgsForCall(0)
 			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
-			Expect(dryRun).To(BeTrue())
+		})
+
+		When("run with the file flag set", func() {
+			BeforeEach(func() {
+				command.File = true
+			})
+
+			It("runs the om tool in dry run mode", func() {
+				Expect(omRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := omRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeTrue())
+			})
+		})
+
+		When("run with the file flag unset", func() {
+			BeforeEach(func() {
+				command.File = false
+			})
+
+			It("runs the om tool in non-dry run mode", func() {
+				Expect(omRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := omRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeFalse())
+			})
+		})
+
+		It("runs the om tool using the supplied command args", func() {
+			Expect(omRunner.RunCallCount()).To(Equal(1))
+
+			_, _, args := omRunner.RunArgsForCall(0)
 			Expect(args).To(BeEquivalentTo([]string{"arg1", "arg2"}))
 		})
 

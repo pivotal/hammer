@@ -18,13 +18,13 @@ var _ = Describe("sshuttle command", func() {
 
 		envReader      *fakes.FakeEnvReader
 		sshuttleRunner *fakes.FakeToolRunner
-		args           []string
+		commandArgs    []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
 		sshuttleRunner = new(fakes.FakeToolRunner)
-		args = []string{"arg1", "arg2"}
+		commandArgs = []string{"arg1", "arg2"}
 
 		command = &SshuttleCommand{
 			Env:            envReader,
@@ -34,7 +34,7 @@ var _ = Describe("sshuttle command", func() {
 	})
 
 	JustBeforeEach(func() {
-		err = command.Execute(args)
+		err = command.Execute(commandArgs)
 	})
 
 	When("retrieving the environment config errors", func() {
@@ -59,10 +59,41 @@ var _ = Describe("sshuttle command", func() {
 		It("runs the sshuttle tool using the retrieved environment config", func() {
 			Expect(sshuttleRunner.RunCallCount()).To(Equal(1))
 
-			environmentConfig, dryRun, args := sshuttleRunner.RunArgsForCall(0)
+			environmentConfig, _, _ := sshuttleRunner.RunArgsForCall(0)
 			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
-			Expect(dryRun).To(BeTrue())
-			Expect(args).To(HaveLen(0))
+		})
+
+		When("run with the file flag set", func() {
+			BeforeEach(func() {
+				command.File = true
+			})
+
+			It("runs the sshuttle tool in dry run mode", func() {
+				Expect(sshuttleRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := sshuttleRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeTrue())
+			})
+		})
+
+		When("run with the file flag unset", func() {
+			BeforeEach(func() {
+				command.File = false
+			})
+
+			It("runs the sshuttle tool in non-dry run mode", func() {
+				Expect(sshuttleRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := sshuttleRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeFalse())
+			})
+		})
+
+		It("runs the sshuttle tool using the supplied command args", func() {
+			Expect(sshuttleRunner.RunCallCount()).To(Equal(1))
+
+			_, _, args := sshuttleRunner.RunArgsForCall(0)
+			Expect(args).To(BeEmpty())
 		})
 
 		When("running the sshuttle tool is successful", func() {

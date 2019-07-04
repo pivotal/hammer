@@ -20,14 +20,14 @@ var _ = Describe("cf login command", func() {
 		envReader     *fakes.FakeEnvReader
 		ui            *fakes.FakeUI
 		cfLoginRunner *fakes.FakeToolRunner
-		args          []string
+		commandArgs   []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
 		ui = new(fakes.FakeUI)
 		cfLoginRunner = new(fakes.FakeToolRunner)
-		args = []string{"arg1", "arg2"}
+		commandArgs = []string{"arg1", "arg2"}
 
 		command = &CFLoginCommand{
 			Env:           envReader,
@@ -38,7 +38,7 @@ var _ = Describe("cf login command", func() {
 	})
 
 	JustBeforeEach(func() {
-		err = command.Execute(args)
+		err = command.Execute(commandArgs)
 	})
 
 	When("retrieving the environment config errors", func() {
@@ -69,12 +69,43 @@ var _ = Describe("cf login command", func() {
 		It("runs the cf login tool using the retrieved environment config", func() {
 			Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
 
-			environmentConfig, dryRun, args := cfLoginRunner.RunArgsForCall(0)
+			environmentConfig, _, _ := cfLoginRunner.RunArgsForCall(0)
 
 			expectedUrl, _ := url.Parse("www.test-cf.io")
 			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{OpsManager: environment.OpsManager{URL: *expectedUrl}}))
-			Expect(dryRun).To(BeTrue())
-			Expect(args).To(HaveLen(0))
+		})
+
+		When("run with the file flag set", func() {
+			BeforeEach(func() {
+				command.File = true
+			})
+
+			It("runs the cf login tool in dry run mode", func() {
+				Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := cfLoginRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeTrue())
+			})
+		})
+
+		When("run with the file flag unset", func() {
+			BeforeEach(func() {
+				command.File = false
+			})
+
+			It("runs the cf login tool in non-dry run mode", func() {
+				Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := cfLoginRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeFalse())
+			})
+		})
+
+		It("runs the cf login tool with no additional args", func() {
+			Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+
+			_, _, args := cfLoginRunner.RunArgsForCall(0)
+			Expect(args).To(BeEmpty())
 		})
 
 		When("running the cf login tool is successful", func() {

@@ -17,17 +17,17 @@ var _ = Describe("open command", func() {
 		err     error
 		command *OpenCommand
 
-		envReader  *fakes.FakeEnvReader
-		ui         *fakes.FakeUI
-		openRunner *fakes.FakeToolRunner
-		args       []string
+		envReader   *fakes.FakeEnvReader
+		ui          *fakes.FakeUI
+		openRunner  *fakes.FakeToolRunner
+		commandArgs []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
 		ui = new(fakes.FakeUI)
 		openRunner = new(fakes.FakeToolRunner)
-		args = []string{"arg1", "arg2"}
+		commandArgs = []string{"arg1", "arg2"}
 
 		command = &OpenCommand{
 			Env:        envReader,
@@ -38,7 +38,7 @@ var _ = Describe("open command", func() {
 	})
 
 	JustBeforeEach(func() {
-		err = command.Execute(args)
+		err = command.Execute(commandArgs)
 	})
 
 	When("retrieving the environment config errors", func() {
@@ -76,7 +76,7 @@ var _ = Describe("open command", func() {
 		It("runs the open tool using the retrieved environment config", func() {
 			Expect(openRunner.RunCallCount()).To(Equal(1))
 
-			environmentConfig, dryRun, args := openRunner.RunArgsForCall(0)
+			environmentConfig, _, _ := openRunner.RunArgsForCall(0)
 
 			expectedUrl, _ := url.Parse("www.test-cf.io")
 			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{
@@ -86,8 +86,39 @@ var _ = Describe("open command", func() {
 					Password: "test-password",
 				},
 			}))
-			Expect(dryRun).To(BeTrue())
-			Expect(args).To(HaveLen(0))
+		})
+
+		When("run with the file flag set", func() {
+			BeforeEach(func() {
+				command.File = true
+			})
+
+			It("runs the open tool in dry run mode", func() {
+				Expect(openRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := openRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeTrue())
+			})
+		})
+
+		When("run with the file flag unset", func() {
+			BeforeEach(func() {
+				command.File = false
+			})
+
+			It("runs the open tool in non-dry run mode", func() {
+				Expect(openRunner.RunCallCount()).To(Equal(1))
+
+				_, dryRun, _ := openRunner.RunArgsForCall(0)
+				Expect(dryRun).To(BeFalse())
+			})
+		})
+
+		It("runs the open tool using the supplied command args", func() {
+			Expect(openRunner.RunCallCount()).To(Equal(1))
+
+			_, _, args := openRunner.RunArgsForCall(0)
+			Expect(args).To(BeEmpty())
 		})
 
 		When("running the open tool is successful", func() {
