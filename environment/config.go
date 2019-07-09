@@ -68,8 +68,9 @@ func FromFile(path string) (Config, error) {
 }
 
 func newLockfile(data environmentReader) (Config, error) {
-	parsedVersion := &version.Version{}
 	var err error
+
+	parsedVersion := &version.Version{}
 	if data.Version != "" {
 		parsedVersion, err = version.NewVersion(data.Version)
 		if err != nil {
@@ -87,19 +88,28 @@ func newLockfile(data environmentReader) (Config, error) {
 		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
 	}
 
-	_, opsManCIDR, err := net.ParseCIDR(data.OpsManCIDR)
-	if err != nil {
-		return Config{}, err
+	opsManCIDR := &net.IPNet{}
+	if data.OpsManCIDR != "" {
+		_, opsManCIDR, err = net.ParseCIDR(data.OpsManCIDR)
+		if err != nil {
+			return Config{}, err
+		}
 	}
 
-	_, pasCIDR, err := net.ParseCIDR(data.PasCIDR)
-	if err != nil {
-		return Config{}, err
+	pasCIDR := &net.IPNet{}
+	if data.OpsManCIDR != "" {
+		_, pasCIDR, err = net.ParseCIDR(data.PasCIDR)
+		if err != nil {
+			return Config{}, err
+		}
 	}
 
-	_, servicesCIDR, err := net.ParseCIDR(data.ServicesCIDR)
-	if err != nil {
-		return Config{}, err
+	servicesCIDR := &net.IPNet{}
+	if data.OpsManCIDR != "" {
+		_, servicesCIDR, err = net.ParseCIDR(data.ServicesCIDR)
+		if err != nil {
+			return Config{}, err
+		}
 	}
 
 	return Config{

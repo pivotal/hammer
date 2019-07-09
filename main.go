@@ -23,8 +23,7 @@ var (
 	date    = "unknown date"
 )
 
-type timeCommand struct {
-}
+type timeCommand struct{}
 
 func (c *timeCommand) Execute(args []string) error {
 	fmt.Print("Can't touch this")
