@@ -3,6 +3,7 @@ package sshuttle_test
 import (
 	"fmt"
 	"net"
+	"net/url"
 
 	"github.com/pivotal/hammer/sshuttle"
 
@@ -25,18 +26,15 @@ var _ = Describe("sshuttle runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		_, omCIDR, _ := net.ParseCIDR("10.0.0.0/24")
-		_, pasCIDR, _ := net.ParseCIDR("10.0.4.0/24")
-		_, servicesCIDR, _ := net.ParseCIDR("10.0.8.0/24")
-
+		url, _ := url.Parse("www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
 				PrivateKey: "private-key-contents",
 				IP:         net.ParseIP("10.0.0.6"),
-				CIDR:       *omCIDR,
+				URL:        *url,
+				Username:   "username",
+				Password:   "password",
 			},
-			PasCIDR:      *pasCIDR,
-			ServicesCIDR: *servicesCIDR,
 		}
 
 		sshuttleRunner = sshuttle.Runner{
@@ -57,7 +55,8 @@ var _ = Describe("sshuttle runner", func() {
 			`echo "private-key-contents" >"$ssh_key_path"`,
 			`trap 'rm -f ${ssh_key_path}' EXIT`,
 			`chmod 0600 "${ssh_key_path}"`,
-			`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" 10.0.0.0/24 10.0.4.0/24 10.0.8.0/24`,
+			`cidrs="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/director/networks | jq -r .networks[].subnets[].cidr | xargs echo)"`,
+			`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" ${cidrs}`,
 		}))
 	})
 
