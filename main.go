@@ -25,14 +25,14 @@ var (
 
 type timeCommand struct{}
 
-func (c *timeCommand) Execute(args []string) error {
+func (c *timeCommand) Execute([]string) error {
 	fmt.Print("Can't touch this")
 	return nil
 }
 
 type versionCommand struct{}
 
-func (c *versionCommand) Execute(args []string) error {
+func (c *versionCommand) Execute([]string) error {
 	fmt.Printf("Version: %s (%s)\n", version, date)
 	return nil
 }
