@@ -71,8 +71,8 @@ var _ = Describe("cf login command", func() {
 
 			environmentConfig, _, _ := cfLoginRunner.RunArgsForCall(0)
 
-			expectedUrl, _ := url.Parse("www.test-cf.io")
-			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{OpsManager: environment.OpsManager{URL: *expectedUrl}}))
+			expectedURL, _ := url.Parse("www.test-cf.io")
+			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{OpsManager: environment.OpsManager{URL: *expectedURL}}))
 		})
 
 		When("run with the file flag set", func() {

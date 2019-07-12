@@ -78,10 +78,10 @@ var _ = Describe("open command", func() {
 
 			environmentConfig, _, _ := openRunner.RunArgsForCall(0)
 
-			expectedUrl, _ := url.Parse("www.test-cf.io")
+			expectedURL, _ := url.Parse("www.test-cf.io")
 			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{
 				OpsManager: environment.OpsManager{
-					URL:      *expectedUrl,
+					URL:      *expectedURL,
 					Username: "test-username",
 					Password: "test-password",
 				},

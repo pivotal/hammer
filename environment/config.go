@@ -78,7 +78,7 @@ func newLockfile(data environmentReader) (Config, error) {
 		}
 	}
 
-	parsedUrl, err := url.Parse(data.OpsManager.URL)
+	parsedURL, err := url.Parse(data.OpsManager.URL)
 	if err != nil {
 		return Config{}, err
 	}
@@ -125,7 +125,7 @@ func newLockfile(data environmentReader) (Config, error) {
 		OpsManager: OpsManager{
 			Username:   data.OpsManager.Username,
 			Password:   data.OpsManager.Password,
-			URL:        *parsedUrl,
+			URL:        *parsedURL,
 			IP:         ip,
 			CIDR:       *opsManCIDR,
 			PrivateKey: data.PrivateKey,
