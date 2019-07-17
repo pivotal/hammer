@@ -33,6 +33,8 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		fmt.Sprintf(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@%s:22?private-key=${ssh_key_path}"`, data.OpsManager.IP.String()),
 	}
 
+	prereqs := []string{"jq", "om", "ssh"}
+
 	if len(boshArgs) > 0 {
 		lines = append(
 			lines,
@@ -40,6 +42,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 			fmt.Sprintf(`trap 'rm -f ${bosh_ca_path}' EXIT`),
 			fmt.Sprintf(`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh %s`, strings.Join(boshArgs, " ")),
 		)
+		prereqs = append(prereqs, "bosh")
 	} else {
 		lines = append(
 			lines,
@@ -57,5 +60,5 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		)
 	}
 
-	return r.ScriptRunner.RunScript(lines, []string{"jq", "om", "ssh", "bosh"}, dryRun)
+	return r.ScriptRunner.RunScript(lines, prereqs, dryRun)
 }

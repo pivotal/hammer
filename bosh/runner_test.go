@@ -37,6 +37,7 @@ var _ = Describe("bosh runner", func() {
 				Password:   "password",
 			},
 		}
+		boshArgs = []string{}
 
 		boshRunner = bosh.Runner{
 			ScriptRunner: scriptRunner,
@@ -48,10 +49,6 @@ var _ = Describe("bosh runner", func() {
 	})
 
 	When("no bosh args are passed to the bosh runner", func() {
-		BeforeEach(func() {
-			boshArgs = []string{}
-		})
-
 		It("runs the script with a series of bosh env var echos", func() {
 			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
@@ -89,6 +86,15 @@ var _ = Describe("bosh runner", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 		})
+
+		It("specifies the appropriate prerequisites when running the script", func() {
+			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+
+			_, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
+
+			Expect(prereqs).To(ConsistOf("jq", "om", "ssh"))
+		})
+
 	})
 
 	When("one or more bosh args are passed to the bosh runner", func() {
@@ -126,14 +132,15 @@ var _ = Describe("bosh runner", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 		})
-	})
 
-	It("specifies the appropriate prerequisites when running the script", func() {
-		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+		It("specifies the appropriate prerequisites when running the script", func() {
+			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 
-		_, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
+			_, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
 
-		Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
+			Expect(prereqs).To(ConsistOf("jq", "om", "ssh", "bosh"))
+		})
+
 	})
 
 	When("run with dry run set to false", func() {
