@@ -16,17 +16,14 @@ $ git clone git@github.com:pivotal/hammer.git && cd hammer && go install
 In order to run the `hammer` tool against a given environment you need to have an environment config file in the following format:
 ```json
 {
-  "ert_cidr": "PAS-SUBNET-CIDR",
   "name": "ENVIRONMENT-NAME",
   "ops_manager": {
     "url": "OPSMAN-FQDN",
     "username": "OPSMAN-USERNAME",
     "password": "OPSMAN-PASSWORD"
   },
-  "ops_manager_cidr": "OPSMAN-SUBNET-CIDR",
   "ops_manager_private_key": "OPSMAN-RSA-PRIVATE-KEY",
   "ops_manager_public_ip": "OPSMAN-PUBLIC-IP",
-  "services_cidr": "SERVICES-SUBNET-CIDR",
   "sys_domain": "PAS-SYSTEM-DOMAIN"
 }
 ```
