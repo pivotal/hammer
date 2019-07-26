@@ -43,4 +43,4 @@ $ golangci-lint run
 
 ---
 
-Special thanks to @blgm for letting an internal tool he created serve as the basis for this tool.
+Special thanks to [@blgm](https://github.com/blgm) for letting an internal tool he created serve as the basis for this tool.
