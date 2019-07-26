@@ -25,7 +25,6 @@ type OpsManager struct {
 	Password   string
 	URL        url.URL
 	IP         net.IP
-	CIDR       net.IPNet
 	PrivateKey string
 }
 
@@ -35,9 +34,7 @@ type Config struct {
 	CFDomain      string
 	AppsDomain    string
 	OpsManager    OpsManager
-	PasCIDR       net.IPNet
 	PasSubnet     string
-	ServicesCIDR  net.IPNet
 	ServiceSubnet string
 	AZs           []string
 }
@@ -49,10 +46,7 @@ type environmentReader struct {
 	AppsDomain    string   `json:"apps_domain"`
 	PrivateKey    string   `json:"ops_manager_private_key"`
 	IP            string   `json:"ops_manager_public_ip"`
-	OpsManCIDR    string   `json:"ops_manager_cidr"`
-	PasCIDR       string   `json:"ert_cidr"`
 	PasSubnet     string   `json:"ert_subnet"`
-	ServicesCIDR  string   `json:"services_cidr"`
 	ServiceSubnet string   `json:"service_subnet_name"`
 	AZs           []string `json:"azs"`
 	OpsManager    struct {
@@ -98,38 +92,12 @@ func newLockfile(data environmentReader) (Config, error) {
 		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
 	}
 
-	opsManCIDR := &net.IPNet{}
-	if data.OpsManCIDR != "" {
-		_, opsManCIDR, err = net.ParseCIDR(data.OpsManCIDR)
-		if err != nil {
-			return Config{}, err
-		}
-	}
-
-	pasCIDR := &net.IPNet{}
-	if data.OpsManCIDR != "" {
-		_, pasCIDR, err = net.ParseCIDR(data.PasCIDR)
-		if err != nil {
-			return Config{}, err
-		}
-	}
-
-	servicesCIDR := &net.IPNet{}
-	if data.OpsManCIDR != "" {
-		_, servicesCIDR, err = net.ParseCIDR(data.ServicesCIDR)
-		if err != nil {
-			return Config{}, err
-		}
-	}
-
 	return Config{
 		Name:          data.Name,
 		Version:       *parsedVersion,
 		CFDomain:      data.SysDomain,
 		AppsDomain:    data.AppsDomain,
-		PasCIDR:       *pasCIDR,
 		PasSubnet:     data.PasSubnet,
-		ServicesCIDR:  *servicesCIDR,
 		ServiceSubnet: data.ServiceSubnet,
 		AZs:           data.AZs,
 		OpsManager: OpsManager{
@@ -137,7 +105,6 @@ func newLockfile(data environmentReader) (Config, error) {
 			Password:   data.OpsManager.Password,
 			URL:        *parsedURL,
 			IP:         ip,
-			CIDR:       *opsManCIDR,
 			PrivateKey: data.PrivateKey,
 		},
 	}, nil
