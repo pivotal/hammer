@@ -28,12 +28,19 @@ type OpsManager struct {
 	PrivateKey string
 }
 
+type PKSApi struct {
+	Username string
+	Password string
+	URL      url.URL
+}
+
 type Config struct {
 	Name          string
 	Version       version.Version
 	CFDomain      string
 	AppsDomain    string
 	OpsManager    OpsManager
+	PKSApi        PKSApi
 	PasSubnet     string
 	ServiceSubnet string
 	AZs           []string
@@ -54,6 +61,11 @@ type environmentReader struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	} `json:"ops_manager"`
+	PKSApi struct {
+		Username string `json:"uaa_admin_user"`
+		Password string `json:"uaa_admin_password"`
+		URL      string `json:"url"`
+	} `json:"pks_api"`
 }
 
 func FromFile(path string) (Config, error) {
@@ -82,14 +94,14 @@ func newLockfile(data environmentReader) (Config, error) {
 		}
 	}
 
-	parsedURL, err := url.Parse(data.OpsManager.URL)
+	parsedOpsManagerURL, OpsManagerIp, err := parseUrl(data.OpsManager.URL, data)
 	if err != nil {
 		return Config{}, err
 	}
 
-	ip := net.ParseIP(data.IP)
-	if ip == nil {
-		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
+	parsedPKSApiURL, _, err := parseUrl(data.PKSApi.URL, data)
+	if err != nil {
+		return Config{}, err
 	}
 
 	return Config{
@@ -103,9 +115,26 @@ func newLockfile(data environmentReader) (Config, error) {
 		OpsManager: OpsManager{
 			Username:   data.OpsManager.Username,
 			Password:   data.OpsManager.Password,
-			URL:        *parsedURL,
-			IP:         ip,
+			URL:        *parsedOpsManagerURL,
+			IP:         OpsManagerIp,
 			PrivateKey: data.PrivateKey,
 		},
+		PKSApi: PKSApi{
+			Username: data.PKSApi.Username,
+			Password: data.PKSApi.Password,
+			URL:      *parsedPKSApiURL,
+		},
 	}, nil
+}
+
+func parseUrl(urlToParse string, data environmentReader) (*url.URL, net.IP, error) {
+	parsedURL, err := url.Parse(urlToParse)
+	if err != nil {
+		return nil, nil, err
+	}
+	ip := net.ParseIP(data.IP)
+	if ip == nil {
+		return nil, nil, fmt.Errorf("Could not parse IP address: %s", data.IP)
+	}
+	return parsedURL, ip, nil
 }

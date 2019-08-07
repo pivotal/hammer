@@ -24,7 +24,10 @@ In order to run the `hammer` tool against a given environment you need to have a
   },
   "ops_manager_private_key": "OPSMAN-RSA-PRIVATE-KEY",
   "ops_manager_public_ip": "OPSMAN-PUBLIC-IP",
-  "sys_domain": "PAS-SYSTEM-DOMAIN"
+  "sys_domain": "PAS-SYSTEM-DOMAIN",
+  "pks_api":  {
+     "url": "PKS-API-FQDN"
+  }
 }
 ```
 This file can then be passed into the tool via `hammer -t path-to-env-config.json <command>`.

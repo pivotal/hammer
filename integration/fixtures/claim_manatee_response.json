@@ -32,6 +32,11 @@
   "ops_manager_public_key": "ubuntu:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDGPKi11B84ogwuGf4Zmq8/VJjvCxgLcpSLD5xuL0FDR1TCA1aeMidb9Pi/DKMfUORry0XbpllgWSbs3YbIEG6FFJEKe68zra/pJSyHH8UE41eULLGWP0ybdAPv5Tvq5D/g1ZtYUnX0jye333akVddM3qh52Dthye0+VKVt4MOH+q2XBLFQ66rhDd6U65MI9YzVpoPVam2WYngGY0a+Am+eo9pww36zk0/osDzLrD57hg3A0v+Otft7l/EiV6elTqLJxHg8BpO0bxWCdBFyJ/i0v+upfrbSgiMAP1QXjZkcSdDeLg0bS5QFX8Nei1/ZjvIHWQHwSUxDfIi67ly+BNmgQHuR2FPFemEkx7EqicV7TWuxfEevMc1edFFkdtzKv1tG8yQEtxPhX6tamz4TBmsu2a5fZ8er47bTI4x7tgCJdNEjhsDVlA1jsqU82i7JLjfXFhbu1hwfBVmKWaaWSeGYMxC8hAGKFXg77Ebo/Nd87urBApmwTOTj5sOFKrOz2BSqiZHYJ/2n8NeH7+CCXgdZQnHrt+u5DyNSpJSorQkNDgQzPunh9TmAVOh2of8gfqryjht6UayWyw1g3S1B1KXgP5RlvfnwL0yhOryLDk3qcpaivsAqFQAKVM6X9KHIbn83rljJxQQ7SmPTJ6TsSKtdZxFlWZklHz4e/smLnclOzQ==\n",
   "ops_manager_subnet": "manatee-management-subnet",
   "ops_manager_version": "2.0-build.314",
+  "pks_api": {
+    "uaa_admin_password": "password ",
+    "uaa_admin_user": "admin",
+    "url": "https://api.pks.manatee.cf-app.com"
+  },
   "project": "cf-toolsmiths-pool-us-2",
   "region": "us-central1",
   "service_network_name": "manatee-pcf-network",

@@ -22,6 +22,7 @@ import (
 	"github.com/pivotal/hammer/environment"
 	"github.com/pivotal/hammer/om"
 	"github.com/pivotal/hammer/open"
+	"github.com/pivotal/hammer/pks"
 	"github.com/pivotal/hammer/scripting"
 	"github.com/pivotal/hammer/ssh"
 	"github.com/pivotal/hammer/sshuttle"
@@ -58,6 +59,7 @@ func (e *targetConfigPath) UnmarshalFlag(path string) error {
 type options struct {
 	Bosh         commands.BoshCommand       `command:"bosh" description:"display BOSH credentials, or run a BOSH command"`
 	CFLogin      commands.CFLoginCommand    `command:"cf-login" description:"log in to the cf for the environment"`
+	PKSLogin     commands.PKSLoginCommand   `command:"pks-login" description:"log in to pks for the environment"`
 	Open         commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
 	OM           commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
 	SSH          commands.SSHCommand        `command:"ssh" choice:"opsman" choice:"director" description:"open an ssh connection to the ops manager or director of this environment"`
@@ -87,6 +89,13 @@ func main() {
 			Env: &envReader,
 			UI:  &ui,
 			CFLoginRunner: &cf.LoginRunner{
+				ScriptRunner: scriptRunner,
+			},
+		},
+		PKSLogin: commands.PKSLoginCommand{
+			Env: &envReader,
+			UI:  &ui,
+			PKSLoginRunner: &pks.LoginRunner{
 				ScriptRunner: scriptRunner,
 			},
 		},

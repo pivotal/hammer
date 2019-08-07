@@ -1,5 +1,8 @@
 {
   "name": "reduced-config",
+  "pks_api": {
+    "url": "https://api.pks.reduced-config.cf-app.com"
+  },
   "ops_manager": {
     "password": "fakePassword",
     "url": "https://pcf.reduced-config.cf-app.com",
