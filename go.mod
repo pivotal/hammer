@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-version v1.2.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/onsi/ginkgo v1.8.0
+	github.com/onsi/ginkgo v1.9.0
 	github.com/onsi/gomega v1.5.0
 	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
 	golang.org/x/sys v0.0.0-20190531175056-4c3a928424d2 // indirect
