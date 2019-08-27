@@ -80,6 +80,9 @@ var _ = Describe("bosh runner", func() {
 				`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
 				`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
 				`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`,
+				`bosh_gw_host="BOSH_GW_HOST=10.0.0.6"`,
+				`bosh_gw_user="BOSH_GW_USER=ubuntu"`,
+				`bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"`,
 
 				`echo "export BOSH_ENV_NAME=env-name"`,
 				`echo "export $bosh_client"`,
@@ -87,6 +90,9 @@ var _ = Describe("bosh runner", func() {
 				`echo "export $bosh_secret"`,
 				`echo "export $bosh_ca_cert"`,
 				`echo "export $bosh_proxy"`,
+				`echo "export $bosh_gw_host"`,
+				`echo "export $bosh_gw_user"`,
+				`echo "export $bosh_gw_private_key"`,
 				`echo "export CREDHUB_SERVER=\"\${BOSH_ENVIRONMENT}:8844\""`,
 				`echo "export CREDHUB_PROXY=\"\${BOSH_ALL_PROXY}\""`,
 				`echo "export CREDHUB_CLIENT=\"\${BOSH_CLIENT}\""`,
@@ -134,10 +140,13 @@ var _ = Describe("bosh runner", func() {
 				`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
 				`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
 				`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`,
+				`bosh_gw_host="BOSH_GW_HOST=10.0.0.6"`,
+				`bosh_gw_user="BOSH_GW_USER=ubuntu"`,
+				`bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"`,
 
 				`trap 'rm -f ${ssh_key_path}' EXIT`,
 				`trap 'rm -f ${bosh_ca_path}' EXIT`,
-				`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh arg1 arg2 arg3`,
+				`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh arg1 arg2 arg3`,
 			}))
 
 			Expect(err).NotTo(HaveOccurred())
