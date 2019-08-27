@@ -41,6 +41,9 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		fmt.Sprintf(`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`),
 		fmt.Sprintf(`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`),
 		fmt.Sprintf(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@%s:22?private-key=${ssh_key_path}"`, data.OpsManager.IP.String()),
+		fmt.Sprintf(`bosh_gw_host="BOSH_GW_HOST=%s"`, data.OpsManager.IP.String()),
+		fmt.Sprintf(`bosh_gw_user="BOSH_GW_USER=ubuntu"`),
+		fmt.Sprintf(`bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"`),
 	}
 
 	prereqs := []string{"jq", "om", "ssh"}
@@ -50,7 +53,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 			lines,
 			fmt.Sprintf(`trap 'rm -f ${ssh_key_path}' EXIT`),
 			fmt.Sprintf(`trap 'rm -f ${bosh_ca_path}' EXIT`),
-			fmt.Sprintf(`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh %s`, strings.Join(boshArgs, " ")),
+			fmt.Sprintf(`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh %s`, strings.Join(boshArgs, " ")),
 		)
 		prereqs = append(prereqs, "bosh")
 	} else {
@@ -62,6 +65,9 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 			fmt.Sprintf(`echo "export $bosh_secret"`),
 			fmt.Sprintf(`echo "export $bosh_ca_cert"`),
 			fmt.Sprintf(`echo "export $bosh_proxy"`),
+			fmt.Sprintf(`echo "export $bosh_gw_host"`),
+			fmt.Sprintf(`echo "export $bosh_gw_user"`),
+			fmt.Sprintf(`echo "export $bosh_gw_private_key"`),
 			fmt.Sprintf(`echo "export CREDHUB_SERVER=\"\${BOSH_ENVIRONMENT}:8844\""`),
 			fmt.Sprintf(`echo "export CREDHUB_PROXY=\"\${BOSH_ALL_PROXY}\""`),
 			fmt.Sprintf(`echo "export CREDHUB_CLIENT=\"\${BOSH_CLIENT}\""`),
