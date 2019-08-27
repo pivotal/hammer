@@ -51,8 +51,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 	if len(boshArgs) > 0 {
 		lines = append(
 			lines,
-			fmt.Sprintf(`trap 'rm -f ${ssh_key_path}' EXIT`),
-			fmt.Sprintf(`trap 'rm -f ${bosh_ca_path}' EXIT`),
+			fmt.Sprintf(`trap 'rm -f ${ssh_key_path} ${bosh_ca_path}' EXIT`),
 			fmt.Sprintf(`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh %s`, strings.Join(boshArgs, " ")),
 		)
 		prereqs = append(prereqs, "bosh")
