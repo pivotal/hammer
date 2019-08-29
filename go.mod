@@ -3,7 +3,7 @@ module github.com/pivotal/hammer
 go 1.12
 
 require (
-	github.com/golang/protobuf v1.3.1 // indirect
+	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/hashicorp/go-version v1.2.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect

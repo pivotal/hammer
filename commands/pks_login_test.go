@@ -22,28 +22,28 @@ import (
 	. "github.com/pivotal/hammer/commands"
 )
 
-var _ = Describe("cf login command", func() {
+var _ = Describe("pks login command", func() {
 	var (
 		err     error
-		command *CFLoginCommand
+		command *PKSLoginCommand
 
-		envReader     *fakes.FakeEnvReader
-		ui            *fakes.FakeUI
-		cfLoginRunner *fakes.FakeToolRunner
-		commandArgs   []string
+		envReader      *fakes.FakeEnvReader
+		ui             *fakes.FakeUI
+		pksLoginRunner *fakes.FakeToolRunner
+		commandArgs    []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
 		ui = new(fakes.FakeUI)
-		cfLoginRunner = new(fakes.FakeToolRunner)
+		pksLoginRunner = new(fakes.FakeToolRunner)
 		commandArgs = []string{"arg1", "arg2"}
 
-		command = &CFLoginCommand{
-			Env:           envReader,
-			UI:            ui,
-			CFLoginRunner: cfLoginRunner,
-			File:          true,
+		command = &PKSLoginCommand{
+			Env:            envReader,
+			UI:             ui,
+			PKSLoginRunner: pksLoginRunner,
+			File:           true,
 		}
 	})
 
@@ -56,8 +56,8 @@ var _ = Describe("cf login command", func() {
 			envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 		})
 
-		It("doesn't attempt to run the cf login tool", func() {
-			Expect(cfLoginRunner.RunCallCount()).To(Equal(0))
+		It("doesn't attempt to run the pks login tool", func() {
+			Expect(pksLoginRunner.RunCallCount()).To(Equal(0))
 		})
 
 		It("propagates the error", func() {
@@ -67,21 +67,21 @@ var _ = Describe("cf login command", func() {
 
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
-			url, _ := url.Parse("www.test-cf.io")
+			url, _ := url.Parse("www.test-pks.io")
 			envReader.ReadReturns(environment.Config{OpsManager: environment.OpsManager{URL: *url}}, nil)
 		})
 
-		It("displays that the cf is being logged into", func() {
+		It("displays that the pks is being logged into", func() {
 			Expect(ui.DisplayTextCallCount()).To(Equal(1))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Logging in to CF at: www.test-cf.io\n"))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Logging in to PKS at: www.test-pks.io\n"))
 		})
 
-		It("runs the cf login tool using the retrieved environment config", func() {
-			Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+		It("runs the pks login tool using the retrieved environment config", func() {
+			Expect(pksLoginRunner.RunCallCount()).To(Equal(1))
 
-			environmentConfig, _, _ := cfLoginRunner.RunArgsForCall(0)
+			environmentConfig, _, _ := pksLoginRunner.RunArgsForCall(0)
 
-			expectedURL, _ := url.Parse("www.test-cf.io")
+			expectedURL, _ := url.Parse("www.test-pks.io")
 			Expect(environmentConfig).To(BeEquivalentTo(environment.Config{OpsManager: environment.OpsManager{URL: *expectedURL}}))
 		})
 
@@ -90,10 +90,10 @@ var _ = Describe("cf login command", func() {
 				command.File = true
 			})
 
-			It("runs the cf login tool in dry run mode", func() {
-				Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+			It("runs the pks login tool in dry run mode", func() {
+				Expect(pksLoginRunner.RunCallCount()).To(Equal(1))
 
-				_, dryRun, _ := cfLoginRunner.RunArgsForCall(0)
+				_, dryRun, _ := pksLoginRunner.RunArgsForCall(0)
 				Expect(dryRun).To(BeTrue())
 			})
 		})
@@ -103,24 +103,24 @@ var _ = Describe("cf login command", func() {
 				command.File = false
 			})
 
-			It("runs the cf login tool in non-dry run mode", func() {
-				Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+			It("runs the pks login tool in non-dry run mode", func() {
+				Expect(pksLoginRunner.RunCallCount()).To(Equal(1))
 
-				_, dryRun, _ := cfLoginRunner.RunArgsForCall(0)
+				_, dryRun, _ := pksLoginRunner.RunArgsForCall(0)
 				Expect(dryRun).To(BeFalse())
 			})
 		})
 
-		It("runs the cf login tool with no additional args", func() {
-			Expect(cfLoginRunner.RunCallCount()).To(Equal(1))
+		It("runs the pks login tool with no additional args", func() {
+			Expect(pksLoginRunner.RunCallCount()).To(Equal(1))
 
-			_, _, args := cfLoginRunner.RunArgsForCall(0)
+			_, _, args := pksLoginRunner.RunArgsForCall(0)
 			Expect(args).To(BeEmpty())
 		})
 
-		When("running the cf login tool is successful", func() {
+		When("running the pks login tool is successful", func() {
 			BeforeEach(func() {
-				cfLoginRunner.RunReturns(nil)
+				pksLoginRunner.RunReturns(nil)
 			})
 
 			It("doesn't error", func() {
@@ -128,13 +128,13 @@ var _ = Describe("cf login command", func() {
 			})
 		})
 
-		When("running the cf login tool errors", func() {
+		When("running the pks login tool errors", func() {
 			BeforeEach(func() {
-				cfLoginRunner.RunReturns(fmt.Errorf("cf-login-runnner-error"))
+				pksLoginRunner.RunReturns(fmt.Errorf("pks-login-runnner-error"))
 			})
 
 			It("propagates the error", func() {
-				Expect(err).To(MatchError("cf-login-runnner-error"))
+				Expect(err).To(MatchError("pks-login-runnner-error"))
 			})
 		})
 	})

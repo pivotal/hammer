@@ -8,28 +8,16 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-package commands
+package pks_test
 
 import (
-	"fmt"
+	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
-type CFLoginCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" hidden:"true"`
-	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
-
-	Env           EnvReader
-	UI            UI
-	CFLoginRunner ToolRunner
-}
-
-func (c *CFLoginCommand) Execute(args []string) error {
-	data, err := c.Env.Read(c.TargetConfig)
-	if err != nil {
-		return err
-	}
-
-	c.UI.DisplayText(fmt.Sprintf("Logging in to CF at: %s\n", data.OpsManager.URL.String()))
-
-	return c.CFLoginRunner.Run(data, c.File)
+func TestCommand(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "PKS Suite")
 }

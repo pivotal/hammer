@@ -63,6 +63,11 @@ func checkMatchLemon(e Config) {
 		"PasSubnet":     Equal("lemon-pas-subnet"),
 		"ServiceSubnet": Equal("lemon-services-subnet"),
 		"AZs":           Equal([]string{"us-central1-f", "us-central1-a", "us-central1-c"}),
+		"PKSApi": MatchFields(IgnoreExtras, Fields{
+			"Username": Equal("pivotalcf"),
+			"Password": Equal("fakePassword"),
+			"URL":      Equal(mustParseURL("https://api.pks.lemon-lemon.cf-app.com")),
+		}),
 		"OpsManager": MatchAllFields(Fields{
 			"Username":   Equal("pivotalcf"),
 			"Password":   Equal("fakePassword"),
@@ -77,6 +82,9 @@ func checkMatchReduced(e Config) {
 	Expect(e).To(MatchFields(IgnoreExtras, Fields{
 		"Name":     Equal("reduced-config"),
 		"CFDomain": Equal("sys.reduced-config.cf-app.com"),
+		"PKSApi": MatchFields(IgnoreExtras, Fields{
+			"URL": Equal(mustParseURL("https://api.pks.reduced-config.cf-app.com")),
+		}),
 		"OpsManager": MatchFields(IgnoreExtras, Fields{
 			"Username":   Equal("pivotalcf"),
 			"Password":   Equal("fakePassword"),

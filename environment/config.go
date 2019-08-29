@@ -28,12 +28,19 @@ type OpsManager struct {
 	PrivateKey string
 }
 
+type PKSApi struct {
+	Username string
+	Password string
+	URL      url.URL
+}
+
 type Config struct {
 	Name          string
 	Version       version.Version
 	CFDomain      string
 	AppsDomain    string
 	OpsManager    OpsManager
+	PKSApi        PKSApi
 	PasSubnet     string
 	ServiceSubnet string
 	AZs           []string
@@ -54,6 +61,11 @@ type environmentReader struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	} `json:"ops_manager"`
+	PKSApi struct {
+		Username string `json:"uaa_admin_user"`
+		Password string `json:"uaa_admin_password"`
+		URL      string `json:"url"`
+	} `json:"pks_api"`
 }
 
 func FromFile(path string) (Config, error) {
@@ -82,14 +94,19 @@ func newLockfile(data environmentReader) (Config, error) {
 		}
 	}
 
-	parsedURL, err := url.Parse(data.OpsManager.URL)
+	parsedOpsManagerURL, err := url.Parse(data.OpsManager.URL)
 	if err != nil {
 		return Config{}, err
 	}
 
-	ip := net.ParseIP(data.IP)
-	if ip == nil {
+	opsManagerIp := net.ParseIP(data.IP)
+	if opsManagerIp == nil {
 		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
+	}
+
+	parsedPKSApiURL, err := url.Parse(data.PKSApi.URL)
+	if err != nil {
+		return Config{}, err
 	}
 
 	return Config{
@@ -103,9 +120,14 @@ func newLockfile(data environmentReader) (Config, error) {
 		OpsManager: OpsManager{
 			Username:   data.OpsManager.Username,
 			Password:   data.OpsManager.Password,
-			URL:        *parsedURL,
-			IP:         ip,
+			URL:        *parsedOpsManagerURL,
+			IP:         opsManagerIp,
 			PrivateKey: data.PrivateKey,
+		},
+		PKSApi: PKSApi{
+			Username: data.PKSApi.Username,
+			Password: data.PKSApi.Password,
+			URL:      *parsedPKSApiURL,
 		},
 	}, nil
 }
