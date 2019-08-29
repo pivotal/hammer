@@ -94,12 +94,17 @@ func newLockfile(data environmentReader) (Config, error) {
 		}
 	}
 
-	parsedOpsManagerURL, OpsManagerIp, err := parseUrl(data.OpsManager.URL, data)
+	parsedOpsManagerURL, err := url.Parse(data.OpsManager.URL)
 	if err != nil {
 		return Config{}, err
 	}
 
-	parsedPKSApiURL, _, err := parseUrl(data.PKSApi.URL, data)
+	opsManagerIp := net.ParseIP(data.IP)
+	if opsManagerIp == nil {
+		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
+	}
+
+	parsedPKSApiURL, err := url.Parse(data.PKSApi.URL)
 	if err != nil {
 		return Config{}, err
 	}
@@ -116,7 +121,7 @@ func newLockfile(data environmentReader) (Config, error) {
 			Username:   data.OpsManager.Username,
 			Password:   data.OpsManager.Password,
 			URL:        *parsedOpsManagerURL,
-			IP:         OpsManagerIp,
+			IP:         opsManagerIp,
 			PrivateKey: data.PrivateKey,
 		},
 		PKSApi: PKSApi{
@@ -125,16 +130,4 @@ func newLockfile(data environmentReader) (Config, error) {
 			URL:      *parsedPKSApiURL,
 		},
 	}, nil
-}
-
-func parseUrl(urlToParse string, data environmentReader) (*url.URL, net.IP, error) {
-	parsedURL, err := url.Parse(urlToParse)
-	if err != nil {
-		return nil, nil, err
-	}
-	ip := net.ParseIP(data.IP)
-	if ip == nil {
-		return nil, nil, fmt.Errorf("Could not parse IP address: %s", data.IP)
-	}
-	return parsedURL, ip, nil
 }
