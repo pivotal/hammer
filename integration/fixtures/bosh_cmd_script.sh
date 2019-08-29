@@ -62,6 +62,8 @@ bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"
 bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"
 bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"
 bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@35.225.148.133:22?private-key=${ssh_key_path}"
-trap 'rm -f ${ssh_key_path}' EXIT
-trap 'rm -f ${bosh_ca_path}' EXIT
-/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy bosh deployments
+bosh_gw_host="BOSH_GW_HOST=35.225.148.133"
+bosh_gw_user="BOSH_GW_USER=ubuntu"
+bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"
+trap 'rm -f ${ssh_key_path} ${bosh_ca_path}' EXIT
+/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh deployments
