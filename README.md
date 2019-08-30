@@ -32,6 +32,8 @@ In order to run the `hammer` tool against a given environment you need to have a
 ```
 This file can then be passed into the tool via `hammer -t path-to-env-config.json <command>`.
 
+NB: `pks_api.url` is needed for using commands that hit a PKS env such as `hammer pks-login`.
+
 ## Development
 
 Unit and integration tests can be run if you have [Ginkgo](https://github.com/onsi/ginkgo) installed:
