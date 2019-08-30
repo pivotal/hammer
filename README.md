@@ -32,7 +32,7 @@ In order to run the `hammer` tool against a given environment you need to have a
 ```
 This file can then be passed into the tool via `hammer -t path-to-env-config.json <command>`.
 
-NB: `pks_api.url` is needed for using commands that hit a PKS env such as `hammer pks-login`.
+NB: `sys_domain` and `pks_api.url` are only needed for using `hammer cf-login` and `hammer pks-login` respectively.
 
 ## Development
 
