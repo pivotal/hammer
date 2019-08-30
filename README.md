@@ -6,7 +6,13 @@
 The latest build of the `hammer` cli is available from the releases page.
 Download the tar for your platform, untar it, and move it to your $PATH.
 
-Alternatively you can build `hammer` from source if you have Go:
+Or using `brew` on macOS or Linux:
+```
+brew tap pivotal/hammer https://github.com/pivotal/hammer
+brew install hammer
+```
+
+Alternatively you can build `hammer` from source if you have Go installed:
 ```bash
 $ git clone git@github.com:pivotal/hammer.git && cd hammer && go install
 ```
