@@ -7,14 +7,14 @@ The latest build of the `hammer` cli is available from the releases page.
 Download the tar for your platform, untar it, and move it to your $PATH.
 
 Or using `brew` on macOS or Linux:
-```
+```bash
 brew tap pivotal/hammer https://github.com/pivotal/hammer
 brew install hammer
 ```
 
 Alternatively you can build `hammer` from source if you have Go installed:
 ```bash
-$ git clone git@github.com:pivotal/hammer.git && cd hammer && go install
+git clone git@github.com:pivotal/hammer.git && cd hammer && go install
 ```
 
 ## Config
@@ -44,12 +44,12 @@ NB: `sys_domain` and `pks_api.url` are only needed for using `hammer cf-login` a
 
 Unit and integration tests can be run if you have [Ginkgo](https://github.com/onsi/ginkgo) installed:
 ```bash
-$ ginkgo -r .
+ginkgo -r .
 ```
 
 Linters can also be run using [golangci-lint](https://github.com/golangci/golangci-lint):
 ```bash
-$ golangci-lint run
+golangci-lint run
 ```
 
 ---
