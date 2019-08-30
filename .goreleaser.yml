@@ -15,7 +15,15 @@ builds:
   - GO111MODULE=on
   - CGO_ENABLED=0
 archives:
-- name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-  files:
-  - none*
+- id: archive
+  format: "tar.gz"
+  name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+brews:
+- github:
+    owner: pivotal
+    name: hammer
+  ids:
+  - archive
+  test: |
+    system "#{bin}/hammer version"
 changelog:
