@@ -12,12 +12,12 @@ package environment
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net"
 	"net/url"
 
 	"github.com/hashicorp/go-version"
+	"gopkg.in/yaml.v2"
 )
 
 type OpsManager struct {
