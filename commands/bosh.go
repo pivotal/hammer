@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package commands
 
 type BoshCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" hidden:"true"`
+	TargetConfig string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env        EnvReader
