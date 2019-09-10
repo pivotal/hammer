@@ -11,8 +11,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package environment
 
 import (
-	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net"
 	"net/url"
@@ -47,25 +47,25 @@ type Config struct {
 }
 
 type environmentReader struct {
-	Name          string   `json:"name"`
-	Version       string   `json:"version"`
-	SysDomain     string   `json:"sys_domain"`
-	AppsDomain    string   `json:"apps_domain"`
-	PrivateKey    string   `json:"ops_manager_private_key"`
-	IP            string   `json:"ops_manager_public_ip"`
-	PasSubnet     string   `json:"ert_subnet"`
-	ServiceSubnet string   `json:"service_subnet_name"`
-	AZs           []string `json:"azs"`
+	Name          string   `yaml:"name"`
+	Version       string   `yaml:"version"`
+	SysDomain     string   `yaml:"sys_domain"`
+	AppsDomain    string   `yaml:"apps_domain"`
+	PrivateKey    string   `yaml:"ops_manager_private_key"`
+	IP            string   `yaml:"ops_manager_public_ip"`
+	PasSubnet     string   `yaml:"ert_subnet"`
+	ServiceSubnet string   `yaml:"service_subnet_name"`
+	AZs           []string `yaml:"azs"`
 	OpsManager    struct {
-		URL      string `json:"url"`
-		Username string `json:"username"`
-		Password string `json:"password"`
-	} `json:"ops_manager"`
+		URL      string `yaml:"url"`
+		Username string `yaml:"username"`
+		Password string `yaml:"password"`
+	} `yaml:"ops_manager"`
 	PKSApi struct {
-		Username string `json:"uaa_admin_user"`
-		Password string `json:"uaa_admin_password"`
-		URL      string `json:"url"`
-	} `json:"pks_api"`
+		Username string `yaml:"uaa_admin_user"`
+		Password string `yaml:"uaa_admin_password"`
+		URL      string `yaml:"url"`
+	} `yaml:"pks_api"`
 }
 
 func FromFile(path string) (Config, error) {
@@ -76,7 +76,7 @@ func FromFile(path string) (Config, error) {
 
 	var data environmentReader
 
-	if err := json.Unmarshal(contents, &data); err != nil {
+	if err := yaml.Unmarshal(contents, &data); err != nil {
 		return Config{}, err
 	}
 

@@ -30,8 +30,15 @@ var _ = Describe("Config", func() {
 	})
 
 	Describe("FromFile", func() {
-		It("reads data from a file", func() {
+		It("reads data from a json file", func() {
 			env, err := FromFile(path.Join("fixtures", "lemon.json"))
+
+			Expect(err).NotTo(HaveOccurred())
+			checkMatchLemon(env)
+		})
+
+		It("reads data from a yaml file", func() {
+			env, err := FromFile(path.Join("fixtures", "lemon.yaml"))
 
 			Expect(err).NotTo(HaveOccurred())
 			checkMatchLemon(env)

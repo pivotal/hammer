@@ -36,7 +36,20 @@ In order to run the `hammer` tool against a given environment you need to have a
   }
 }
 ```
-This file can then be passed into the tool via `hammer -t path-to-env-config.json <command>`.
+Or the equivalent in yaml:
+```yaml
+name: ENVIRONMENT-NAME
+ops_manager:
+  password: OPSMAN-PASSWORD
+  url: OPSMAN-FQDN
+  username: OPSMAN-USERNAME
+ops_manager_private_key: OPSMAN-RSA-PRIVATE-KEY
+ops_manager_public_ip: OPSMAN-PUBLIC-IP
+pks_api:
+  url: PKS-API-FQDN
+sys_domain: PAS-SYSTEM-DOMAIN
+```
+This file can then be passed into the tool via `hammer -t path-to-env-config <command>`.
 
 NB: `sys_domain` and `pks_api.url` are only needed for using `hammer cf-login` and `hammer pks-login` respectively.
 
