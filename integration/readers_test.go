@@ -55,9 +55,9 @@ var _ = Describe("Readers", func() {
 		readers...,
 	)
 
-	DescribeTable("reading the environment from $TARGET_ENVIRONMENT_CONFIG",
+	DescribeTable("reading the environment from $HAMMER_TARGET_CONFIG",
 		func(subcmds ...string) {
-			env := []string{"TARGET_ENVIRONMENT_CONFIG=fixtures/claim_manatee_response.json"}
+			env := []string{"HAMMER_TARGET_CONFIG=fixtures/claim_manatee_response.json"}
 			params := append(subcmds, "-f")
 			session := runPcf(env, params...)
 

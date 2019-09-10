@@ -26,7 +26,7 @@ import (
 
 var _ = Describe("Config", func() {
 	AfterEach(func() {
-		os.Unsetenv("TARGET_ENVIRONMENT_CONFIG")
+		os.Unsetenv("HAMMER_TARGET_CONFIG")
 	})
 
 	Describe("FromFile", func() {

@@ -18,19 +18,19 @@ import (
 type targetConfigPath struct{}
 
 // If `-t` is specified on the ssh command (rather than a subcommand)
-// then set `TARGET_ENVIRONMENT_CONFIG` so the subcommand can read it
+// then set `HAMMER_TARGET_CONFIG` so the subcommand can read it
 func (e *targetConfigPath) UnmarshalFlag(path string) error {
-	return os.Setenv("TARGET_ENVIRONMENT_CONFIG", path)
+	return os.Setenv("HAMMER_TARGET_CONFIG", path)
 }
 
 type SSHCommand struct {
-	TargetConfig targetConfigPath     `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" hidden:"true"`
+	TargetConfig targetConfigPath     `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
 	Director     SSHDirectorCommand   `command:"director"`
 	OpsManager   SSHOpsManagerCommand `command:"opsman"`
 }
 
 type SSHDirectorCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" hidden:"true"`
+	TargetConfig string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env       EnvReader
@@ -50,7 +50,7 @@ func (c *SSHDirectorCommand) Execute(args []string) error {
 }
 
 type SSHOpsManagerCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" hidden:"true"`
+	TargetConfig string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env       EnvReader

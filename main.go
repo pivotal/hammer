@@ -51,9 +51,9 @@ func (c *versionCommand) Execute([]string) error {
 type targetConfigPath struct{}
 
 // If `-t` is specified on the hammer command (rather than a subcommand)
-// then set `TARGET_ENVIRONMENT_CONFIG` so the subcommand can read it
+// then set `HAMMER_TARGET_CONFIG` so the subcommand can read it
 func (e *targetConfigPath) UnmarshalFlag(path string) error {
-	return os.Setenv("TARGET_ENVIRONMENT_CONFIG", path)
+	return os.Setenv("HAMMER_TARGET_CONFIG", path)
 }
 
 type options struct {
@@ -67,7 +67,7 @@ type options struct {
 	Time         timeCommand                `command:"time" description:"duuun dundundun" hidden:"true"`
 	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
 	Completion   commands.CompletionCommand `command:"completion" description:"command completion script"`
-	TargetConfig targetConfigPath           `short:"t" long:"target" env:"TARGET_ENVIRONMENT_CONFIG" description:"path to the target environment config"`
+	TargetConfig targetConfigPath           `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" description:"path to the target environment config"`
 }
 
 func main() {
