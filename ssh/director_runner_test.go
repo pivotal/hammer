@@ -12,7 +12,6 @@ package ssh_test
 
 import (
 	"fmt"
-	"net"
 	"net/url"
 
 	"github.com/pivotal/hammer/ssh"
@@ -36,11 +35,10 @@ var _ = Describe("director ssh runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		url, _ := url.Parse("www.test-url.io")
+		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
 				PrivateKey: "private-key-contents",
-				IP:         net.ParseIP("10.0.0.6"),
 				URL:        *url,
 				Username:   "username",
 				Password:   "password",
@@ -64,13 +62,14 @@ var _ = Describe("director ssh runner", func() {
 			`ssh_key_path=$(mktemp temp.XXXXXX)`,
 			`echo "private-key-contents" >"$ssh_key_path"`,
 			`chmod 0600 "${ssh_key_path}"`,
-			`director_ssh_key="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bbr_ssh_credentials | jq -r .credential.value.private_key_pem)"`,
+			`ops_manager_ip="$(dig +short www.test-url.io)"`,
+			`director_ssh_key="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bbr_ssh_credentials | jq -r .credential.value.private_key_pem)"`,
 			`director_ssh_key_path=$(mktemp)`,
 			`echo -e "$director_ssh_key" > "$director_ssh_key_path"`,
 			`chmod 0600 "${director_ssh_key_path}"`,
-			`bosh_env="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"`,
+			`bosh_env="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"`,
 			`trap 'rm -f ${director_ssh_key_path}; rm -f ${ssh_key_path}' EXIT`,
-			`jumpbox_cmd="ubuntu@10.0.0.6 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"`,
+			`jumpbox_cmd="ubuntu@${ops_manager_ip} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"`,
 			`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -J "$jumpbox_cmd" "bbr@${bosh_env}" -i "$director_ssh_key_path"`,
 		}))
 	})
@@ -80,7 +79,7 @@ var _ = Describe("director ssh runner", func() {
 
 		_, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
 
-		Expect(prereqs).To(ConsistOf("ssh", "om"))
+		Expect(prereqs).To(ConsistOf("ssh", "om", "dig"))
 	})
 
 	When("run with dry run set to false", func() {

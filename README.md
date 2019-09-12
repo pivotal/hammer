@@ -29,7 +29,6 @@ In order to run the `hammer` tool against a given environment you need to have a
     "password": "OPSMAN-PASSWORD"
   },
   "ops_manager_private_key": "OPSMAN-RSA-PRIVATE-KEY",
-  "ops_manager_public_ip": "OPSMAN-PUBLIC-IP",
   "sys_domain": "PAS-SYSTEM-DOMAIN",
   "pks_api":  {
      "url": "PKS-API-FQDN"
@@ -44,7 +43,6 @@ ops_manager:
   url: OPSMAN-FQDN
   username: OPSMAN-USERNAME
 ops_manager_private_key: OPSMAN-RSA-PRIVATE-KEY
-ops_manager_public_ip: OPSMAN-PUBLIC-IP
 pks_api:
   url: PKS-API-FQDN
 sys_domain: PAS-SYSTEM-DOMAIN
