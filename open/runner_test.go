@@ -35,7 +35,7 @@ var _ = Describe("open runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		url, _ := url.Parse("www.test-url.io")
+		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
 				URL:      *url,
@@ -57,7 +57,7 @@ var _ = Describe("open runner", func() {
 
 		lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 		Expect(lines).To(Equal([]string{
-			`open "www.test-url.io"`,
+			`open "https://www.test-url.io"`,
 			`echo "password" | pbcopy`,
 		}))
 	})
