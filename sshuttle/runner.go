@@ -30,12 +30,14 @@ func (b Runner) Run(data environment.Config, dryRun bool, args ...string) error 
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
 		fmt.Sprintf(`trap 'rm -f ${ssh_key_path}' EXIT`),
 		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
+
+		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Host),
+
 		fmt.Sprintf(`cidrs="$(om -t %s -k -u %s -p %s curl -s -p %s | jq -r %s | xargs echo)"`,
 			data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, networksPath, cidrPath),
 
-		fmt.Sprintf(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"%s" ${cidrs}`,
-			data.OpsManager.IP.String()),
+		fmt.Sprintf(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@${ops_manager_ip} ${cidrs}`),
 	}
 
-	return b.ScriptRunner.RunScript(sshuttleCommandLines, []string{"jq", "om", "sshuttle"}, dryRun)
+	return b.ScriptRunner.RunScript(sshuttleCommandLines, []string{"jq", "om", "sshuttle", "dig"}, dryRun)
 }

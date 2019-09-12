@@ -11,7 +11,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package environment_test
 
 import (
-	"net"
 	"net/url"
 	"os"
 	"path"
@@ -79,7 +78,6 @@ func checkMatchLemon(e Config) {
 			"Username":   Equal("pivotalcf"),
 			"Password":   Equal("fakePassword"),
 			"URL":        Equal(mustParseURL("https://pcf.lemon.cf-app.com")),
-			"IP":         Equal(net.ParseIP("35.225.148.133")),
 			"PrivateKey": ContainSubstring("BEGIN RSA"),
 		}),
 	}))
@@ -96,7 +94,6 @@ func checkMatchReduced(e Config) {
 			"Username":   Equal("pivotalcf"),
 			"Password":   Equal("fakePassword"),
 			"URL":        Equal(mustParseURL("https://pcf.reduced-config.cf-app.com")),
-			"IP":         Equal(net.ParseIP("35.225.148.133")),
 			"PrivateKey": ContainSubstring("BEGIN RSA"),
 		}),
 	}))

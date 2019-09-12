@@ -29,8 +29,10 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
 		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
 
+		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Host),
+
 		fmt.Sprintf(`bosh_ca_path=$(mktemp)`),
-		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"%s" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`, data.OpsManager.IP.String()),
+		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@${ops_manager_ip} cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`),
 		fmt.Sprintf(`chmod 0600 "${bosh_ca_path}"`),
 
 		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
@@ -40,13 +42,13 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		fmt.Sprintf(`bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`),
 		fmt.Sprintf(`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`),
 		fmt.Sprintf(`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`),
-		fmt.Sprintf(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@%s:22?private-key=${ssh_key_path}"`, data.OpsManager.IP.String()),
-		fmt.Sprintf(`bosh_gw_host="BOSH_GW_HOST=%s"`, data.OpsManager.IP.String()),
+		fmt.Sprintf(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@${ops_manager_ip}:22?private-key=${ssh_key_path}"`),
+		fmt.Sprintf(`bosh_gw_host="BOSH_GW_HOST=${ops_manager_ip}"`),
 		fmt.Sprintf(`bosh_gw_user="BOSH_GW_USER=ubuntu"`),
 		fmt.Sprintf(`bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"`),
 	}
 
-	prereqs := []string{"jq", "om", "ssh"}
+	prereqs := []string{"jq", "om", "ssh", "dig"}
 
 	if len(boshArgs) > 0 {
 		lines = append(

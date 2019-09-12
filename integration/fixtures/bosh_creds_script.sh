@@ -52,8 +52,9 @@ ZLuM3MSg63owoj01309KLkd0K+jh50SRmAdYcMF2Rwp+pmCD1umxkowU+JAeWdYU
 -----END RSA PRIVATE KEY-----
 " >"$ssh_key_path"
 chmod 0600 "${ssh_key_path}"
+ops_manager_ip="$(dig +short pcf.manatee.cf-app.com)"
 bosh_ca_path=$(mktemp)
-ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"35.225.148.133" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null
+ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@${ops_manager_ip} cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null
 chmod 0600 "${bosh_ca_path}"
 creds="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
 bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"
@@ -61,8 +62,8 @@ bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"
 bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"
 bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"
 bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"
-bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@35.225.148.133:22?private-key=${ssh_key_path}"
-bosh_gw_host="BOSH_GW_HOST=35.225.148.133"
+bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@${ops_manager_ip}:22?private-key=${ssh_key_path}"
+bosh_gw_host="BOSH_GW_HOST=${ops_manager_ip}"
 bosh_gw_user="BOSH_GW_USER=ubuntu"
 bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"
 echo "export BOSH_ENV_NAME=manatee"
