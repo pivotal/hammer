@@ -35,7 +35,7 @@ var _ = Describe("cf login runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		url, _ := url.Parse("www.test-url.io")
+		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			CFDomain: "sys.test-url.io",
 			OpsManager: environment.OpsManager{
@@ -60,9 +60,9 @@ var _ = Describe("cf login runner", func() {
 		lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 
 		Expect(lines).To(Equal([]string{
-			`prods="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
+			`prods="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
 			`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`,
-			`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, `user="$(echo "$creds" | jq -r .credential.value.identity)"`,
+			`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, `user="$(echo "$creds" | jq -r .credential.value.identity)"`,
 			`pass="$(echo "$creds" | jq -r .credential.value.password)"`,
 			`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`,
 		}))

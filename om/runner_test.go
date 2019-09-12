@@ -36,7 +36,7 @@ var _ = Describe("om runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		url, _ := url.Parse("www.test-url.io")
+		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
 				URL:      *url,
@@ -64,7 +64,7 @@ var _ = Describe("om runner", func() {
 
 			lines, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
 			Expect(lines).To(Equal([]string{
-				`echo "export OM_TARGET=www.test-url.io"`,
+				`echo "export OM_TARGET=https://www.test-url.io"`,
 				`echo "export OM_USERNAME=username"`,
 				`echo "export OM_PASSWORD=password"`,
 			}))
@@ -86,7 +86,7 @@ var _ = Describe("om runner", func() {
 
 			lines, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
 			Expect(lines).To(Equal([]string{
-				`om -t 'www.test-url.io' -k -u 'username' -p 'password' 'arg1' 'arg2' 'arg3'`,
+				`om -t 'https://www.test-url.io' -k -u 'username' -p 'password' 'arg1' 'arg2' 'arg3'`,
 			}))
 			Expect(prereqs).To(ConsistOf("om"))
 		})

@@ -35,7 +35,7 @@ var _ = Describe("pks login runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		opsmanUrl, _ := url.Parse("www.test-url.io")
+		opsmanUrl, _ := url.Parse("https://www.test-url.io")
 		pksApiUrl, _ := url.Parse("api.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
@@ -65,9 +65,9 @@ var _ = Describe("pks login runner", func() {
 		lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 
 		Expect(lines).To(Equal([]string{
-			`prods="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
+			`prods="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
 			`guid="$(echo "$prods" | jq -r '.[] | select(.type == "pivotal-container-service") | .guid')"`,
-			`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.properties.uaa_admin_password)"`,
+			`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.properties.uaa_admin_password)"`,
 			`pass="$(echo "$creds" | jq -r .credential.value.secret)"`,
 			`pks login -a api.test-url.io -u admin -p "$pass" --skip-ssl-validation`,
 		}))
