@@ -24,14 +24,14 @@ In order to run the `hammer` tool against a given environment you need to have a
 {
   "name": "ENVIRONMENT-NAME",
   "ops_manager": {
-    "url": "OPSMAN-FQDN",
+    "url": "OPSMAN-URL",
     "username": "OPSMAN-USERNAME",
     "password": "OPSMAN-PASSWORD"
   },
   "ops_manager_private_key": "OPSMAN-RSA-PRIVATE-KEY",
   "sys_domain": "PAS-SYSTEM-DOMAIN",
   "pks_api":  {
-     "url": "PKS-API-FQDN"
+     "url": "PKS-API-URL"
   }
 }
 ```
@@ -40,11 +40,11 @@ Or the equivalent in yaml:
 name: ENVIRONMENT-NAME
 ops_manager:
   password: OPSMAN-PASSWORD
-  url: OPSMAN-FQDN
+  url: OPSMAN-URL
   username: OPSMAN-USERNAME
 ops_manager_private_key: OPSMAN-RSA-PRIVATE-KEY
 pks_api:
-  url: PKS-API-FQDN
+  url: PKS-API-URL
 sys_domain: PAS-SYSTEM-DOMAIN
 ```
 This file can then be passed into the tool via `hammer -t path-to-env-config <command>`.
