@@ -29,7 +29,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
 		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
 
-		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Host),
+		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Hostname()),
 
 		fmt.Sprintf(`bosh_ca_path=$(mktemp)`),
 		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@${ops_manager_ip} cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`),

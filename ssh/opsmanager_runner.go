@@ -30,7 +30,7 @@ func (b OpsManagerRunner) Run(data environment.Config, dryRun bool, args ...stri
 		fmt.Sprintf(`trap 'rm -f ${ssh_key_path}' EXIT`),
 		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
 
-		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Host),
+		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Hostname()),
 
 		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p %s)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, "/api/v0/deployed/director/credentials/bosh_commandline_credentials"),
 		fmt.Sprintf(`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`),
