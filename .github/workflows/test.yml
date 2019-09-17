@@ -15,6 +15,7 @@ jobs:
       uses: actions/checkout@v1
     - name: Unit tests
       run: |
+        export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
         go get github.com/onsi/ginkgo/ginkgo@v1.10.1
         go mod download
         make unit-test
