@@ -53,6 +53,5 @@ ZLuM3MSg63owoj01309KLkd0K+jh50SRmAdYcMF2Rwp+pmCD1umxkowU+JAeWdYU
 " >"$ssh_key_path"
 trap 'rm -f ${ssh_key_path}' EXIT
 chmod 0600 "${ssh_key_path}"
-ops_manager_ip="$(dig +short pcf.manatee.cf-app.com)"
 cidrs="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/staged/director/networks | jq -r .networks[].subnets[].cidr | xargs echo)"
-sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@${ops_manager_ip} ${cidrs}
+sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"35.225.148.133" ${cidrs}

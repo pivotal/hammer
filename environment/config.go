@@ -11,7 +11,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package environment
 
 import (
+	"fmt"
 	"io/ioutil"
+	"net"
 	"net/url"
 
 	"github.com/hashicorp/go-version"
@@ -22,6 +24,7 @@ type OpsManager struct {
 	Username   string
 	Password   string
 	URL        url.URL
+	IP         net.IP
 	PrivateKey string
 }
 
@@ -96,6 +99,11 @@ func newLockfile(data environmentReader) (Config, error) {
 		return Config{}, err
 	}
 
+	opsManagerIp := net.ParseIP(data.IP)
+	if opsManagerIp == nil {
+		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
+	}
+
 	parsedPKSApiURL, err := url.Parse(data.PKSApi.URL)
 	if err != nil {
 		return Config{}, err
@@ -113,6 +121,7 @@ func newLockfile(data environmentReader) (Config, error) {
 			Username:   data.OpsManager.Username,
 			Password:   data.OpsManager.Password,
 			URL:        *parsedOpsManagerURL,
+			IP:         opsManagerIp,
 			PrivateKey: data.PrivateKey,
 		},
 		PKSApi: PKSApi{
