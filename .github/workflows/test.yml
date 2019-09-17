@@ -31,3 +31,5 @@ jobs:
       uses: actions/checkout@v1
     - name: Lint
       uses: actions-contrib/golangci-lint@master
+      with:
+        args: run
