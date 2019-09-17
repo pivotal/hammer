@@ -36,7 +36,7 @@ var _ = Describe("bosh runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		url, _ := url.Parse("www.test-url.io")
+		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			Name: "env-name",
 			OpsManager: environment.OpsManager{
@@ -72,7 +72,7 @@ var _ = Describe("bosh runner", func() {
 				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
 				`chmod 0600 "${bosh_ca_path}"`,
 
-				`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+				`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
 				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
@@ -132,7 +132,7 @@ var _ = Describe("bosh runner", func() {
 				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
 				`chmod 0600 "${bosh_ca_path}"`,
 
-				`creds="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+				`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
 				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
