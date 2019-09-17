@@ -31,7 +31,7 @@ func (b DirectorRunner) Run(data environment.Config, dryRun bool, args ...string
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
 		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
 
-		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Hostname()),
+		fmt.Sprintf(`ops_manager_ip="$(dig +short %s)"`, data.OpsManager.URL.Host),
 
 		fmt.Sprintf(`director_ssh_key="$(om -t %s -k -u %s -p %s curl -s -p %s | jq -r %s)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, bbrCredsPath, privateKeyPath),
 		fmt.Sprintf(`director_ssh_key_path=$(mktemp)`),
