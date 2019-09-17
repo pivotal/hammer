@@ -1,5 +1,5 @@
 # hammer - wrapper CLI for interacting with PCF environments
-[![Build Status](https://travis-ci.com/pivotal/hammer.svg?token=jUqzM7hyJNi7CRu5xyLL&branch=master)](https://travis-ci.com/pivotal/hammer)
+[![Test and Lint Status](https://github.com/pivotal/hammer/workflows/Test%20and%20Lint/badge.svg)](https://github.com/pivotal/hammer/actions)
 
 ## Installation
 
