@@ -53,9 +53,8 @@ ZLuM3MSg63owoj01309KLkd0K+jh50SRmAdYcMF2Rwp+pmCD1umxkowU+JAeWdYU
 " >"$ssh_key_path"
 trap 'rm -f ${ssh_key_path}' EXIT
 chmod 0600 "${ssh_key_path}"
-ops_manager_ip="$(dig +short pcf.manatee.cf-app.com)"
 creds="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
 bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"
 echo "$bosh"
 shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"
-ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@${ops_manager_ip} "$shell"
+ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"35.225.148.133" "$shell"
