@@ -36,7 +36,7 @@ var _ = Describe("sshuttle runner", func() {
 	BeforeEach(func() {
 		scriptRunner = new(scriptingfakes.FakeScriptRunner)
 
-		url, _ := url.Parse("www.test-url.io")
+		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
 				PrivateKey: "private-key-contents",
@@ -65,7 +65,7 @@ var _ = Describe("sshuttle runner", func() {
 			`echo "private-key-contents" >"$ssh_key_path"`,
 			`trap 'rm -f ${ssh_key_path}' EXIT`,
 			`chmod 0600 "${ssh_key_path}"`,
-			`cidrs="$(om -t www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/director/networks | jq -r .networks[].subnets[].cidr | xargs echo)"`,
+			`cidrs="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/director/networks | jq -r .networks[].subnets[].cidr | xargs echo)"`,
 			`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" ${cidrs}`,
 		}))
 	})
