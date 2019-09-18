@@ -1,5 +1,5 @@
 # hammer - wrapper CLI for interacting with PCF environments
-[![Test and Lint Status](https://github.com/pivotal/hammer/workflows/Test%20and%20Lint/badge.svg)](https://github.com/pivotal/hammer/actions)
+[![Test Status](https://github.com/pivotal/hammer/workflows/Test/badge.svg)](https://github.com/pivotal/hammer/actions)
 
 ## Installation
 
