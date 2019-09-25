@@ -2,16 +2,16 @@
 class Hammer < Formula
   desc ""
   homepage ""
-  version "0.7.0"
+  version "0.8.0"
   bottle :unneeded
 
   if OS.mac?
-    url "https://github.com/pivotal/hammer/releases/download/v0.7.0/hammer_darwin_amd64.tar.gz"
-    sha256 "a2c3f9975dd4cafdd1b5e17042c3b3800fe91798ae5866a51651304360f46a14"
+    url "https://github.com/pivotal/hammer/releases/download/v0.8.0/hammer_darwin_amd64.tar.gz"
+    sha256 "10eca42199e2f85c49920a4cbe787901df18dc2db904d780661ff0406760a8e2"
   elsif OS.linux?
     if Hardware::CPU.intel?
-      url "https://github.com/pivotal/hammer/releases/download/v0.7.0/hammer_linux_amd64.tar.gz"
-      sha256 "5953a712042161a6357b345ff66d8561e5f5c1759f57a67389392cb078cd41f5"
+      url "https://github.com/pivotal/hammer/releases/download/v0.8.0/hammer_linux_amd64.tar.gz"
+      sha256 "5c39ecc456fbe324267e271d706f1e5f6636773d6ea4db392e6dbccd39157e9b"
     end
   end
 
