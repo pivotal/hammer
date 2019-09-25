@@ -37,7 +37,7 @@ var _ = Describe("SSH", func() {
 			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(string(contents)).To(Equal(LoadFixture("ssh_script.sh")))
+			Expect(string(contents)).To(Equal(LoadFixture("ssh_opsman_script.sh")))
 		})
 	})
 
