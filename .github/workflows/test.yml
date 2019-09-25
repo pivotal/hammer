@@ -23,9 +23,15 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
     - name: Check out code
       uses: actions/checkout@v1
     - name: Lint
-      uses: actions-contrib/golangci-lint@master
-      with:
-        args: run
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
+        go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.18.0
+        make lint
