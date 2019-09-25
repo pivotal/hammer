@@ -15,6 +15,7 @@ type SshuttleCommand struct {
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env            EnvReader
+	UI             UI
 	SshuttleRunner ToolRunner
 }
 
@@ -24,5 +25,6 @@ func (c *SshuttleCommand) Execute(args []string) error {
 		return err
 	}
 
+	c.UI.DisplayText("# sshuttle\n")
 	return c.SshuttleRunner.Run(data, c.File)
 }

@@ -15,6 +15,7 @@ type OMCommand struct {
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env      EnvReader
+	UI       UI
 	OMRunner ToolRunner
 }
 
@@ -24,5 +25,6 @@ func (c *OMCommand) Execute(args []string) error {
 		return err
 	}
 
+	c.UI.DisplayText("# om\n")
 	return c.OMRunner.Run(data, c.File, args...)
 }

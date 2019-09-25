@@ -27,17 +27,20 @@ var _ = Describe("Bosh command", func() {
 		command *BoshCommand
 
 		envReader   *fakes.FakeEnvReader
+		ui          *fakes.FakeUI
 		boshRunner  *fakes.FakeToolRunner
 		commandArgs []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
+		ui = new(fakes.FakeUI)
 		boshRunner = new(fakes.FakeToolRunner)
 		commandArgs = []string{"arg1", "arg2"}
 
 		command = &BoshCommand{
 			Env:        envReader,
+			UI:         ui,
 			BoshRunner: boshRunner,
 		}
 	})
@@ -63,6 +66,11 @@ var _ = Describe("Bosh command", func() {
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+		})
+
+		It("displays bosh as a comment", func() {
+			Expect(ui.DisplayTextCallCount()).To(Equal(1))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# bosh\n"))
 		})
 
 		It("runs the bosh tool using the retrieved environment config", func() {

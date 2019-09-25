@@ -72,8 +72,9 @@ var _ = Describe("ssh command", func() {
 				})
 
 				It("displays that the connection is being started", func() {
-					Expect(ui.DisplayTextCallCount()).To(Equal(1))
-					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Connecting to: env-name\n"))
+					Expect(ui.DisplayTextCallCount()).To(Equal(2))
+					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# ssh-opsman\n"))
+					Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Connecting to: env-name\n"))
 				})
 
 				It("runs the ssh tool using the retrieved environment config", func() {
@@ -189,8 +190,9 @@ var _ = Describe("ssh command", func() {
 				})
 
 				It("displays that the connection is being started", func() {
-					Expect(ui.DisplayTextCallCount()).To(Equal(1))
-					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Connecting to: env-name\n"))
+					Expect(ui.DisplayTextCallCount()).To(Equal(2))
+					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# ssh-director\n"))
+					Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Connecting to: env-name\n"))
 				})
 
 				It("runs the ssh tool using the retrieved environment config", func() {

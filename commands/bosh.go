@@ -15,6 +15,7 @@ type BoshCommand struct {
 	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env        EnvReader
+	UI         UI
 	BoshRunner ToolRunner
 }
 
@@ -24,5 +25,6 @@ func (c *BoshCommand) Execute(args []string) error {
 		return err
 	}
 
+	c.UI.DisplayText("# bosh\n")
 	return c.BoshRunner.Run(data, c.File, args...)
 }

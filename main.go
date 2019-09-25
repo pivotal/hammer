@@ -81,6 +81,7 @@ func main() {
 	opts := options{
 		Bosh: commands.BoshCommand{
 			Env: &envReader,
+			UI:  &ui,
 			BoshRunner: &bosh.Runner{
 				ScriptRunner: scriptRunner,
 			},
@@ -101,6 +102,7 @@ func main() {
 		},
 		OM: commands.OMCommand{
 			Env: &envReader,
+			UI:  &ui,
 			OMRunner: &om.Runner{
 				ScriptRunner: scriptRunner,
 			},
@@ -130,6 +132,7 @@ func main() {
 		},
 		Sshuttle: commands.SshuttleCommand{
 			Env: &envReader,
+			UI:  &ui,
 			SshuttleRunner: &sshuttle.Runner{
 				ScriptRunner: scriptRunner,
 			},

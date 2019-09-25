@@ -44,6 +44,7 @@ func (c *SSHDirectorCommand) Execute(args []string) error {
 		return err
 	}
 
+	c.UI.DisplayText("# ssh-director\n")
 	c.UI.DisplayText(fmt.Sprintf("Connecting to: %s\n", data.Name))
 
 	return c.SSHRunner.Run(data, c.File)
@@ -64,6 +65,7 @@ func (c *SSHOpsManagerCommand) Execute(args []string) error {
 		return err
 	}
 
+	c.UI.DisplayText("# ssh-opsman\n")
 	c.UI.DisplayText(fmt.Sprintf("Connecting to: %s\n", data.Name))
 
 	return c.SSHRunner.Run(data, c.File)

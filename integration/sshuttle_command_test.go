@@ -31,7 +31,8 @@ var _ = Describe("sshuttle", func() {
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
-			contents, err := ioutil.ReadFile(output)
+			pathToFile := LastLine(output)
+			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("sshuttle_script.sh")))

@@ -27,17 +27,20 @@ var _ = Describe("sshuttle command", func() {
 		command *SshuttleCommand
 
 		envReader      *fakes.FakeEnvReader
+		ui             *fakes.FakeUI
 		sshuttleRunner *fakes.FakeToolRunner
 		commandArgs    []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
+		ui = new(fakes.FakeUI)
 		sshuttleRunner = new(fakes.FakeToolRunner)
 		commandArgs = []string{"arg1", "arg2"}
 
 		command = &SshuttleCommand{
 			Env:            envReader,
+			UI:             ui,
 			SshuttleRunner: sshuttleRunner,
 			File:           true,
 		}
@@ -64,6 +67,11 @@ var _ = Describe("sshuttle command", func() {
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+		})
+
+		It("displays sshuttle as a comment", func() {
+			Expect(ui.DisplayTextCallCount()).To(Equal(1))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# sshuttle\n"))
 		})
 
 		It("runs the sshuttle tool using the retrieved environment config", func() {

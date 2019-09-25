@@ -31,7 +31,8 @@ var _ = Describe("BOSH", func() {
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
-			contents, err := ioutil.ReadFile(output)
+			pathToFile := LastLine(output)
+			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("bosh_creds_script.sh")))
@@ -48,7 +49,8 @@ var _ = Describe("BOSH", func() {
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
-			contents, err := ioutil.ReadFile(output)
+			pathToFile := LastLine(output)
+			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("bosh_cmd_script.sh")))
