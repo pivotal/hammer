@@ -27,17 +27,20 @@ var _ = Describe("om command", func() {
 		command *OMCommand
 
 		envReader   *fakes.FakeEnvReader
+		ui          *fakes.FakeUI
 		omRunner    *fakes.FakeToolRunner
 		commandArgs []string
 	)
 
 	BeforeEach(func() {
 		envReader = new(fakes.FakeEnvReader)
+		ui = new(fakes.FakeUI)
 		omRunner = new(fakes.FakeToolRunner)
 		commandArgs = []string{"arg1", "arg2"}
 
 		command = &OMCommand{
 			Env:      envReader,
+			UI:       ui,
 			OMRunner: omRunner,
 			File:     true,
 		}
@@ -64,6 +67,11 @@ var _ = Describe("om command", func() {
 	When("retrieving the environment config is successful", func() {
 		BeforeEach(func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+		})
+
+		It("displays om as a comment", func() {
+			Expect(ui.DisplayTextCallCount()).To(Equal(1))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# om\n"))
 		})
 
 		It("runs the om tool using the retrieved environment config", func() {

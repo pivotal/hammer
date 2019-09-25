@@ -13,6 +13,7 @@ package integration
 import (
 	"io/ioutil"
 	"path"
+	"strings"
 
 	. "github.com/onsi/gomega"
 )
@@ -21,4 +22,9 @@ func LoadFixture(name string) string {
 	contents, err := ioutil.ReadFile(path.Join("fixtures", name))
 	Expect(err).NotTo(HaveOccurred())
 	return string(contents)
+}
+
+func LastLine(output string) string {
+	lines := strings.Split(output, "\n")
+	return lines[len(lines)-1]
 }

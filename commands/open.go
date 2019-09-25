@@ -30,6 +30,7 @@ func (c *OpenCommand) Execute(args []string) error {
 		return err
 	}
 
+	c.UI.DisplayText("# open\n")
 	if c.Show {
 		c.UI.DisplayText(fmt.Sprintf("%s\n", data.OpsManager.URL.String()))
 		c.UI.DisplayText(fmt.Sprintf("username: %s\n", data.OpsManager.Username))
@@ -39,7 +40,7 @@ func (c *OpenCommand) Execute(args []string) error {
 
 	c.UI.DisplayText(fmt.Sprintf("Opening: %s\n", data.OpsManager.URL.String()))
 	c.UI.DisplayText(fmt.Sprintf("Username is: %s\n", data.OpsManager.Username))
-	c.UI.DisplayText(fmt.Sprint("Password is in the clipboard\n"))
+	c.UI.DisplayText("Password is in the clipboard\n")
 
 	return c.OpenRunner.Run(data, c.File)
 }

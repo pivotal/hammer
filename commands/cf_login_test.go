@@ -72,8 +72,9 @@ var _ = Describe("cf login command", func() {
 		})
 
 		It("displays that the cf is being logged into", func() {
-			Expect(ui.DisplayTextCallCount()).To(Equal(1))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Logging in to CF at: www.test-cf.io\n"))
+			Expect(ui.DisplayTextCallCount()).To(Equal(2))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# cf-login\n"))
+			Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Logging in to CF at: www.test-cf.io\n"))
 		})
 
 		It("runs the cf login tool using the retrieved environment config", func() {

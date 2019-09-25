@@ -72,8 +72,9 @@ var _ = Describe("pks login command", func() {
 		})
 
 		It("displays that the pks is being logged into", func() {
-			Expect(ui.DisplayTextCallCount()).To(Equal(1))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Logging in to PKS at: www.test-pks.io\n"))
+			Expect(ui.DisplayTextCallCount()).To(Equal(2))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# pks-login\n"))
+			Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Logging in to PKS at: www.test-pks.io\n"))
 		})
 
 		It("runs the pks login tool using the retrieved environment config", func() {

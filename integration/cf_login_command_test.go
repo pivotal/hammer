@@ -32,8 +32,7 @@ var _ = Describe("CF", func() {
 		Eventually(session.Out).Should(Say("Logging in to CF at: https://pcf.manatee.cf-app.com"))
 
 		output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
-		lines := strings.Split(output, "\n")
-		pathToFile := lines[len(lines)-1]
+		pathToFile := LastLine(output)
 		contents, err := ioutil.ReadFile(pathToFile)
 		Expect(err).NotTo(HaveOccurred())
 

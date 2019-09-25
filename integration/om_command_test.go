@@ -30,7 +30,8 @@ var _ = Describe("OM", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 
-			pathToFile := strings.TrimSuffix(string(session.Out.Contents()), "\n")
+			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
+			pathToFile := LastLine(output)
 			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
@@ -49,7 +50,8 @@ var _ = Describe("OM", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 
-			pathToFile := strings.TrimSuffix(string(session.Out.Contents()), "\n")
+			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
+			pathToFile := LastLine(output)
 			contents, err := ioutil.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
@@ -65,7 +67,7 @@ var _ = Describe("OM", func() {
 
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
-			Eventually(string(session.Out.Contents())).Should(Equal("export OM_TARGET=https://pcf.manatee.cf-app.com\nexport OM_USERNAME=pivotalcf\nexport OM_PASSWORD=fakePassword\n"))
+			Eventually(string(session.Out.Contents())).Should(Equal("# om\nexport OM_TARGET=https://pcf.manatee.cf-app.com\nexport OM_USERNAME=pivotalcf\nexport OM_PASSWORD=fakePassword\n"))
 		})
 	})
 })

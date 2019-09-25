@@ -77,10 +77,11 @@ var _ = Describe("open command", func() {
 		})
 
 		It("prints out that it is opening the ops manager and details on username and password", func() {
-			Expect(ui.DisplayTextCallCount()).To(Equal(3))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("Opening: www.test-cf.io\n"))
-			Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Username is: test-username\n"))
-			Expect(ui.DisplayTextArgsForCall(2)).To(Equal("Password is in the clipboard\n"))
+			Expect(ui.DisplayTextCallCount()).To(Equal(4))
+			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# open\n"))
+			Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Opening: www.test-cf.io\n"))
+			Expect(ui.DisplayTextArgsForCall(2)).To(Equal("Username is: test-username\n"))
+			Expect(ui.DisplayTextArgsForCall(3)).To(Equal("Password is in the clipboard\n"))
 		})
 
 		It("runs the open tool using the retrieved environment config", func() {
@@ -157,10 +158,11 @@ var _ = Describe("open command", func() {
 			})
 
 			It("prints out the url, username and password for the ops manager", func() {
-				Expect(ui.DisplayTextCallCount()).To(Equal(3))
-				Expect(ui.DisplayTextArgsForCall(0)).To(Equal("www.test-cf.io\n"))
-				Expect(ui.DisplayTextArgsForCall(1)).To(Equal("username: test-username\n"))
-				Expect(ui.DisplayTextArgsForCall(2)).To(Equal("password: test-password\n"))
+				Expect(ui.DisplayTextCallCount()).To(Equal(4))
+				Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# open\n"))
+				Expect(ui.DisplayTextArgsForCall(1)).To(Equal("www.test-cf.io\n"))
+				Expect(ui.DisplayTextArgsForCall(2)).To(Equal("username: test-username\n"))
+				Expect(ui.DisplayTextArgsForCall(3)).To(Equal("password: test-password\n"))
 			})
 		})
 	})
