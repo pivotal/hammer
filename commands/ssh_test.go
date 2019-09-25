@@ -47,94 +47,92 @@ var _ = Describe("ssh command", func() {
 			}
 		})
 
-		Context("no subcommand", func() {
-			JustBeforeEach(func() {
-				err = sshOpsManagerCommand.Execute(commandArgs)
+		JustBeforeEach(func() {
+			err = sshOpsManagerCommand.Execute(commandArgs)
+		})
+
+		When("retrieving the environment config errors", func() {
+			BeforeEach(func() {
+				envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 			})
 
-			When("retrieving the environment config errors", func() {
+			It("doesn't attempt to run the ssh tool", func() {
+				Expect(sshRunner.RunCallCount()).To(Equal(0))
+			})
+
+			It("propagates the error", func() {
+				Expect(err).To(MatchError("env-reader-error"))
+			})
+		})
+
+		When("retrieving the environment config is successful", func() {
+			BeforeEach(func() {
+				envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+			})
+
+			It("displays that the connection is being started", func() {
+				Expect(ui.DisplayTextCallCount()).To(Equal(2))
+				Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# ssh-opsman\n"))
+				Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Connecting to: env-name\n"))
+			})
+
+			It("runs the ssh tool using the retrieved environment config", func() {
+				Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+				environmentConfig, _, _ := sshRunner.RunArgsForCall(0)
+				Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
+			})
+
+			When("run with the file flag set", func() {
 				BeforeEach(func() {
-					envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
+					sshOpsManagerCommand.File = true
 				})
 
-				It("doesn't attempt to run the ssh tool", func() {
-					Expect(sshRunner.RunCallCount()).To(Equal(0))
+				It("runs the ssh tool in dry run mode", func() {
+					Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+					_, dryRun, _ := sshRunner.RunArgsForCall(0)
+					Expect(dryRun).To(BeTrue())
+				})
+			})
+
+			When("run with the file flag unset", func() {
+				BeforeEach(func() {
+					sshOpsManagerCommand.File = false
+				})
+
+				It("runs the ssh tool in non-dry run mode", func() {
+					Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+					_, dryRun, _ := sshRunner.RunArgsForCall(0)
+					Expect(dryRun).To(BeFalse())
+				})
+			})
+
+			It("runs the ssh tool with no additional args", func() {
+				Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+				_, _, args := sshRunner.RunArgsForCall(0)
+				Expect(args).To(BeEmpty())
+			})
+
+			When("running the ssh tool is successful", func() {
+				BeforeEach(func() {
+					sshRunner.RunReturns(nil)
+				})
+
+				It("doesn't error", func() {
+					Expect(err).NotTo(HaveOccurred())
+				})
+			})
+
+			When("running the ssh tool errors", func() {
+				BeforeEach(func() {
+					sshRunner.RunReturns(fmt.Errorf("ssh-runnner-error"))
 				})
 
 				It("propagates the error", func() {
-					Expect(err).To(MatchError("env-reader-error"))
-				})
-			})
-
-			When("retrieving the environment config is successful", func() {
-				BeforeEach(func() {
-					envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
-				})
-
-				It("displays that the connection is being started", func() {
-					Expect(ui.DisplayTextCallCount()).To(Equal(2))
-					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# ssh-opsman\n"))
-					Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Connecting to: env-name\n"))
-				})
-
-				It("runs the ssh tool using the retrieved environment config", func() {
-					Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-					environmentConfig, _, _ := sshRunner.RunArgsForCall(0)
-					Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
-				})
-
-				When("run with the file flag set", func() {
-					BeforeEach(func() {
-						sshOpsManagerCommand.File = true
-					})
-
-					It("runs the ssh tool in dry run mode", func() {
-						Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-						_, dryRun, _ := sshRunner.RunArgsForCall(0)
-						Expect(dryRun).To(BeTrue())
-					})
-				})
-
-				When("run with the file flag unset", func() {
-					BeforeEach(func() {
-						sshOpsManagerCommand.File = false
-					})
-
-					It("runs the ssh tool in non-dry run mode", func() {
-						Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-						_, dryRun, _ := sshRunner.RunArgsForCall(0)
-						Expect(dryRun).To(BeFalse())
-					})
-				})
-
-				It("runs the ssh tool with no additional args", func() {
-					Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-					_, _, args := sshRunner.RunArgsForCall(0)
-					Expect(args).To(BeEmpty())
-				})
-
-				When("running the ssh tool is successful", func() {
-					BeforeEach(func() {
-						sshRunner.RunReturns(nil)
-					})
-
-					It("doesn't error", func() {
-						Expect(err).NotTo(HaveOccurred())
-					})
-				})
-
-				When("running the ssh tool errors", func() {
-					BeforeEach(func() {
-						sshRunner.RunReturns(fmt.Errorf("ssh-runnner-error"))
-					})
-
-					It("propagates the error", func() {
-						Expect(err).To(MatchError("ssh-runnner-error"))
-					})
+					Expect(err).To(MatchError("ssh-runnner-error"))
 				})
 			})
 		})
@@ -165,94 +163,92 @@ var _ = Describe("ssh command", func() {
 			}
 		})
 
-		Context("no subcommand", func() {
-			JustBeforeEach(func() {
-				err = sshDirectorCommand.Execute(commandArgs)
+		JustBeforeEach(func() {
+			err = sshDirectorCommand.Execute(commandArgs)
+		})
+
+		When("retrieving the environment config errors", func() {
+			BeforeEach(func() {
+				envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
 			})
 
-			When("retrieving the environment config errors", func() {
+			It("doesn't attempt to run the ssh tool", func() {
+				Expect(sshRunner.RunCallCount()).To(Equal(0))
+			})
+
+			It("propagates the error", func() {
+				Expect(err).To(MatchError("env-reader-error"))
+			})
+		})
+
+		When("retrieving the environment config is successful", func() {
+			BeforeEach(func() {
+				envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
+			})
+
+			It("displays that the connection is being started", func() {
+				Expect(ui.DisplayTextCallCount()).To(Equal(2))
+				Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# ssh-director\n"))
+				Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Connecting to: env-name\n"))
+			})
+
+			It("runs the ssh tool using the retrieved environment config", func() {
+				Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+				environmentConfig, _, _ := sshRunner.RunArgsForCall(0)
+				Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
+			})
+
+			When("run with the file flag set", func() {
 				BeforeEach(func() {
-					envReader.ReadReturns(environment.Config{}, fmt.Errorf("env-reader-error"))
+					sshDirectorCommand.File = true
 				})
 
-				It("doesn't attempt to run the ssh tool", func() {
-					Expect(sshRunner.RunCallCount()).To(Equal(0))
+				It("runs the ssh tool in dry run mode", func() {
+					Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+					_, dryRun, _ := sshRunner.RunArgsForCall(0)
+					Expect(dryRun).To(BeTrue())
+				})
+			})
+
+			When("run with the file flag unset", func() {
+				BeforeEach(func() {
+					sshDirectorCommand.File = false
+				})
+
+				It("runs the ssh tool in non-dry run mode", func() {
+					Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+					_, dryRun, _ := sshRunner.RunArgsForCall(0)
+					Expect(dryRun).To(BeFalse())
+				})
+			})
+
+			It("runs the ssh tool with no additional args", func() {
+				Expect(sshRunner.RunCallCount()).To(Equal(1))
+
+				_, _, args := sshRunner.RunArgsForCall(0)
+				Expect(args).To(BeEmpty())
+			})
+
+			When("running the ssh tool is successful", func() {
+				BeforeEach(func() {
+					sshRunner.RunReturns(nil)
+				})
+
+				It("doesn't error", func() {
+					Expect(err).NotTo(HaveOccurred())
+				})
+			})
+
+			When("running the ssh tool errors", func() {
+				BeforeEach(func() {
+					sshRunner.RunReturns(fmt.Errorf("ssh-runnner-error"))
 				})
 
 				It("propagates the error", func() {
-					Expect(err).To(MatchError("env-reader-error"))
-				})
-			})
-
-			When("retrieving the environment config is successful", func() {
-				BeforeEach(func() {
-					envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
-				})
-
-				It("displays that the connection is being started", func() {
-					Expect(ui.DisplayTextCallCount()).To(Equal(2))
-					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# ssh-director\n"))
-					Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Connecting to: env-name\n"))
-				})
-
-				It("runs the ssh tool using the retrieved environment config", func() {
-					Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-					environmentConfig, _, _ := sshRunner.RunArgsForCall(0)
-					Expect(environmentConfig).To(BeEquivalentTo(environment.Config{Name: "env-name"}))
-				})
-
-				When("run with the file flag set", func() {
-					BeforeEach(func() {
-						sshDirectorCommand.File = true
-					})
-
-					It("runs the ssh tool in dry run mode", func() {
-						Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-						_, dryRun, _ := sshRunner.RunArgsForCall(0)
-						Expect(dryRun).To(BeTrue())
-					})
-				})
-
-				When("run with the file flag unset", func() {
-					BeforeEach(func() {
-						sshDirectorCommand.File = false
-					})
-
-					It("runs the ssh tool in non-dry run mode", func() {
-						Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-						_, dryRun, _ := sshRunner.RunArgsForCall(0)
-						Expect(dryRun).To(BeFalse())
-					})
-				})
-
-				It("runs the ssh tool with no additional args", func() {
-					Expect(sshRunner.RunCallCount()).To(Equal(1))
-
-					_, _, args := sshRunner.RunArgsForCall(0)
-					Expect(args).To(BeEmpty())
-				})
-
-				When("running the ssh tool is successful", func() {
-					BeforeEach(func() {
-						sshRunner.RunReturns(nil)
-					})
-
-					It("doesn't error", func() {
-						Expect(err).NotTo(HaveOccurred())
-					})
-				})
-
-				When("running the ssh tool errors", func() {
-					BeforeEach(func() {
-						sshRunner.RunReturns(fmt.Errorf("ssh-runnner-error"))
-					})
-
-					It("propagates the error", func() {
-						Expect(err).To(MatchError("ssh-runnner-error"))
-					})
+					Expect(err).To(MatchError("ssh-runnner-error"))
 				})
 			})
 		})
