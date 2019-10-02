@@ -65,6 +65,11 @@ Linters can also be run using [golangci-lint](https://github.com/golangci/golang
 golangci-lint run
 ```
 
+Or just run both with:
+```
+make test
+```
+
 ---
 
 Special thanks to [@blgm](https://github.com/blgm) for letting an internal tool he created serve as the basis for this tool.
