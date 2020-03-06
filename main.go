@@ -62,7 +62,7 @@ type options struct {
 	PKSLogin     commands.PKSLoginCommand   `command:"pks-login" description:"log in to pks for the environment"`
 	Open         commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
 	OM           commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
-	SSH          commands.SSHCommand        `command:"ssh" choice:"opsman" choice:"director" description:"open an ssh connection to the ops manager or director of this environment"`
+	SSH          commands.SSHCommand        `command:"ssh" choice:"opsman" choice:"director" description:"open an ssh connection to the ops manager or director of this environment"` //nolint:staticcheck
 	Sshuttle     commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
 	Time         timeCommand                `command:"time" description:"duuun dundundun" hidden:"true"`
 	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
