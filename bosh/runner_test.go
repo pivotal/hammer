@@ -42,6 +42,7 @@ var _ = Describe("bosh runner", func() {
 			OpsManager: environment.OpsManager{
 				PrivateKey: "private-key-contents",
 				IP:         net.ParseIP("10.0.0.6"),
+				SshUser:    "ubuntu",
 				URL:        *url,
 				Username:   "username",
 				Password:   "password",
