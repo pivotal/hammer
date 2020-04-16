@@ -80,6 +80,7 @@ func checkMatchLemon(e Config) {
 			"Password":   Equal("fakePassword"),
 			"URL":        Equal(mustParseURL("https://pcf.lemon.cf-app.com")),
 			"IP":         Equal(net.ParseIP("35.225.148.133")),
+			"SshUser":    Equal("ubuntu"),
 			"PrivateKey": ContainSubstring("BEGIN RSA"),
 		}),
 	}))
@@ -97,6 +98,7 @@ func checkMatchReduced(e Config) {
 			"Password":   Equal("fakePassword"),
 			"URL":        Equal(mustParseURL("https://pcf.reduced-config.cf-app.com")),
 			"IP":         Equal(net.ParseIP("35.225.148.133")),
+			"SshUser":    Equal("ubuntu"),
 			"PrivateKey": ContainSubstring("BEGIN RSA"),
 		}),
 	}))

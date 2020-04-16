@@ -26,6 +26,7 @@ type OpsManager struct {
 	URL        url.URL
 	IP         net.IP
 	PrivateKey string
+	SshUser    string
 }
 
 type PKSApi struct {
@@ -53,6 +54,7 @@ type environmentReader struct {
 	AppsDomain    string   `yaml:"apps_domain"`
 	PrivateKey    string   `yaml:"ops_manager_private_key"`
 	IP            string   `yaml:"ops_manager_public_ip"`
+	SshUser       string   `yaml:"ops_manager_ssh_user"`
 	PasSubnet     string   `yaml:"ert_subnet"`
 	ServiceSubnet string   `yaml:"service_subnet_name"`
 	AZs           []string `yaml:"azs"`
@@ -123,6 +125,7 @@ func newLockfile(data environmentReader) (Config, error) {
 			URL:        *parsedOpsManagerURL,
 			IP:         opsManagerIp,
 			PrivateKey: data.PrivateKey,
+			SshUser:    data.SshUser,
 		},
 		PKSApi: PKSApi{
 			Username: data.PKSApi.Username,
