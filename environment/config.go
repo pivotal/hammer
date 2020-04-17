@@ -20,6 +20,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const defaultSSHUser = "ubuntu"
+
 type OpsManager struct {
 	Username   string
 	Password   string
@@ -111,6 +113,11 @@ func newLockfile(data environmentReader) (Config, error) {
 		return Config{}, err
 	}
 
+	sshUser := data.SshUser
+	if sshUser == "" {
+		sshUser = defaultSSHUser
+	}
+
 	return Config{
 		Name:          data.Name,
 		Version:       *parsedVersion,
@@ -125,7 +132,7 @@ func newLockfile(data environmentReader) (Config, error) {
 			URL:        *parsedOpsManagerURL,
 			IP:         opsManagerIp,
 			PrivateKey: data.PrivateKey,
-			SshUser:    data.SshUser,
+			SshUser:    sshUser,
 		},
 		PKSApi: PKSApi{
 			Username: data.PKSApi.Username,
