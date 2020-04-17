@@ -25,9 +25,9 @@ type LoginRunner struct {
 func (r LoginRunner) Run(data environment.Config, dryRun bool, args ...string) error {
 	lines := []string{
 		fmt.Sprintf(`prods="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/staged/products)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
-		fmt.Sprintf(`guid="$(echo "$prods" | jq -r '.[] | select(.type == "pivotal-container-service") | .guid')"`),
+		`guid="$(echo "$prods" | jq -r '.[] | select(.type == "pivotal-container-service") | .guid')"`,
 		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/deployed/products/"$guid"/credentials/.properties.uaa_admin_password)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
-		fmt.Sprintf(`pass="$(echo "$creds" | jq -r .credential.value.secret)"`),
+		`pass="$(echo "$creds" | jq -r .credential.value.secret)"`,
 		fmt.Sprintf(`pks login -a %s -u admin -p "$pass" --skip-ssl-validation`, data.PKSApi.URL.String()),
 	}
 

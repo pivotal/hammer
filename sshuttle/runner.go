@@ -26,10 +26,10 @@ func (b Runner) Run(data environment.Config, dryRun bool, args ...string) error 
 	cidrPath := ".networks[].subnets[].cidr"
 
 	sshuttleCommandLines := []string{
-		fmt.Sprintf(`ssh_key_path=$(mktemp)`),
+		`ssh_key_path=$(mktemp)`,
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
-		fmt.Sprintf(`trap 'rm -f ${ssh_key_path}' EXIT`),
-		fmt.Sprintf(`chmod 0600 "${ssh_key_path}"`),
+		`trap 'rm -f ${ssh_key_path}' EXIT`,
+		`chmod 0600 "${ssh_key_path}"`,
 		fmt.Sprintf(`cidrs="$(om -t %s -k -u %s -p %s curl -s -p %s | jq -r %s | xargs echo)"`,
 			data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, networksPath, cidrPath),
 
