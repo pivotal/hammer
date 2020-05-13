@@ -165,5 +165,41 @@ var _ = Describe("open command", func() {
 				Expect(ui.DisplayTextArgsForCall(3)).To(Equal("password: test-password\n"))
 			})
 		})
+
+		When("client credentials are specified", func() {
+			BeforeEach(func() {
+				url, _ := url.Parse("www.test-cf.io")
+				envReader.ReadReturns(environment.Config{
+					OpsManager: environment.OpsManager{
+						URL:          *url,
+						Username:     "test-username",
+						Password:     "test-password",
+						ClientID:     "test-client-id",
+						ClientSecret: "test-client-secret"}},
+					nil)
+			})
+
+			It("prints out that it is opening the ops manager and details on client id and client secret", func() {
+				Expect(ui.DisplayTextCallCount()).To(Equal(4))
+				Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# open\n"))
+				Expect(ui.DisplayTextArgsForCall(1)).To(Equal("Opening: www.test-cf.io\n"))
+				Expect(ui.DisplayTextArgsForCall(2)).To(Equal("Client ID is: test-client-id\n"))
+				Expect(ui.DisplayTextArgsForCall(3)).To(Equal("Client Secret is in the clipboard\n"))
+			})
+
+			When("running in show mode", func() {
+				BeforeEach(func() {
+					command.Show = true
+				})
+
+				It("prints out the url, client id and client secret for the ops manager", func() {
+					Expect(ui.DisplayTextCallCount()).To(Equal(4))
+					Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# open\n"))
+					Expect(ui.DisplayTextArgsForCall(1)).To(Equal("www.test-cf.io\n"))
+					Expect(ui.DisplayTextArgsForCall(2)).To(Equal("client id: test-client-id\n"))
+					Expect(ui.DisplayTextArgsForCall(3)).To(Equal("client secret: test-client-secret\n"))
+				})
+			})
+		})
 	})
 })

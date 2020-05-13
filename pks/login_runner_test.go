@@ -39,9 +39,11 @@ var _ = Describe("pks login runner", func() {
 		pksApiUrl, _ := url.Parse("api.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
-				Username: "username",
-				Password: "password",
-				URL:      *opsmanUrl,
+				Username:     "username",
+				Password:     "password",
+				ClientID:     "client_id",
+				ClientSecret: "client_secret",
+				URL:          *opsmanUrl,
 			},
 			PKSApi: environment.PKSApi{
 				URL:      *pksApiUrl,
@@ -65,9 +67,9 @@ var _ = Describe("pks login runner", func() {
 		lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 
 		Expect(lines).To(Equal([]string{
-			`prods="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
+			`prods="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/staged/products)"`,
 			`guid="$(echo "$prods" | jq -r '.[] | select(.type == "pivotal-container-service") | .guid')"`,
-			`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.properties.uaa_admin_password)"`,
+			`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/products/"$guid"/credentials/.properties.uaa_admin_password)"`,
 			`pass="$(echo "$creds" | jq -r .credential.value.secret)"`,
 			`pks login -a api.test-url.io -u admin -p "$pass" --skip-ssl-validation`,
 		}))

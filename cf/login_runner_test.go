@@ -39,9 +39,11 @@ var _ = Describe("cf login runner", func() {
 		data = environment.Config{
 			CFDomain: "sys.test-url.io",
 			OpsManager: environment.OpsManager{
-				URL:      *url,
-				Username: "username",
-				Password: "password",
+				URL:          *url,
+				Username:     "username",
+				Password:     "password",
+				ClientID:     "client_id",
+				ClientSecret: "client_secret",
 			},
 		}
 
@@ -60,9 +62,9 @@ var _ = Describe("cf login runner", func() {
 		lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
 
 		Expect(lines).To(Equal([]string{
-			`prods="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/staged/products)"`,
+			`prods="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/staged/products)"`,
 			`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`,
-			`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, `user="$(echo "$creds" | jq -r .credential.value.identity)"`,
+			`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, `user="$(echo "$creds" | jq -r .credential.value.identity)"`,
 			`pass="$(echo "$creds" | jq -r .credential.value.password)"`,
 			`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`,
 		}))

@@ -23,9 +23,12 @@ type Runner struct {
 }
 
 func (r Runner) Run(data environment.Config, dryRun bool, args ...string) error {
-	openCommandLines := []string{
-		fmt.Sprintf(`open "%s"`, data.OpsManager.URL.String()),
-		fmt.Sprintf(`echo "%s" | pbcopy`, data.OpsManager.Password),
+	openCommandLines := []string{fmt.Sprintf(`open "%s"`, data.OpsManager.URL.String())}
+
+	if data.OpsManager.ClientID != "" && data.OpsManager.ClientSecret != "" {
+		openCommandLines = append(openCommandLines, fmt.Sprintf(`echo "%s" | pbcopy`, data.OpsManager.ClientSecret))
+	} else {
+		openCommandLines = append(openCommandLines, fmt.Sprintf(`echo "%s" | pbcopy`, data.OpsManager.Password))
 	}
 
 	return r.ScriptRunner.RunScript(openCommandLines, []string{"open", "pbcopy"}, dryRun)

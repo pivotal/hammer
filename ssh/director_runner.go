@@ -31,12 +31,25 @@ func (b DirectorRunner) Run(data environment.Config, dryRun bool, args ...string
 		fmt.Sprintf(`echo "%s" >"$ssh_key_path"`, data.OpsManager.PrivateKey),
 		`chmod 0600 "${ssh_key_path}"`,
 
-		fmt.Sprintf(`director_ssh_key="$(om -t %s -k -u %s -p %s curl -s -p %s | jq -r %s)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, bbrCredsPath, privateKeyPath),
+		fmt.Sprintf(`director_ssh_key="$(OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t %s -k curl -s -p %s | jq -r %s)"`,
+			data.OpsManager.ClientID,
+			data.OpsManager.ClientSecret,
+			data.OpsManager.Username,
+			data.OpsManager.Password,
+			data.OpsManager.URL.String(),
+			bbrCredsPath,
+			privateKeyPath),
 		`director_ssh_key_path=$(mktemp)`,
 		`echo -e "$director_ssh_key" > "$director_ssh_key_path"`,
 		`chmod 0600 "${director_ssh_key_path}"`,
 
-		fmt.Sprintf(`bosh_env="$(om -t %s -k -u %s -p %s curl -s -p %s | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, boshCreds),
+		fmt.Sprintf(`bosh_env="$(OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t %s -k curl -s -p %s | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"`,
+			data.OpsManager.ClientID,
+			data.OpsManager.ClientSecret,
+			data.OpsManager.Username,
+			data.OpsManager.Password,
+			data.OpsManager.URL.String(),
+			boshCreds),
 
 		`trap 'rm -f ${director_ssh_key_path}; rm -f ${ssh_key_path}' EXIT`,
 

@@ -33,14 +33,24 @@ func (c *OpenCommand) Execute(args []string) error {
 	c.UI.DisplayText("# open\n")
 	if c.Show {
 		c.UI.DisplayText(fmt.Sprintf("%s\n", data.OpsManager.URL.String()))
-		c.UI.DisplayText(fmt.Sprintf("username: %s\n", data.OpsManager.Username))
-		c.UI.DisplayText(fmt.Sprintf("password: %s\n", data.OpsManager.Password))
+		if data.OpsManager.ClientID != "" && data.OpsManager.ClientSecret != "" {
+			c.UI.DisplayText(fmt.Sprintf("client id: %s\n", data.OpsManager.ClientID))
+			c.UI.DisplayText(fmt.Sprintf("client secret: %s\n", data.OpsManager.ClientSecret))
+		} else {
+			c.UI.DisplayText(fmt.Sprintf("username: %s\n", data.OpsManager.Username))
+			c.UI.DisplayText(fmt.Sprintf("password: %s\n", data.OpsManager.Password))
+		}
 		return nil
 	}
 
 	c.UI.DisplayText(fmt.Sprintf("Opening: %s\n", data.OpsManager.URL.String()))
-	c.UI.DisplayText(fmt.Sprintf("Username is: %s\n", data.OpsManager.Username))
-	c.UI.DisplayText("Password is in the clipboard\n")
+	if data.OpsManager.ClientID != "" && data.OpsManager.ClientSecret != "" {
+		c.UI.DisplayText(fmt.Sprintf("Client ID is: %s\n", data.OpsManager.ClientID))
+		c.UI.DisplayText("Client Secret is in the clipboard\n")
+	} else {
+		c.UI.DisplayText(fmt.Sprintf("Username is: %s\n", data.OpsManager.Username))
+		c.UI.DisplayText("Password is in the clipboard\n")
+	}
 
 	return c.OpenRunner.Run(data, c.File)
 }

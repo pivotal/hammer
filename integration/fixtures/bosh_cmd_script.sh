@@ -55,7 +55,7 @@ chmod 0600 "${ssh_key_path}"
 bosh_ca_path=$(mktemp)
 ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"35.225.148.133" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null
 chmod 0600 "${bosh_ca_path}"
-creds="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
+creds="$(OM_CLIENT_ID='fakeClientID' OM_CLIENT_SECRET='fakeClientSecret' OM_USERNAME='pivotalcf' OM_PASSWORD='fakePassword' om -t https://pcf.manatee.cf-app.com -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
 bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"
 bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"
 bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"
