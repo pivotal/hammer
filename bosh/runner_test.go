@@ -40,12 +40,14 @@ var _ = Describe("bosh runner", func() {
 		data = environment.Config{
 			Name: "env-name",
 			OpsManager: environment.OpsManager{
-				PrivateKey: "private-key-contents",
-				IP:         net.ParseIP("10.0.0.6"),
-				SshUser:    "ubuntu",
-				URL:        *url,
-				Username:   "username",
-				Password:   "password",
+				PrivateKey:   "private-key-contents",
+				IP:           net.ParseIP("10.0.0.6"),
+				SshUser:      "ubuntu",
+				URL:          *url,
+				Username:     "username",
+				Password:     "password",
+				ClientID:     "client_id",
+				ClientSecret: "client_secret",
 			},
 		}
 		boshArgs = []string{}
@@ -73,7 +75,7 @@ var _ = Describe("bosh runner", func() {
 				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
 				`chmod 0600 "${bosh_ca_path}"`,
 
-				`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+				`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
 				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
@@ -133,7 +135,7 @@ var _ = Describe("bosh runner", func() {
 				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
 				`chmod 0600 "${bosh_ca_path}"`,
 
-				`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+				`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
 				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,

@@ -53,7 +53,7 @@ ZLuM3MSg63owoj01309KLkd0K+jh50SRmAdYcMF2Rwp+pmCD1umxkowU+JAeWdYU
 " >"$ssh_key_path"
 trap 'rm -f ${ssh_key_path}' EXIT
 chmod 0600 "${ssh_key_path}"
-creds="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
+creds="$(OM_CLIENT_ID='fakeClientID' OM_CLIENT_SECRET='fakeClientSecret' OM_USERNAME='pivotalcf' OM_PASSWORD='fakePassword' om -t https://pcf.manatee.cf-app.com -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
 bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"
 echo "$bosh"
 shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"

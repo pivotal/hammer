@@ -52,11 +52,11 @@ ZLuM3MSg63owoj01309KLkd0K+jh50SRmAdYcMF2Rwp+pmCD1umxkowU+JAeWdYU
 -----END RSA PRIVATE KEY-----
 " >"$ssh_key_path"
 chmod 0600 "${ssh_key_path}"
-director_ssh_key="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/deployed/director/credentials/bbr_ssh_credentials | jq -r .credential.value.private_key_pem)"
+director_ssh_key="$(OM_CLIENT_ID='fakeClientID' OM_CLIENT_SECRET='fakeClientSecret' OM_USERNAME='pivotalcf' OM_PASSWORD='fakePassword' om -t https://pcf.manatee.cf-app.com -k curl -s -p /api/v0/deployed/director/credentials/bbr_ssh_credentials | jq -r .credential.value.private_key_pem)"
 director_ssh_key_path=$(mktemp)
 echo -e "$director_ssh_key" > "$director_ssh_key_path"
 chmod 0600 "${director_ssh_key_path}"
-bosh_env="$(om -t https://pcf.manatee.cf-app.com -k -u pivotalcf -p fakePassword curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"
+bosh_env="$(OM_CLIENT_ID='fakeClientID' OM_CLIENT_SECRET='fakeClientSecret' OM_USERNAME='pivotalcf' OM_PASSWORD='fakePassword' om -t https://pcf.manatee.cf-app.com -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"
 trap 'rm -f ${director_ssh_key_path}; rm -f ${ssh_key_path}' EXIT
 jumpbox_cmd="ubuntu@35.225.148.133 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"
 ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -J "$jumpbox_cmd" "bbr@${bosh_env}" -i "$director_ssh_key_path"

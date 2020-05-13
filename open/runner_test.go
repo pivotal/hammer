@@ -62,6 +62,30 @@ var _ = Describe("open runner", func() {
 		}))
 	})
 
+	When("client credentials are specified", func() {
+		BeforeEach(func() {
+			url, _ := url.Parse("https://www.test-url.io")
+			data = environment.Config{
+				OpsManager: environment.OpsManager{
+					URL:          *url,
+					Password:     "password",
+					ClientID:     "client_id",
+					ClientSecret: "client_secret",
+				},
+			}
+		})
+
+		It("runs the script with opsman url open and copying of the client secret into the clipboard", func() {
+			Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
+
+			lines, _, _ := scriptRunner.RunScriptArgsForCall(0)
+			Expect(lines).To(Equal([]string{
+				`open "https://www.test-url.io"`,
+				`echo "client_secret" | pbcopy`,
+			}))
+		})
+	})
+
 	It("specifies the appropriate prerequisites when running the script", func() {
 		Expect(scriptRunner.RunScriptCallCount()).To(Equal(1))
 

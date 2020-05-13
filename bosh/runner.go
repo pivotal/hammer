@@ -33,7 +33,12 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" %s@"%s" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`, data.OpsManager.SshUser, data.OpsManager.IP.String()),
 		`chmod 0600 "${bosh_ca_path}"`,
 
-		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
+		fmt.Sprintf(`creds="$(OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t %s -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+			data.OpsManager.ClientID,
+			data.OpsManager.ClientSecret,
+			data.OpsManager.Username,
+			data.OpsManager.Password,
+			data.OpsManager.URL.String()),
 		`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
 		`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,

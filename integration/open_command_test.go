@@ -29,8 +29,8 @@ var _ = Describe("Open", func() {
 
 		Eventually(session).Should(Exit(0))
 		Eventually(string(session.Err.Contents())).Should(Equal(""))
-		Eventually(session.Out).Should(Say("Username is: pivotalcf"))
-		Eventually(session.Out).Should(Say("Password is in the clipboard"))
+		Eventually(session.Out).Should(Say("Client ID is: fakeClientID"))
+		Eventually(session.Out).Should(Say("Client Secret is in the clipboard"))
 
 		output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
 		pathToFile := LastLine(output)
@@ -49,8 +49,8 @@ var _ = Describe("Open", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 			Eventually(session.Out).Should(Say("https://pcf.manatee.cf-app.com"))
-			Eventually(session.Out).Should(Say("username: pivotalcf"))
-			Eventually(session.Out).Should(Say("password: fakePassword"))
+			Eventually(session.Out).Should(Say("client id: fakeClientID"))
+			Eventually(session.Out).Should(Say("client secret: fakeClientSecret"))
 		})
 	})
 })

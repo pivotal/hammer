@@ -24,9 +24,19 @@ type LoginRunner struct {
 
 func (r LoginRunner) Run(data environment.Config, dryRun bool, args ...string) error {
 	lines := []string{
-		fmt.Sprintf(`prods="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/staged/products)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
+		fmt.Sprintf(`prods="$(OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t %s -k curl -s -p /api/v0/staged/products)"`,
+			data.OpsManager.ClientID,
+			data.OpsManager.ClientSecret,
+			data.OpsManager.Username,
+			data.OpsManager.Password,
+			data.OpsManager.URL.String()),
 		`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`,
-		fmt.Sprintf(`creds="$(om -t %s -k -u %s -p %s curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password),
+		fmt.Sprintf(`creds="$(OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t %s -k curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`,
+			data.OpsManager.ClientID,
+			data.OpsManager.ClientSecret,
+			data.OpsManager.Username,
+			data.OpsManager.Password,
+			data.OpsManager.URL.String()),
 		`user="$(echo "$creds" | jq -r .credential.value.identity)"`,
 		`pass="$(echo "$creds" | jq -r .credential.value.password)"`,
 		fmt.Sprintf(`cf login -a "api.%s" -u "$user" -p "$pass" --skip-ssl-validation`, data.CFDomain),

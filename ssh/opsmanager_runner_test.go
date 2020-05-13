@@ -39,11 +39,13 @@ var _ = Describe("ops manager ssh runner", func() {
 		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
-				PrivateKey: "private-key-contents",
-				IP:         net.ParseIP("10.0.0.6"),
-				URL:        *url,
-				Username:   "username",
-				Password:   "password",
+				PrivateKey:   "private-key-contents",
+				IP:           net.ParseIP("10.0.0.6"),
+				URL:          *url,
+				Username:     "username",
+				Password:     "password",
+				ClientID:     "client_id",
+				ClientSecret: "client_secret",
 			},
 		}
 
@@ -65,7 +67,7 @@ var _ = Describe("ops manager ssh runner", func() {
 			`echo "private-key-contents" >"$ssh_key_path"`,
 			`trap 'rm -f ${ssh_key_path}' EXIT`,
 			`chmod 0600 "${ssh_key_path}"`,
-			`creds="$(om -t https://www.test-url.io -k -u username -p password curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
+			`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 			`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 			`echo "$bosh"`,
 			`shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"`,
