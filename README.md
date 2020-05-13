@@ -61,8 +61,7 @@ This file can then be passed into the tool via `hammer -t path-to-env-config <co
 `ubuntu` to ssh to the OpsManager VM, if users need to ssh via a different username they should set this as appropriate.
 
 Only one set of `ops_manager.client_id` and `ops_manager.client_secret` or `ops_manager.username` and `ops_manager.password`
-need to be specified in order to use `hammer om`, if both sets are specified then in line with `om` the client details
-will be used.
+need to be specified, if both sets are specified then in line with `om` the client details will be used.
 
 NB: `sys_domain` and `pks_api.url` are only needed for using `hammer cf-login` and `hammer pks-login` respectively.
 
