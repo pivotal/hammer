@@ -1,1 +1,1 @@
-om -t 'https://pcf.manatee.cf-app.com' -k -u 'pivotalcf' -p 'fakePassword' 'configure-product' '--product-name' 'p-rabbitmq' '--product-properties' '{".rabbitmq-server.server_admin_credentials":{"value":{"identity":"admin","password":"admin"}}}'
+OM_CLIENT_ID='fakeClientID' OM_CLIENT_SECRET='fakeClientSecret' OM_USERNAME='pivotalcf' OM_PASSWORD='fakePassword' om -t 'https://pcf.manatee.cf-app.com' -k 'configure-product' '--product-name' 'p-rabbitmq' '--product-properties' '{".rabbitmq-server.server_admin_credentials":{"value":{"identity":"admin","password":"admin"}}}'

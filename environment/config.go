@@ -23,12 +23,14 @@ import (
 const defaultSSHUser = "ubuntu"
 
 type OpsManager struct {
-	Username   string
-	Password   string
-	URL        url.URL
-	IP         net.IP
-	PrivateKey string
-	SshUser    string
+	Username     string
+	Password     string
+	ClientID     string
+	ClientSecret string
+	URL          url.URL
+	IP           net.IP
+	PrivateKey   string
+	SshUser      string
 }
 
 type PKSApi struct {
@@ -61,9 +63,11 @@ type environmentReader struct {
 	ServiceSubnet string   `yaml:"service_subnet_name"`
 	AZs           []string `yaml:"azs"`
 	OpsManager    struct {
-		URL      string `yaml:"url"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
+		URL          string `yaml:"url"`
+		Username     string `yaml:"username"`
+		Password     string `yaml:"password"`
+		ClientID     string `yaml:"client_id"`
+		ClientSecret string `yaml:"client_secret"`
 	} `yaml:"ops_manager"`
 	PKSApi struct {
 		Username string `yaml:"uaa_admin_user"`
@@ -127,12 +131,14 @@ func newLockfile(data environmentReader) (Config, error) {
 		ServiceSubnet: data.ServiceSubnet,
 		AZs:           data.AZs,
 		OpsManager: OpsManager{
-			Username:   data.OpsManager.Username,
-			Password:   data.OpsManager.Password,
-			URL:        *parsedOpsManagerURL,
-			IP:         opsManagerIp,
-			PrivateKey: data.PrivateKey,
-			SshUser:    sshUser,
+			Username:     data.OpsManager.Username,
+			Password:     data.OpsManager.Password,
+			ClientID:     data.OpsManager.ClientID,
+			ClientSecret: data.OpsManager.ClientSecret,
+			URL:          *parsedOpsManagerURL,
+			IP:           opsManagerIp,
+			PrivateKey:   data.PrivateKey,
+			SshUser:      sshUser,
 		},
 		PKSApi: PKSApi{
 			Username: data.PKSApi.Username,

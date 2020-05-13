@@ -28,14 +28,22 @@ func (r Runner) Run(data environment.Config, dryRun bool, omArgs ...string) erro
 
 	if len(omArgs) > 0 {
 		omCommandLines = []string{
-			fmt.Sprintf(`om -t '%s' -k -u '%s' -p '%s' %s`, data.OpsManager.URL.String(), data.OpsManager.Username, data.OpsManager.Password, quoteArgs(omArgs)),
+			fmt.Sprintf(`OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t '%s' -k %s`,
+				data.OpsManager.ClientID,
+				data.OpsManager.ClientSecret,
+				data.OpsManager.Username,
+				data.OpsManager.Password,
+				data.OpsManager.URL.String(),
+				quoteArgs(omArgs)),
 		}
 		omPrereqs = []string{"om"}
 	} else {
 		omCommandLines = []string{
-			fmt.Sprintf(`echo "export OM_TARGET=%s"`, data.OpsManager.URL.String()),
-			fmt.Sprintf(`echo "export OM_USERNAME=%s"`, data.OpsManager.Username),
-			fmt.Sprintf(`echo "export OM_PASSWORD=%s"`, data.OpsManager.Password),
+			fmt.Sprintf(`echo "export OM_TARGET='%s'"`, data.OpsManager.URL.String()),
+			fmt.Sprintf(`echo "export OM_CLIENT_ID='%s'"`, data.OpsManager.ClientID),
+			fmt.Sprintf(`echo "export OM_CLIENT_SECRET='%s'"`, data.OpsManager.ClientSecret),
+			fmt.Sprintf(`echo "export OM_USERNAME='%s'"`, data.OpsManager.Username),
+			fmt.Sprintf(`echo "export OM_PASSWORD='%s'"`, data.OpsManager.Password),
 		}
 	}
 

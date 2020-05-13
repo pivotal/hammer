@@ -20,6 +20,8 @@ name: lemon
 ops_manager:
   password: fakePassword
   url: https://pcf.lemon.cf-app.com
+  client_id: "fakeClientID"
+  client_secret: "fakeClientSecret"
   username: pivotalcf
 ops_manager_cidr: 10.0.0.0/24
 ops_manager_dns: pcf.lemon.cf-app.com

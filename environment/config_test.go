@@ -76,12 +76,14 @@ func checkMatchLemon(e Config) {
 			"URL":      Equal(mustParseURL("https://api.pks.lemon-lemon.cf-app.com")),
 		}),
 		"OpsManager": MatchAllFields(Fields{
-			"Username":   Equal("pivotalcf"),
-			"Password":   Equal("fakePassword"),
-			"URL":        Equal(mustParseURL("https://pcf.lemon.cf-app.com")),
-			"IP":         Equal(net.ParseIP("35.225.148.133")),
-			"SshUser":    Equal("ubuntu"),
-			"PrivateKey": ContainSubstring("BEGIN RSA"),
+			"Username":     Equal("pivotalcf"),
+			"Password":     Equal("fakePassword"),
+			"ClientID":     Equal("fakeClientID"),
+			"ClientSecret": Equal("fakeClientSecret"),
+			"URL":          Equal(mustParseURL("https://pcf.lemon.cf-app.com")),
+			"IP":           Equal(net.ParseIP("35.225.148.133")),
+			"SshUser":      Equal("ubuntu"),
+			"PrivateKey":   ContainSubstring("BEGIN RSA"),
 		}),
 	}))
 }
