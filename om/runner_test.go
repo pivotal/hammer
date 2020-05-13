@@ -39,9 +39,11 @@ var _ = Describe("om runner", func() {
 		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
-				URL:      *url,
-				Username: "username",
-				Password: "password",
+				URL:          *url,
+				Username:     "username",
+				Password:     "password",
+				ClientID:     "client_id",
+				ClientSecret: "client_secret",
 			},
 		}
 
@@ -64,9 +66,11 @@ var _ = Describe("om runner", func() {
 
 			lines, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
 			Expect(lines).To(Equal([]string{
-				`echo "export OM_TARGET=https://www.test-url.io"`,
-				`echo "export OM_USERNAME=username"`,
-				`echo "export OM_PASSWORD=password"`,
+				`echo "export OM_TARGET='https://www.test-url.io'"`,
+				`echo "export OM_CLIENT_ID='client_id'"`,
+				`echo "export OM_CLIENT_SECRET='client_secret'"`,
+				`echo "export OM_USERNAME='username'"`,
+				`echo "export OM_PASSWORD='password'"`,
 			}))
 			Expect(prereqs).To(HaveLen(0))
 		})
@@ -86,7 +90,7 @@ var _ = Describe("om runner", func() {
 
 			lines, prereqs, _ := scriptRunner.RunScriptArgsForCall(0)
 			Expect(lines).To(Equal([]string{
-				`om -t 'https://www.test-url.io' -k -u 'username' -p 'password' 'arg1' 'arg2' 'arg3'`,
+				`OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t 'https://www.test-url.io' -k 'arg1' 'arg2' 'arg3'`,
 			}))
 			Expect(prereqs).To(ConsistOf("om"))
 		})

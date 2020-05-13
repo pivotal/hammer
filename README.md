@@ -25,6 +25,8 @@ In order to run the `hammer` tool against a given environment you need to have a
   "name": "ENVIRONMENT-NAME",
   "ops_manager": {
     "url": "OPSMAN-URL",
+    "client_id": "OPSMAN-CLIENT-ID",
+    "client_secret": "OPSMAN-CLIENT-SECRET",
     "username": "OPSMAN-USERNAME",
     "password": "OPSMAN-PASSWORD"
   },
@@ -41,6 +43,8 @@ Or the equivalent in yaml:
 ```yaml
 name: ENVIRONMENT-NAME
 ops_manager:
+  client_id: OPSMAN-CLIENT-ID
+  client_secret: OPSMAN-CLIENT-SECRET
   password: OPSMAN-PASSWORD
   url: OPSMAN-URL
   username: OPSMAN-USERNAME
@@ -55,6 +59,10 @@ This file can then be passed into the tool via `hammer -t path-to-env-config <co
 
 `ops_manager_ssh_user` is an optional field and if not set then `hammer -t path-to-env-config ssh opsman` will use
 `ubuntu` to ssh to the OpsManager VM, if users need to ssh via a different username they should set this as appropriate.
+
+Only one set of `ops_manager.client_id` and `ops_manager.client_secret` or `ops_manager.username` and `ops_manager.password`
+need to be specified in order to use `hammer om`, if both sets are specified then in line with `om` the client details
+will be used.
 
 NB: `sys_domain` and `pks_api.url` are only needed for using `hammer cf-login` and `hammer pks-login` respectively.
 

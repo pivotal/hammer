@@ -67,7 +67,7 @@ var _ = Describe("OM", func() {
 
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
-			Eventually(string(session.Out.Contents())).Should(Equal("# om\nexport OM_TARGET=https://pcf.manatee.cf-app.com\nexport OM_USERNAME=pivotalcf\nexport OM_PASSWORD=fakePassword\n"))
+			Eventually(string(session.Out.Contents())).Should(Equal("# om\nexport OM_TARGET='https://pcf.manatee.cf-app.com'\nexport OM_CLIENT_ID='fakeClientID'\nexport OM_CLIENT_SECRET='fakeClientSecret'\nexport OM_USERNAME='pivotalcf'\nexport OM_PASSWORD='fakePassword'\n"))
 		})
 	})
 })
