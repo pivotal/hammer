@@ -33,7 +33,7 @@ func (c *OpenCommand) Execute(args []string) error {
 	c.UI.DisplayText("# open\n")
 	if c.Show {
 		c.UI.DisplayText(fmt.Sprintf("%s\n", data.OpsManager.URL.String()))
-		if data.OpsManager.ClientID != "" && data.OpsManager.ClientSecret != "" {
+		if data.OpsManager.ClientID != "" {
 			c.UI.DisplayText(fmt.Sprintf("client id: %s\n", data.OpsManager.ClientID))
 			c.UI.DisplayText(fmt.Sprintf("client secret: %s\n", data.OpsManager.ClientSecret))
 		} else {
@@ -44,7 +44,7 @@ func (c *OpenCommand) Execute(args []string) error {
 	}
 
 	c.UI.DisplayText(fmt.Sprintf("Opening: %s\n", data.OpsManager.URL.String()))
-	if data.OpsManager.ClientID != "" && data.OpsManager.ClientSecret != "" {
+	if data.OpsManager.ClientID != "" {
 		c.UI.DisplayText(fmt.Sprintf("Client ID is: %s\n", data.OpsManager.ClientID))
 		c.UI.DisplayText("Client Secret is in the clipboard\n")
 	} else {
