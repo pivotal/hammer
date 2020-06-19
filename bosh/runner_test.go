@@ -72,15 +72,15 @@ var _ = Describe("bosh runner", func() {
 				`chmod 0600 "${ssh_key_path}"`,
 
 				`bosh_ca_path=$(mktemp)`,
-				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
+				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>"${bosh_ca_path}" 2>/dev/null`,
 				`chmod 0600 "${bosh_ca_path}"`,
 
 				`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
-				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
-				`bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
-				`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
+				`bosh_client="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
+				`bosh_env="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
+				`bosh_secret="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
 				`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
 				`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`,
 				`bosh_gw_host="BOSH_GW_HOST=10.0.0.6"`,
@@ -132,15 +132,15 @@ var _ = Describe("bosh runner", func() {
 				`chmod 0600 "${ssh_key_path}"`,
 
 				`bosh_ca_path=$(mktemp)`,
-				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`,
+				`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"10.0.0.6" cat /var/tempest/workspaces/default/root_ca_certificate 1>"${bosh_ca_path}" 2>/dev/null`,
 				`chmod 0600 "${bosh_ca_path}"`,
 
 				`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 				`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
-				`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
-				`bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
-				`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
+				`bosh_client="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
+				`bosh_env="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
+				`bosh_secret="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
 				`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
 				`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@10.0.0.6:22?private-key=${ssh_key_path}"`,
 				`bosh_gw_host="BOSH_GW_HOST=10.0.0.6"`,
@@ -148,7 +148,7 @@ var _ = Describe("bosh runner", func() {
 				`bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"`,
 
 				`trap 'rm -f ${ssh_key_path} ${bosh_ca_path}' EXIT`,
-				`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh arg1 arg2 arg3`,
+				`/usr/bin/env "$bosh_client" "$bosh_env" "$bosh_secret" "$bosh_ca_cert" "$bosh_proxy" "$bosh_gw_host" "$bosh_gw_user" "$bosh_gw_private_key" bosh arg1 arg2 arg3`,
 			}))
 
 			Expect(err).NotTo(HaveOccurred())

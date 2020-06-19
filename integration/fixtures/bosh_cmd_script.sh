@@ -53,17 +53,17 @@ ZLuM3MSg63owoj01309KLkd0K+jh50SRmAdYcMF2Rwp+pmCD1umxkowU+JAeWdYU
 " >"$ssh_key_path"
 chmod 0600 "${ssh_key_path}"
 bosh_ca_path=$(mktemp)
-ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"35.225.148.133" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null
+ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" ubuntu@"35.225.148.133" cat /var/tempest/workspaces/default/root_ca_certificate 1>"${bosh_ca_path}" 2>/dev/null
 chmod 0600 "${bosh_ca_path}"
 creds="$(OM_CLIENT_ID='fakeClientID' OM_CLIENT_SECRET='fakeClientSecret' OM_USERNAME='pivotalcf' OM_PASSWORD='fakePassword' om -t https://pcf.manatee.cf-app.com -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"
 bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"
-bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"
-bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"
-bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"
+bosh_client="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT=')"
+bosh_env="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"
+bosh_secret="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"
 bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"
 bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://ubuntu@35.225.148.133:22?private-key=${ssh_key_path}"
 bosh_gw_host="BOSH_GW_HOST=35.225.148.133"
 bosh_gw_user="BOSH_GW_USER=ubuntu"
 bosh_gw_private_key="BOSH_GW_PRIVATE_KEY=${ssh_key_path}"
 trap 'rm -f ${ssh_key_path} ${bosh_ca_path}' EXIT
-/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh deployments
+/usr/bin/env "$bosh_client" "$bosh_env" "$bosh_secret" "$bosh_ca_cert" "$bosh_proxy" "$bosh_gw_host" "$bosh_gw_user" "$bosh_gw_private_key" bosh deployments

@@ -38,7 +38,7 @@ func (b OpsManagerRunner) Run(data environment.Config, dryRun bool, args ...stri
 			"/api/v0/deployed/director/credentials/bosh_commandline_credentials"),
 		`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 		`echo "$bosh"`,
-		`shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"`,
+		`shell="/usr/bin/env $(echo "$bosh" | tr '\n' ' ') bash -l"`,
 		fmt.Sprintf(`%s "$shell"`, sshCommand),
 	}
 

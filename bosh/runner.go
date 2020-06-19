@@ -30,7 +30,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		`chmod 0600 "${ssh_key_path}"`,
 
 		`bosh_ca_path=$(mktemp)`,
-		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" %s@"%s" cat /var/tempest/workspaces/default/root_ca_certificate 1>${bosh_ca_path} 2>/dev/null`, data.OpsManager.SshUser, data.OpsManager.IP.String()),
+		fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" %s@"%s" cat /var/tempest/workspaces/default/root_ca_certificate 1>"${bosh_ca_path}" 2>/dev/null`, data.OpsManager.SshUser, data.OpsManager.IP.String()),
 		`chmod 0600 "${bosh_ca_path}"`,
 
 		fmt.Sprintf(`creds="$(OM_CLIENT_ID='%s' OM_CLIENT_SECRET='%s' OM_USERNAME='%s' OM_PASSWORD='%s' om -t %s -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
@@ -41,9 +41,9 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 			data.OpsManager.URL.String()),
 		`bosh_all="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 
-		`bosh_client="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
-		`bosh_env="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
-		`bosh_secret="$(echo $bosh_all | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
+		`bosh_client="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT=')"`,
+		`bosh_env="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_ENVIRONMENT=')"`,
+		`bosh_secret="$(echo "$bosh_all" | tr ' ' '\n' | grep 'BOSH_CLIENT_SECRET=')"`,
 		`bosh_ca_cert="BOSH_CA_CERT=$bosh_ca_path"`,
 		fmt.Sprintf(`bosh_proxy="BOSH_ALL_PROXY=ssh+socks5://%s@%s:22?private-key=${ssh_key_path}"`, data.OpsManager.SshUser, data.OpsManager.IP.String()),
 		fmt.Sprintf(`bosh_gw_host="BOSH_GW_HOST=%s"`, data.OpsManager.IP.String()),
@@ -57,7 +57,7 @@ func (r Runner) Run(data environment.Config, dryRun bool, boshArgs ...string) er
 		lines = append(
 			lines,
 			`trap 'rm -f ${ssh_key_path} ${bosh_ca_path}' EXIT`,
-			fmt.Sprintf(`/usr/bin/env $bosh_client $bosh_env $bosh_secret $bosh_ca_cert $bosh_proxy $bosh_gw_host $bosh_gw_user $bosh_gw_private_key bosh %s`, strings.Join(boshArgs, " ")),
+			fmt.Sprintf(`/usr/bin/env "$bosh_client" "$bosh_env" "$bosh_secret" "$bosh_ca_cert" "$bosh_proxy" "$bosh_gw_host" "$bosh_gw_user" "$bosh_gw_private_key" bosh %s`, strings.Join(boshArgs, " ")),
 		)
 		prereqs = append(prereqs, "bosh")
 	} else {

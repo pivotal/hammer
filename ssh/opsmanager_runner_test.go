@@ -70,7 +70,7 @@ var _ = Describe("ops manager ssh runner", func() {
 			`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials)"`,
 			`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 			`echo "$bosh"`,
-			`shell="/usr/bin/env $(echo $bosh | tr '\n' ' ') bash -l"`,
+			`shell="/usr/bin/env $(echo "$bosh" | tr '\n' ' ') bash -l"`,
 			`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"10.0.0.6" "$shell"`,
 		}))
 	})

@@ -68,7 +68,7 @@ var _ = Describe("sshuttle runner", func() {
 			`trap 'rm -f ${ssh_key_path}' EXIT`,
 			`chmod 0600 "${ssh_key_path}"`,
 			`cidrs="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/staged/director/networks | jq -r .networks[].subnets[].cidr | xargs echo)"`,
-			`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" ${cidrs}`,
+			`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"10.0.0.6" "${cidrs}"`,
 		}))
 	})
 
