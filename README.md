@@ -78,7 +78,7 @@ golangci-lint run
 ```
 
 Or just run both with:
-```
+```bash
 make test
 ```
 
