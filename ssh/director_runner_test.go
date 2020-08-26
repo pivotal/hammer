@@ -39,6 +39,7 @@ var _ = Describe("director ssh runner", func() {
 		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
+				SshUser:      "ssh_user",
 				PrivateKey:   "private-key-contents",
 				IP:           net.ParseIP("10.0.0.6"),
 				URL:          *url,
@@ -72,7 +73,7 @@ var _ = Describe("director ssh runner", func() {
 			`chmod 0600 "${director_ssh_key_path}"`,
 			`bosh_env="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/director/credentials/bosh_commandline_credentials | grep -o "BOSH_ENVIRONMENT=\S*" | cut -f2 -d=)"`,
 			`trap 'rm -f ${director_ssh_key_path}; rm -f ${ssh_key_path}' EXIT`,
-			`jumpbox_cmd="ubuntu@10.0.0.6 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"`,
+			`jumpbox_cmd="ssh_user@10.0.0.6 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"`,
 			`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -J "$jumpbox_cmd" "bbr@${bosh_env}" -i "$director_ssh_key_path"`,
 		}))
 	})
