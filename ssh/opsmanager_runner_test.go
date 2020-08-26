@@ -39,6 +39,7 @@ var _ = Describe("ops manager ssh runner", func() {
 		url, _ := url.Parse("https://www.test-url.io")
 		data = environment.Config{
 			OpsManager: environment.OpsManager{
+				SshUser:      "ssh_user",
 				PrivateKey:   "private-key-contents",
 				IP:           net.ParseIP("10.0.0.6"),
 				URL:          *url,
@@ -71,7 +72,7 @@ var _ = Describe("ops manager ssh runner", func() {
 			`bosh="$(echo "$creds" | jq -r .credential | tr ' ' '\n' | grep '=')"`,
 			`echo "$bosh"`,
 			`shell="/usr/bin/env $(echo "$bosh" | tr '\n' ' ') bash -l"`,
-			`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"10.0.0.6" "$shell"`,
+			`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ssh_user@"10.0.0.6" "$shell"`,
 		}))
 	})
 
