@@ -22,7 +22,7 @@ type OpsManagerRunner struct {
 }
 
 func (b OpsManagerRunner) Run(data environment.Config, dryRun bool, args ...string) error {
-	sshCommand := fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t ubuntu@"%s"`, data.OpsManager.IP.String())
+	sshCommand := fmt.Sprintf(`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i "${ssh_key_path}" -t %s@"%s"`, data.OpsManager.SshUser, data.OpsManager.IP.String())
 
 	sshCommandLines := []string{
 		`ssh_key_path=$(mktemp)`,

@@ -53,7 +53,7 @@ func (b DirectorRunner) Run(data environment.Config, dryRun bool, args ...string
 
 		`trap 'rm -f ${director_ssh_key_path}; rm -f ${ssh_key_path}' EXIT`,
 
-		fmt.Sprintf(`jumpbox_cmd="ubuntu@%s -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"`, data.OpsManager.IP.String()),
+		fmt.Sprintf(`jumpbox_cmd="%s@%s -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -i ${ssh_key_path}"`, data.OpsManager.SshUser, data.OpsManager.IP.String()),
 		`ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -J "$jumpbox_cmd" "bbr@${bosh_env}" -i "$director_ssh_key_path"`,
 	}
 
