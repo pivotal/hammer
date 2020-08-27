@@ -39,7 +39,8 @@ func (b Runner) Run(data environment.Config, dryRun bool, args ...string) error 
 			networksPath,
 			cidrPath),
 
-		fmt.Sprintf(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r ubuntu@"%s" "${cidrs}"`,
+		fmt.Sprintf(`sshuttle --ssh-cmd "ssh -o IdentitiesOnly=yes -i ${ssh_key_path}" -r %s@"%s" "${cidrs}"`,
+			data.OpsManager.SshUser,
 			data.OpsManager.IP.String()),
 	}
 
