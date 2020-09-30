@@ -17,6 +17,8 @@ Alternatively you can build `hammer` from source if you have Go installed:
 git clone git@github.com:pivotal/hammer.git && cd hammer && go install
 ```
 
+You will also need to install, separately, any of the underlying cli tools that `hammer` will use in your workflow. `hammer` does not include `cf`, `bosh`, `om`, etc.
+
 ## Config
 
 In order to run the `hammer` tool against a given environment you need to have an environment config file in the following format:
