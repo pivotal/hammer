@@ -7,5 +7,5 @@ require (
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/onsi/ginkgo v1.13.0
 	github.com/onsi/gomega v1.10.1
-	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v2 v2.4.0
 )
