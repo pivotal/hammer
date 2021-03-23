@@ -13,9 +13,8 @@ package cf
 import (
 	"fmt"
 
-	"github.com/pivotal/hammer/scripting"
-
 	"github.com/pivotal/hammer/environment"
+	"github.com/pivotal/hammer/scripting"
 )
 
 type LoginRunner struct {
@@ -37,9 +36,10 @@ func (r LoginRunner) Run(data environment.Config, dryRun bool, args ...string) e
 			data.OpsManager.Username,
 			data.OpsManager.Password,
 			data.OpsManager.URL.String()),
-		`user="$(echo "$creds" | jq -r .credential.value.identity)"`,
-		`pass="$(echo "$creds" | jq -r .credential.value.password)"`,
-		fmt.Sprintf(`cf login -a "api.%s" -u "$user" -p "$pass" --skip-ssl-validation`, data.CFDomain),
+		`export CF_USERNAME="$(echo "$creds" | jq -r .credential.value.identity)"`,
+		`export CF_PASSWORD="$(echo "$creds" | jq -r .credential.value.password)"`,
+		fmt.Sprintf(`cf api "api.%s" --skip-ssl-validation`, data.CFDomain),
+		`cf auth`,
 	}
 
 	return r.ScriptRunner.RunScript(lines, []string{"jq", "om", "cf"}, dryRun)
