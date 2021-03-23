@@ -64,9 +64,11 @@ var _ = Describe("cf login runner", func() {
 		Expect(lines).To(Equal([]string{
 			`prods="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/staged/products)"`,
 			`guid="$(echo "$prods" | jq -r '.[] | select(.type == "cf") | .guid')"`,
-			`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`, `user="$(echo "$creds" | jq -r .credential.value.identity)"`,
-			`pass="$(echo "$creds" | jq -r .credential.value.password)"`,
-			`cf login -a "api.sys.test-url.io" -u "$user" -p "$pass" --skip-ssl-validation`,
+			`creds="$(OM_CLIENT_ID='client_id' OM_CLIENT_SECRET='client_secret' OM_USERNAME='username' OM_PASSWORD='password' om -t https://www.test-url.io -k curl -s -p /api/v0/deployed/products/"$guid"/credentials/.uaa.admin_credentials)"`,
+			`export CF_USERNAME="$(echo "$creds" | jq -r .credential.value.identity)"`,
+			`export CF_PASSWORD="$(echo "$creds" | jq -r .credential.value.password)"`,
+			`cf api "api.sys.test-url.io" --skip-ssl-validation`,
+			`cf auth`,
 		}))
 	})
 
