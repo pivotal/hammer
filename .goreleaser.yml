@@ -19,7 +19,7 @@ archives:
   format: "tar.gz"
   name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 brews:
-- github:
+- tap:
     owner: pivotal
     name: hammer
   ids:
