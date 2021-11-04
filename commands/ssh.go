@@ -23,15 +23,25 @@ func (e *targetConfigPath) UnmarshalFlag(path string) error {
 	return os.Setenv("HAMMER_TARGET_CONFIG", path)
 }
 
+type environmentName struct{}
+
+// If `-e` is specified on the hammer command (rather than a subcommand)
+// then set `HAMMER_ENVIRONMENT_NAME` so the subcommand can read it
+func (e *environmentName) UnmarshalFlag(name string) error {
+	return os.Setenv("HAMMER_ENVIRONMENT_NAME", name)
+}
+
 type SSHCommand struct {
-	TargetConfig targetConfigPath     `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
-	Director     SSHDirectorCommand   `command:"director"`
-	OpsManager   SSHOpsManagerCommand `command:"opsman"`
+	TargetConfig    targetConfigPath     `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
+	EnvironmentName environmentName      `short:"e" long:"environmentName" env:"HAMMER_ENVIRONMENT_NAME" hidden:"true"`
+	Director        SSHDirectorCommand   `command:"director"`
+	OpsManager      SSHOpsManagerCommand `command:"opsman"`
 }
 
 type SSHDirectorCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
-	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
+	TargetConfig    string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
+	EnvironmentName string `short:"e" long:"environmentName" env:"HAMMER_ENVIRONMENT_NAME" hidden:"true"`
+	File            bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env       EnvReader
 	UI        UI
@@ -39,7 +49,7 @@ type SSHDirectorCommand struct {
 }
 
 func (c *SSHDirectorCommand) Execute(args []string) error {
-	data, err := c.Env.Read(c.TargetConfig)
+	data, err := c.Env.Read(c.TargetConfig, c.EnvironmentName)
 	if err != nil {
 		return err
 	}
@@ -50,8 +60,9 @@ func (c *SSHDirectorCommand) Execute(args []string) error {
 }
 
 type SSHOpsManagerCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
-	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
+	TargetConfig    string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
+	EnvironmentName string `short:"e" long:"environmentName" env:"HAMMER_ENVIRONMENT_NAME" hidden:"true"`
+	File            bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env       EnvReader
 	UI        UI
@@ -59,7 +70,7 @@ type SSHOpsManagerCommand struct {
 }
 
 func (c *SSHOpsManagerCommand) Execute(args []string) error {
-	data, err := c.Env.Read(c.TargetConfig)
+	data, err := c.Env.Read(c.TargetConfig, c.EnvironmentName)
 	if err != nil {
 		return err
 	}

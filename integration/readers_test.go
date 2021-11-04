@@ -77,6 +77,77 @@ var _ = Describe("Readers", func() {
 		},
 		readers...,
 	)
+
+	DescribeTable("specifying a mismatching environment name with a single environments",
+		func(subcmds ...string) {
+			env := []string{
+				"HAMMER_TARGET_CONFIG=fixtures/claim_manatee_response.json",
+				"HAMMER_ENVIRONMENT_NAME=environment-that-does-not-match",
+			}
+			session := runPcf(env, subcmds...)
+
+			Eventually(session).Should(Exit(1))
+			Eventually(string(session.Err.Contents())).Should(Equal("Environment name 'environment-that-does-not-match' specified but does not match environment in config\n"))
+			Eventually(string(session.Out.Contents())).Should(Equal(""))
+		},
+		readers...,
+	)
+
+	DescribeTable("specifying a non-existent environment name with a config containing an environments list",
+		func(subcmds ...string) {
+			env := []string{
+				"HAMMER_TARGET_CONFIG=fixtures/multiple_environment_config.json",
+				"HAMMER_ENVIRONMENT_NAME=environment-that-does-not-exist",
+			}
+			session := runPcf(env, subcmds...)
+
+			Eventually(session).Should(Exit(1))
+			Eventually(string(session.Err.Contents())).Should(Equal("Environment name 'environment-that-does-not-exist' specified but does not match environment in config\n"))
+			Eventually(string(session.Out.Contents())).Should(Equal(""))
+		},
+		readers...,
+	)
+
+	DescribeTable("not specifying environment name with a config containing an environments list",
+		func(subcmds ...string) {
+			env := []string{
+				"HAMMER_TARGET_CONFIG=fixtures/multiple_environment_config.json",
+			}
+			params := append(subcmds, "-f")
+			session := runPcf(env, params...)
+
+			Eventually(session).Should(Exit(0))
+			Eventually(string(session.Err.Contents())).Should(Equal(""))
+		},
+		readers...,
+	)
+
+	DescribeTable("specifying environment name via an env var",
+		func(subcmds ...string) {
+			env := []string{
+				"HAMMER_TARGET_CONFIG=fixtures/multiple_environment_config.json",
+				"HAMMER_ENVIRONMENT_NAME=narwhal",
+			}
+			params := append(subcmds, "-f")
+			session := runPcf(env, params...)
+
+			Eventually(session).Should(Exit(0))
+			Eventually(string(session.Err.Contents())).Should(Equal(""))
+		},
+		readers...,
+	)
+
+	DescribeTable("specifying environment name via a flag",
+		func(subcmds ...string) {
+			params := append([]string{"-t", "fixtures/multiple_environment_config.json", "-e", "narwhal"}, subcmds...)
+			params = append(params, "-f")
+			session := runPcf([]string{}, params...)
+
+			Eventually(session).Should(Exit(0))
+			Eventually(string(session.Err.Contents())).Should(Equal(""))
+		},
+		readers...,
+	)
 })
 
 func runPcf(env []string, params ...string) *Session {

@@ -67,6 +67,77 @@ need to be specified, if both sets are specified then in line with `om` the clie
 
 NB: `sys_domain` and `pks_api.url` are only needed for using `hammer cf-login` and `hammer pks-login` respectively.
 
+### Multiple environments in a single config
+
+The config file can contain a list of environments in previously defined structure, such as:
+```json
+[{
+  "name": "ENVIRONMENT-NAME-1",
+  "ops_manager": {
+    "url": "OPSMAN-URL",
+    "client_id": "OPSMAN-CLIENT-ID",
+    "client_secret": "OPSMAN-CLIENT-SECRET",
+    "username": "OPSMAN-USERNAME",
+    "password": "OPSMAN-PASSWORD"
+  },
+  "ops_manager_private_key": "OPSMAN-RSA-PRIVATE-KEY",
+  "ops_manager_public_ip": "OPSMAN-PUBLIC-IP",
+  "ops_manager_ssh_user": "OPSMAN-SSH-USER",
+  "sys_domain": "PAS-SYSTEM-DOMAIN",
+  "pks_api":  {
+     "url": "PKS-API-URL"
+  }
+},
+{
+  "name": "ENVIRONMENT-NAME-2",
+  "ops_manager": {
+    "url": "OPSMAN-URL",
+    "client_id": "OPSMAN-CLIENT-ID",
+    "client_secret": "OPSMAN-CLIENT-SECRET",
+    "username": "OPSMAN-USERNAME",
+    "password": "OPSMAN-PASSWORD"
+  },
+  "ops_manager_private_key": "OPSMAN-RSA-PRIVATE-KEY",
+  "ops_manager_public_ip": "OPSMAN-PUBLIC-IP",
+  "ops_manager_ssh_user": "OPSMAN-SSH-USER",
+  "sys_domain": "PAS-SYSTEM-DOMAIN",
+  "pks_api":  {
+    "url": "PKS-API-URL"
+  }
+}]
+```
+Or the equivalent in yaml:
+```yaml
+- name: ENVIRONMENT-NAME-1
+  ops_manager:
+    client_id: OPSMAN-CLIENT-ID
+    client_secret: OPSMAN-CLIENT-SECRET
+    password: OPSMAN-PASSWORD
+    url: OPSMAN-URL
+    username: OPSMAN-USERNAME
+  ops_manager_private_key: OPSMAN-RSA-PRIVATE-KEY
+  ops_manager_public_ip: OPSMAN-PUBLIC-IP
+  ops_manager_ssh_user: OPSMAN-SSH-USER
+  pks_api:
+    url: PKS-API-URL
+  sys_domain: PAS-SYSTEM-DOMAIN
+- name: ENVIRONMENT-NAME-2
+  ops_manager:
+    client_id: OPSMAN-CLIENT-ID
+    client_secret: OPSMAN-CLIENT-SECRET
+    password: OPSMAN-PASSWORD
+    url: OPSMAN-URL
+    username: OPSMAN-USERNAME
+  ops_manager_private_key: OPSMAN-RSA-PRIVATE-KEY
+  ops_manager_public_ip: OPSMAN-PUBLIC-IP
+  ops_manager_ssh_user: OPSMAN-SSH-USER
+  pks_api:
+    url: PKS-API-URL
+  sys_domain: PAS-SYSTEM-DOMAIN
+```
+An environment can then be specified via `hammer -t path-to-env-config -e environment-name <command>`. If an environment
+name is not specified then the first environment in the config will be used.
+
 ## Development
 
 Unit and integration tests can be run if you have [Ginkgo](https://github.com/onsi/ginkgo) installed:

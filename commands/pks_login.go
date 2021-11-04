@@ -15,8 +15,9 @@ import (
 )
 
 type PKSLoginCommand struct {
-	TargetConfig string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
-	File         bool   `short:"f" long:"file" description:"write a script file but do not run it"`
+	TargetConfig    string `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" hidden:"true"`
+	EnvironmentName string `short:"e" long:"environmentName" env:"HAMMER_ENVIRONMENT_NAME" hidden:"true"`
+	File            bool   `short:"f" long:"file" description:"write a script file but do not run it"`
 
 	Env            EnvReader
 	UI             UI
@@ -24,7 +25,7 @@ type PKSLoginCommand struct {
 }
 
 func (c *PKSLoginCommand) Execute(args []string) error {
-	data, err := c.Env.Read(c.TargetConfig)
+	data, err := c.Env.Read(c.TargetConfig, c.EnvironmentName)
 	if err != nil {
 		return err
 	}
