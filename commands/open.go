@@ -30,7 +30,6 @@ func (c *OpenCommand) Execute(args []string) error {
 		return err
 	}
 
-	c.UI.DisplayText("# open\n")
 	if c.Show {
 		c.UI.DisplayText(fmt.Sprintf("%s\n", data.OpsManager.URL.String()))
 		if data.OpsManager.ClientID != "" {

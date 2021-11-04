@@ -25,6 +25,5 @@ func (c *SshuttleCommand) Execute(args []string) error {
 		return err
 	}
 
-	c.UI.DisplayText("# sshuttle\n")
 	return c.SshuttleRunner.Run(data, c.File)
 }

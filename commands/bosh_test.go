@@ -68,11 +68,6 @@ var _ = Describe("Bosh command", func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("displays bosh as a comment", func() {
-			Expect(ui.DisplayTextCallCount()).To(Equal(1))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# bosh\n"))
-		})
-
 		It("runs the bosh tool using the retrieved environment config", func() {
 			Expect(boshRunner.RunCallCount()).To(Equal(1))
 
