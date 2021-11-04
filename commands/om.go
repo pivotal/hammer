@@ -25,6 +25,5 @@ func (c *OMCommand) Execute(args []string) error {
 		return err
 	}
 
-	c.UI.DisplayText("# om\n")
 	return c.OMRunner.Run(data, c.File, args...)
 }

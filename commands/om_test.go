@@ -69,11 +69,6 @@ var _ = Describe("om command", func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("displays om as a comment", func() {
-			Expect(ui.DisplayTextCallCount()).To(Equal(1))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# om\n"))
-		})
-
 		It("runs the om tool using the retrieved environment config", func() {
 			Expect(omRunner.RunCallCount()).To(Equal(1))
 

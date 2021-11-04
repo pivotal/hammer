@@ -69,11 +69,6 @@ var _ = Describe("sshuttle command", func() {
 			envReader.ReadReturns(environment.Config{Name: "env-name"}, nil)
 		})
 
-		It("displays sshuttle as a comment", func() {
-			Expect(ui.DisplayTextCallCount()).To(Equal(1))
-			Expect(ui.DisplayTextArgsForCall(0)).To(Equal("# sshuttle\n"))
-		})
-
 		It("runs the sshuttle tool using the retrieved environment config", func() {
 			Expect(sshuttleRunner.RunCallCount()).To(Equal(1))
 

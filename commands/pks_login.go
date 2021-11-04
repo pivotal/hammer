@@ -29,7 +29,6 @@ func (c *PKSLoginCommand) Execute(args []string) error {
 		return err
 	}
 
-	c.UI.DisplayText("# pks-login\n")
 	c.UI.DisplayText(fmt.Sprintf("Logging in to PKS at: %s\n", data.OpsManager.URL.String()))
 
 	return c.PKSLoginRunner.Run(data, c.File)

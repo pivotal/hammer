@@ -29,7 +29,6 @@ func (c *CFLoginCommand) Execute(args []string) error {
 		return err
 	}
 
-	c.UI.DisplayText("# cf-login\n")
 	c.UI.DisplayText(fmt.Sprintf("Logging in to CF at: %s\n", data.OpsManager.URL.String()))
 
 	return c.CFLoginRunner.Run(data, c.File)

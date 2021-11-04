@@ -25,6 +25,5 @@ func (c *BoshCommand) Execute(args []string) error {
 		return err
 	}
 
-	c.UI.DisplayText("# bosh\n")
 	return c.BoshRunner.Run(data, c.File, args...)
 }
