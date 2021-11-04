@@ -27,9 +27,10 @@ func (fake *FakeUI) DisplayError(arg1 error) {
 	fake.displayErrorArgsForCall = append(fake.displayErrorArgsForCall, struct {
 		arg1 error
 	}{arg1})
+	stub := fake.DisplayErrorStub
 	fake.recordInvocation("DisplayError", []interface{}{arg1})
 	fake.displayErrorMutex.Unlock()
-	if fake.DisplayErrorStub != nil {
+	if stub != nil {
 		fake.DisplayErrorStub(arg1)
 	}
 }
@@ -58,9 +59,10 @@ func (fake *FakeUI) DisplayText(arg1 string) {
 	fake.displayTextArgsForCall = append(fake.displayTextArgsForCall, struct {
 		arg1 string
 	}{arg1})
+	stub := fake.DisplayTextStub
 	fake.recordInvocation("DisplayText", []interface{}{arg1})
 	fake.displayTextMutex.Unlock()
-	if fake.DisplayTextStub != nil {
+	if stub != nil {
 		fake.DisplayTextStub(arg1)
 	}
 }

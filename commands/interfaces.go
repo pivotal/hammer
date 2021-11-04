@@ -12,19 +12,19 @@ package commands
 
 import "github.com/pivotal/hammer/environment"
 
-//go:generate counterfeiter . EnvReader
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . EnvReader
 
 type EnvReader interface {
 	Read(targetConfigPath string) (environment.Config, error)
 }
 
-//go:generate counterfeiter . ToolRunner
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ToolRunner
 
 type ToolRunner interface {
 	Run(data environment.Config, dryRun bool, args ...string) error
 }
 
-//go:generate counterfeiter . UI
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . UI
 
 type UI interface {
 	DisplayText(text string)
