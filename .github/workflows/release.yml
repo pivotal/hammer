@@ -4,6 +4,8 @@ on:
   push:
     tags:
     - 'v*'
+permissions:
+  contents: write
 jobs:
   release:
     name: Release
@@ -18,7 +20,7 @@ jobs:
     - name: goreleaser
       uses: goreleaser/goreleaser-action@v2
       env:
-        GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         distribution: goreleaser
         args: release
