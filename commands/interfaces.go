@@ -15,7 +15,7 @@ import "github.com/pivotal/hammer/environment"
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . EnvReader
 
 type EnvReader interface {
-	Read(targetConfigPath string) (environment.Config, error)
+	Read(targetConfigPath, environmentName string) (environment.Config, error)
 }
 
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ToolRunner

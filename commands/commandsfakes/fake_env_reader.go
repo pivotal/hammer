@@ -9,10 +9,11 @@ import (
 )
 
 type FakeEnvReader struct {
-	ReadStub        func(string) (environment.Config, error)
+	ReadStub        func(string, string) (environment.Config, error)
 	readMutex       sync.RWMutex
 	readArgsForCall []struct {
 		arg1 string
+		arg2 string
 	}
 	readReturns struct {
 		result1 environment.Config
@@ -26,18 +27,19 @@ type FakeEnvReader struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeEnvReader) Read(arg1 string) (environment.Config, error) {
+func (fake *FakeEnvReader) Read(arg1 string, arg2 string) (environment.Config, error) {
 	fake.readMutex.Lock()
 	ret, specificReturn := fake.readReturnsOnCall[len(fake.readArgsForCall)]
 	fake.readArgsForCall = append(fake.readArgsForCall, struct {
 		arg1 string
-	}{arg1})
+		arg2 string
+	}{arg1, arg2})
 	stub := fake.ReadStub
 	fakeReturns := fake.readReturns
-	fake.recordInvocation("Read", []interface{}{arg1})
+	fake.recordInvocation("Read", []interface{}{arg1, arg2})
 	fake.readMutex.Unlock()
 	if stub != nil {
-		return stub(arg1)
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -51,17 +53,17 @@ func (fake *FakeEnvReader) ReadCallCount() int {
 	return len(fake.readArgsForCall)
 }
 
-func (fake *FakeEnvReader) ReadCalls(stub func(string) (environment.Config, error)) {
+func (fake *FakeEnvReader) ReadCalls(stub func(string, string) (environment.Config, error)) {
 	fake.readMutex.Lock()
 	defer fake.readMutex.Unlock()
 	fake.ReadStub = stub
 }
 
-func (fake *FakeEnvReader) ReadArgsForCall(i int) string {
+func (fake *FakeEnvReader) ReadArgsForCall(i int) (string, string) {
 	fake.readMutex.RLock()
 	defer fake.readMutex.RUnlock()
 	argsForCall := fake.readArgsForCall[i]
-	return argsForCall.arg1
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeEnvReader) ReadReturns(result1 environment.Config, result2 error) {

@@ -31,24 +31,65 @@ var _ = Describe("Config", func() {
 
 	Describe("FromFile", func() {
 		It("reads data from a json file", func() {
-			env, err := FromFile(path.Join("fixtures", "lemon.json"))
+			env, err := FromFile(path.Join("fixtures", "lemon.json"), "")
 
 			Expect(err).NotTo(HaveOccurred())
 			checkMatchLemon(env)
 		})
 
 		It("reads data from a yaml file", func() {
-			env, err := FromFile(path.Join("fixtures", "lemon.yaml"))
+			env, err := FromFile(path.Join("fixtures", "lemon.yaml"), "")
 
 			Expect(err).NotTo(HaveOccurred())
 			checkMatchLemon(env)
 		})
 
 		It("reads data from a config file that does not contain subnets, CIDRs, AZs or version", func() {
-			env, err := FromFile(path.Join("fixtures", "reduced.json"))
+			env, err := FromFile(path.Join("fixtures", "reduced.json"), "")
 
 			Expect(err).NotTo(HaveOccurred())
 			checkMatchReduced(env)
+		})
+
+		When("a non-matching environment name is specified", func() {
+			It("errors with a helpful message", func() {
+				env, err := FromFile(path.Join("fixtures", "lemon.json"), "non-matching-environment")
+
+				Expect(err).To(MatchError("Environment name 'non-matching-environment' specified but does not match environment in config"))
+				Expect(env).To(BeEquivalentTo(Config{}))
+			})
+		})
+
+		When("a file with multiple environment configs is specified", func() {
+			It("selects the first config if an environment name is not specified", func() {
+				env, err := FromFile(path.Join("fixtures", "multiple.json"), "")
+
+				Expect(err).NotTo(HaveOccurred())
+				checkMatchLemon(env)
+			})
+
+			It("selects the appropriate config if a matching environment name is specified", func() {
+				env, err := FromFile(path.Join("fixtures", "multiple.json"), "reduced-config")
+
+				Expect(err).NotTo(HaveOccurred())
+				checkMatchReduced(env)
+			})
+
+			It("errors if a non-matching environment name is specified", func() {
+				env, err := FromFile(path.Join("fixtures", "multiple.json"), "non-existent-config")
+
+				Expect(err).To(MatchError("Environment name 'non-existent-config' specified but does not match environment in config"))
+				Expect(env).To(BeEquivalentTo(Config{}))
+			})
+		})
+
+		When("a file with an empty array is specified", func() {
+			It("errors", func() {
+				env, err := FromFile(path.Join("fixtures", "empty.json"), "")
+
+				Expect(err).To(MatchError("Target config is an empty array"))
+				Expect(env).To(BeEquivalentTo(Config{}))
+			})
 		})
 	})
 })

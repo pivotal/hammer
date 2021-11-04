@@ -56,18 +56,27 @@ func (e *targetConfigPath) UnmarshalFlag(path string) error {
 	return os.Setenv("HAMMER_TARGET_CONFIG", path)
 }
 
+type environmentName struct{}
+
+// If `-e` is specified on the hammer command (rather than a subcommand)
+// then set `HAMMER_ENVIRONMENT_NAME` so the subcommand can read it
+func (e *environmentName) UnmarshalFlag(name string) error {
+	return os.Setenv("HAMMER_ENVIRONMENT_NAME", name)
+}
+
 type options struct {
-	Bosh         commands.BoshCommand       `command:"bosh" description:"display BOSH credentials, or run a BOSH command"`
-	CFLogin      commands.CFLoginCommand    `command:"cf-login" description:"log in to the cf for the environment"`
-	PKSLogin     commands.PKSLoginCommand   `command:"pks-login" description:"log in to pks for the environment"`
-	Open         commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
-	OM           commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
-	SSH          commands.SSHCommand        `command:"ssh" choice:"opsman" choice:"director" description:"open an ssh connection to the ops manager or director of this environment"` //nolint:staticcheck
-	Sshuttle     commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
-	Time         timeCommand                `command:"time" description:"duuun dundundun" hidden:"true"`
-	Version      versionCommand             `command:"version" alias:"ver" description:"version of command"`
-	Completion   commands.CompletionCommand `command:"completion" description:"command completion script"`
-	TargetConfig targetConfigPath           `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" description:"path to the target environment config"`
+	Bosh            commands.BoshCommand       `command:"bosh" description:"display BOSH credentials, or run a BOSH command"`
+	CFLogin         commands.CFLoginCommand    `command:"cf-login" description:"log in to the cf for the environment"`
+	PKSLogin        commands.PKSLoginCommand   `command:"pks-login" description:"log in to pks for the environment"`
+	Open            commands.OpenCommand       `command:"open" description:"open a browser to this environment"`
+	OM              commands.OMCommand         `command:"om" description:"run the 'om' command with credentials for this environment"`
+	SSH             commands.SSHCommand        `command:"ssh" choice:"opsman" choice:"director" description:"open an ssh connection to the ops manager or director of this environment"` //nolint:staticcheck
+	Sshuttle        commands.SshuttleCommand   `command:"sshuttle" description:"sshuttle to this environment"`
+	Time            timeCommand                `command:"time" description:"duuun dundundun" hidden:"true"`
+	Version         versionCommand             `command:"version" alias:"ver" description:"version of command"`
+	Completion      commands.CompletionCommand `command:"completion" description:"command completion script"`
+	TargetConfig    targetConfigPath           `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" description:"path to the target environment config"`
+	EnvironmentName environmentName            `short:"e" long:"environmentName" env:"HAMMER_ENVIRONMENT_NAME" description:"name of the environment in the config to target"`
 }
 
 func main() {

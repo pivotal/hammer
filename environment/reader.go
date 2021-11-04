@@ -16,9 +16,9 @@ import (
 
 type Reader struct{}
 
-func (er *Reader) Read(targetConfigPath string) (Config, error) {
+func (er *Reader) Read(targetConfigPath, environmentName string) (Config, error) {
 	if targetConfigPath == "" {
 		return Config{}, fmt.Errorf("You must specify the target environment config path (--target | -t) flag")
 	}
-	return FromFile(targetConfigPath)
+	return FromFile(targetConfigPath, environmentName)
 }
