@@ -9,12 +9,17 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
     - name: Check out code
       uses: actions/checkout@v2
     - name: goreleaser
-      uses: docker://goreleaser/goreleaser
+      uses: goreleaser/goreleaser-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
       with:
+        distribution: goreleaser
         args: release
       if: success()
