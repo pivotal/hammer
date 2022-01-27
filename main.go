@@ -76,7 +76,7 @@ type options struct {
 	Version         versionCommand             `command:"version" alias:"ver" description:"version of command"`
 	Completion      commands.CompletionCommand `command:"completion" description:"command completion script"`
 	TargetConfig    targetConfigPath           `short:"t" long:"target" env:"HAMMER_TARGET_CONFIG" description:"path to the target environment config"`
-	EnvironmentName environmentName            `short:"e" long:"environmentName" env:"HAMMER_ENVIRONMENT_NAME" description:"name of the environment in the config to target"`
+	EnvironmentName environmentName            `short:"e" long:"environment-name" env:"HAMMER_ENVIRONMENT_NAME" description:"name of the environment in the config to target"`
 }
 
 func main() {
