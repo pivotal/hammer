@@ -5,12 +5,12 @@
 class Hammer < Formula
   desc ""
   homepage ""
-  version "0.11.0"
+  version "0.12.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/pivotal/hammer/releases/download/v0.11.0/hammer_darwin_amd64.tar.gz"
-      sha256 "e560776045f01801539c6320d1a8d92ea4bd669fb74c132d3e34d8a6a98897ca"
+      url "https://github.com/pivotal/hammer/releases/download/v0.12.0/hammer_darwin_amd64.tar.gz"
+      sha256 "2211d9639819a34e18f5d50947ac5f8a3ad192e24695f32d52a9c65a8bed1328"
 
       def install
         bin.install "hammer"
@@ -20,8 +20,8 @@ class Hammer < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/pivotal/hammer/releases/download/v0.11.0/hammer_linux_amd64.tar.gz"
-      sha256 "1b9ad0214728e4ff3636046804b6398abcac6ad8110a26860adab29624a1bb04"
+      url "https://github.com/pivotal/hammer/releases/download/v0.12.0/hammer_linux_amd64.tar.gz"
+      sha256 "f7e066017e5f59dd5c8ee5c2cd4f2e4e8333e3a45bdd574cc26a1cc4e950aa81"
 
       def install
         bin.install "hammer"
