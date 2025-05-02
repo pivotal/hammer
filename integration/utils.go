@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package integration
 
 import (
-	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 
@@ -19,7 +19,7 @@ import (
 )
 
 func LoadFixture(name string) string {
-	contents, err := ioutil.ReadFile(path.Join("fixtures", name))
+	contents, err := os.ReadFile(path.Join("fixtures", name))
 	Expect(err).NotTo(HaveOccurred())
 	return string(contents)
 }

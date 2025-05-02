@@ -12,11 +12,11 @@ package scripting
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 func WriteTempFile(lines ...string) (string, error) {
-	tempfile, err := ioutil.TempFile("", "")
+	tempfile, err := os.CreateTemp("", "")
 	if err != nil {
 		return "", err
 	}
