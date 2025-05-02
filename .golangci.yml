@@ -2,7 +2,6 @@
 linters:
   disable-all: true
   enable:
-  - deadcode
   - errcheck
   - gochecknoinits
   - goconst
@@ -11,14 +10,11 @@ linters:
   - gosimple
   - govet
   - ineffassign
-  - interfacer
   - misspell
   - staticcheck
-  - structcheck
   - typecheck
   - unconvert
   - unused
-  - varcheck
 linters-settings:
   goconst:
     min-len: 2

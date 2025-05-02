@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package integration
 
 import (
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -32,7 +32,7 @@ var _ = Describe("BOSH", func() {
 
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
 			pathToFile := LastLine(output)
-			contents, err := ioutil.ReadFile(pathToFile)
+			contents, err := os.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("bosh_creds_script.sh")))
@@ -50,7 +50,7 @@ var _ = Describe("BOSH", func() {
 
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
 			pathToFile := LastLine(output)
-			contents, err := ioutil.ReadFile(pathToFile)
+			contents, err := os.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("bosh_cmd_script.sh")))

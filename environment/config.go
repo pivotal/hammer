@@ -12,9 +12,9 @@ package environment
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net"
 	"net/url"
+	"os"
 
 	"github.com/hashicorp/go-version"
 	"gopkg.in/yaml.v2"
@@ -77,7 +77,7 @@ type environmentReader struct {
 }
 
 func FromFile(path, environmentName string) (Config, error) {
-	contents, err := ioutil.ReadFile(path)
+	contents, err := os.ReadFile(path)
 	if err != nil {
 		return Config{}, err
 	}

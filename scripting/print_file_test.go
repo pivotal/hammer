@@ -11,7 +11,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package scripting_test
 
 import (
-	"io/ioutil"
 	"os"
 
 	. "github.com/onsi/ginkgo"
@@ -26,7 +25,7 @@ var _ = Describe("WriteTempFile", func() {
 		Expect(err).NotTo(HaveOccurred())
 		defer os.Remove(path)
 
-		contents, err := ioutil.ReadFile(path)
+		contents, err := os.ReadFile(path)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(string(contents)).To(BeEmpty())
 	})
@@ -36,7 +35,7 @@ var _ = Describe("WriteTempFile", func() {
 		Expect(err).NotTo(HaveOccurred())
 		defer os.Remove(path)
 
-		contents, err := ioutil.ReadFile(path)
+		contents, err := os.ReadFile(path)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(string(contents)).To(Equal("line1\nline2\nline3\n"))
 	})

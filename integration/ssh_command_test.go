@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package integration
 
 import (
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -34,7 +34,7 @@ var _ = Describe("SSH", func() {
 
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
 			pathToFile := LastLine(output)
-			contents, err := ioutil.ReadFile(pathToFile)
+			contents, err := os.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("ssh_opsman_script.sh")))
@@ -54,7 +54,7 @@ var _ = Describe("SSH", func() {
 			output := strings.TrimSuffix(string(session.Out.Contents()), "\n")
 			lines := strings.Split(output, "\n")
 			pathToFile := lines[len(lines)-1]
-			contents, err := ioutil.ReadFile(pathToFile)
+			contents, err := os.ReadFile(pathToFile)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal(LoadFixture("ssh_director_script.sh")))
