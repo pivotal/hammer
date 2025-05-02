@@ -1,6 +1,6 @@
 module github.com/pivotal/hammer
 
-go 1.17
+go 1.23
 
 require (
 	github.com/hashicorp/go-version v1.4.0
