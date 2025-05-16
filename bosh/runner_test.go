@@ -15,7 +15,7 @@ import (
 	"net"
 	"net/url"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/pivotal/hammer/bosh"
 	"github.com/pivotal/hammer/environment"

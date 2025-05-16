@@ -11,7 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 package scripting_test
 
 import (
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	. "github.com/pivotal/hammer/scripting"
