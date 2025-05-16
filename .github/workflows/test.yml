@@ -17,8 +17,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Unit tests
       run: |
-        go get github.com/onsi/ginkgo/ginkgo@v1.16.5
-        go install github.com/onsi/ginkgo/ginkgo
+        go install github.com/onsi/ginkgo/v2/ginkgo
         make unit-test
   lint:
     name: Lint

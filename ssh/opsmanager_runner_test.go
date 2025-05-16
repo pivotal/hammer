@@ -17,7 +17,7 @@ import (
 
 	"github.com/pivotal/hammer/ssh"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/pivotal/hammer/environment"
 	"github.com/pivotal/hammer/scripting/scriptingfakes"

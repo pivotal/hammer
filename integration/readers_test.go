@@ -13,8 +13,7 @@ package integration
 import (
 	"os/exec"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
@@ -40,7 +39,7 @@ var _ = Describe("Readers", func() {
 			Eventually(session.Err).Should(Say("open /this/should/not/exist: no such file or directory"))
 			Eventually(string(session.Out.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("accepting the `-t` flag before the subcommands",
@@ -52,7 +51,7 @@ var _ = Describe("Readers", func() {
 			Eventually(session.Err).Should(Say("open /also/should/not/exist: no such file or directory"))
 			Eventually(string(session.Out.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("reading the environment from $HAMMER_TARGET_CONFIG",
@@ -64,7 +63,7 @@ var _ = Describe("Readers", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("failure to specify the `-t` flags",
@@ -75,7 +74,7 @@ var _ = Describe("Readers", func() {
 			Eventually(string(session.Err.Contents())).Should(Equal("You must specify the target environment config path (--target | -t) flag\n"))
 			Eventually(string(session.Out.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("specifying a mismatching environment name with a single environments",
@@ -90,7 +89,7 @@ var _ = Describe("Readers", func() {
 			Eventually(string(session.Err.Contents())).Should(Equal("Environment name 'environment-that-does-not-match' specified but does not match environment in config\n"))
 			Eventually(string(session.Out.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("specifying a non-existent environment name with a config containing an environments list",
@@ -105,7 +104,7 @@ var _ = Describe("Readers", func() {
 			Eventually(string(session.Err.Contents())).Should(Equal("Environment name 'environment-that-does-not-exist' specified but does not match environment in config\n"))
 			Eventually(string(session.Out.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("not specifying environment name with a config containing an environments list",
@@ -119,7 +118,7 @@ var _ = Describe("Readers", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("specifying environment name via an env var",
@@ -134,7 +133,7 @@ var _ = Describe("Readers", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 
 	DescribeTable("specifying environment name via a flag",
@@ -146,7 +145,7 @@ var _ = Describe("Readers", func() {
 			Eventually(session).Should(Exit(0))
 			Eventually(string(session.Err.Contents())).Should(Equal(""))
 		},
-		readers...,
+		readers,
 	)
 })
 

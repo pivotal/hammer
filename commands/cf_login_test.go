@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"net/url"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	fakes "github.com/pivotal/hammer/commands/commandsfakes"
 	"github.com/pivotal/hammer/environment"
