@@ -9,6 +9,7 @@ builds:
   goos:
   - darwin
   - linux
+  - windows
   goarch:
   - amd64
   - arm64
@@ -17,8 +18,13 @@ builds:
   - CGO_ENABLED=0
 archives:
 - id: archive
-  format: "tar.gz"
+  formats:
+  - tar.gz
   name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+  format_overrides:
+  - goos: windows
+    formats:
+    - zip
 brews:
 - tap:
     owner: pivotal
