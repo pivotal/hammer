@@ -1,5 +1,6 @@
 # Documentation at http://goreleaser.com
 ---
+version: 2
 project_name: hammer
 before:
   hooks:
@@ -26,7 +27,7 @@ archives:
     formats:
     - zip
 brews:
-- tap:
+- repository:
     owner: pivotal
     name: hammer
   ids:
