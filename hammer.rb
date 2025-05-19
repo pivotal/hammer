@@ -5,12 +5,20 @@
 class Hammer < Formula
   desc ""
   homepage ""
-  version "0.12.0"
+  version "0.13.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/pivotal/hammer/releases/download/v0.12.0/hammer_darwin_amd64.tar.gz"
-      sha256 "2211d9639819a34e18f5d50947ac5f8a3ad192e24695f32d52a9c65a8bed1328"
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_darwin_amd64.tar.gz"
+      sha256 "83590b8f19eb26ca29ebeaa8257bedb27ab83a059f5faeabb4f816d27f2281d6"
+
+      def install
+        bin.install "hammer"
+      end
+    end
+    if Hardware::CPU.arm?
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_darwin_arm64.tar.gz"
+      sha256 "eb8ad96275d64455d6605a3f356ad933a1c6946dad86917d18bebe24357a4362"
 
       def install
         bin.install "hammer"
@@ -19,10 +27,16 @@ class Hammer < Formula
   end
 
   on_linux do
-    if Hardware::CPU.intel?
-      url "https://github.com/pivotal/hammer/releases/download/v0.12.0/hammer_linux_amd64.tar.gz"
-      sha256 "f7e066017e5f59dd5c8ee5c2cd4f2e4e8333e3a45bdd574cc26a1cc4e950aa81"
-
+    if Hardware::CPU.intel? and Hardware::CPU.is_64_bit?
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_linux_amd64.tar.gz"
+      sha256 "8f188383d6f5764d78cf616d36693ff446ed33c5649e95619913f9383cd83f5f"
+      def install
+        bin.install "hammer"
+      end
+    end
+    if Hardware::CPU.arm? and Hardware::CPU.is_64_bit?
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_linux_arm64.tar.gz"
+      sha256 "e4317a61e92dfd724c96d28a8eb53d1a32e7929b82aec6a4363f4f1a40d5c3a0"
       def install
         bin.install "hammer"
       end
