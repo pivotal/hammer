@@ -22,10 +22,25 @@ archives:
   formats:
   - tar.gz
   name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+  builds_info:
+    group: root
+    owner: root
+    mode: 0755
   format_overrides:
   - goos: windows
     formats:
     - zip
+  files:
+  - src: "LICENSE"
+    info:
+      group: root
+      owner: root
+      mode: 0644
+  - src: "README.md"
+    info:
+      group: root
+      owner: root
+      mode: 0644
 brews:
 - repository:
     owner: pivotal
