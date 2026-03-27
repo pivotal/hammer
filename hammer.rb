@@ -5,39 +5,39 @@
 class Hammer < Formula
   desc ""
   homepage ""
-  version "0.13.0"
+  version "0.13.1"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_darwin_amd64.tar.gz"
-      sha256 "83590b8f19eb26ca29ebeaa8257bedb27ab83a059f5faeabb4f816d27f2281d6"
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.1/hammer_darwin_amd64.tar.gz"
+      sha256 "1085cd901fb6791c37492776ebb05d26bb8f2956efc2080321ad8455fafdf2be"
 
-      def install
+      define_method(:install) do
         bin.install "hammer"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_darwin_arm64.tar.gz"
-      sha256 "eb8ad96275d64455d6605a3f356ad933a1c6946dad86917d18bebe24357a4362"
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.1/hammer_darwin_arm64.tar.gz"
+      sha256 "3fa03f3bc868b075afd188300eb297ddc0663d2af76a5b43f3853f6e900146fe"
 
-      def install
+      define_method(:install) do
         bin.install "hammer"
       end
     end
   end
 
   on_linux do
-    if Hardware::CPU.intel? and Hardware::CPU.is_64_bit?
-      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_linux_amd64.tar.gz"
-      sha256 "8f188383d6f5764d78cf616d36693ff446ed33c5649e95619913f9383cd83f5f"
-      def install
+    if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.1/hammer_linux_amd64.tar.gz"
+      sha256 "01b49f14af28372c335f47fcef35cd061739496ccdee7763d0d247cc25b315d4"
+      define_method(:install) do
         bin.install "hammer"
       end
     end
-    if Hardware::CPU.arm? and Hardware::CPU.is_64_bit?
-      url "https://github.com/pivotal/hammer/releases/download/v0.13.0/hammer_linux_arm64.tar.gz"
-      sha256 "e4317a61e92dfd724c96d28a8eb53d1a32e7929b82aec6a4363f4f1a40d5c3a0"
-      def install
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/pivotal/hammer/releases/download/v0.13.1/hammer_linux_arm64.tar.gz"
+      sha256 "de88fd241537e5d5776b71473dd3b9381379cc686b7f8a54acc706b370d2778b"
+      define_method(:install) do
         bin.install "hammer"
       end
     end
