@@ -7,4 +7,4 @@ lint:
 	golangci-lint run -v
 
 unit-test:
-	ginkgo -r .
+	go tool ginkgo -r .

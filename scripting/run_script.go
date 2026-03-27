@@ -16,8 +16,9 @@ import (
 	"os/exec"
 )
 
-//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ScriptRunner
+//go:generate go tool counterfeiter -generate
 
+//counterfeiter:generate . ScriptRunner
 type ScriptRunner interface {
 	RunScript(lines []string, prereqs []string, onlyWriteFile bool) error
 }

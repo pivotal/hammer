@@ -89,10 +89,6 @@ func (fake *FakeUI) DisplayTextArgsForCall(i int) string {
 func (fake *FakeUI) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
-	fake.displayErrorMutex.RLock()
-	defer fake.displayErrorMutex.RUnlock()
-	fake.displayTextMutex.RLock()
-	defer fake.displayTextMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value
