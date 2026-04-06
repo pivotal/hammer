@@ -86,18 +86,19 @@ func FromFile(path, environmentName string) (Config, error) {
 	err = yaml.Unmarshal(contents, &selectedEnvironment)
 	if err == nil {
 		if environmentName != "" && environmentName != selectedEnvironment.Name {
-			return Config{}, fmt.Errorf("Environment name '%s' specified but does not match environment in config", environmentName)
+
+			return Config{}, fmt.Errorf("Environment name '%s' specified but does not match environment in config", environmentName) //nolint:staticcheck
 		}
 		return newLockfile(selectedEnvironment)
 	}
 
 	var environments []environmentReader
 	if arrayErr := yaml.Unmarshal(contents, &environments); arrayErr != nil {
-		return Config{}, fmt.Errorf("Unable to unmarshal specified config as either single environment, '%s' or multiple environments, '%s'", err.Error(), arrayErr.Error())
+		return Config{}, fmt.Errorf("Unable to unmarshal specified config as either single environment, '%s' or multiple environments, '%s'", err.Error(), arrayErr.Error()) //nolint:staticcheck
 	}
 
 	if len(environments) == 0 {
-		return Config{}, fmt.Errorf("Target config is an empty array")
+		return Config{}, fmt.Errorf("Target config is an empty array") //nolint:staticcheck
 	}
 
 	if environmentName == "" {
@@ -111,7 +112,7 @@ func FromFile(path, environmentName string) (Config, error) {
 	}
 
 	if selectedEnvironment.Name == "" {
-		return Config{}, fmt.Errorf("Environment name '%s' specified but does not match environment in config", environmentName)
+		return Config{}, fmt.Errorf("Environment name '%s' specified but does not match environment in config", environmentName) //nolint:staticcheck
 	}
 	return newLockfile(selectedEnvironment)
 
@@ -135,7 +136,7 @@ func newLockfile(data environmentReader) (Config, error) {
 
 	opsManagerIp := net.ParseIP(data.IP)
 	if opsManagerIp == nil {
-		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP)
+		return Config{}, fmt.Errorf("Could not parse IP address: %s", data.IP) //nolint:staticcheck
 	}
 
 	parsedPKSApiURL, err := url.Parse(data.PKSApi.URL)

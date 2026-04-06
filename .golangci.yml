@@ -1,21 +1,38 @@
----
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
-  - errcheck
-  - gochecknoinits
-  - goconst
-  - gocritic
-  - goimports
-  - gosimple
-  - govet
-  - ineffassign
-  - misspell
-  - staticcheck
-  - typecheck
-  - unconvert
-  - unused
-linters-settings:
-  goconst:
-    min-len: 2
-    min-occurrences: 3
+    - errcheck
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - govet
+    - ineffassign
+    - misspell
+    - staticcheck
+    - unconvert
+    - unused
+  settings:
+    goconst:
+      min-len: 2
+      min-occurrences: 3
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

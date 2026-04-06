@@ -15,12 +15,12 @@ import (
 	"path"
 	"strings"
 
-	. "github.com/onsi/gomega"
+	g "github.com/onsi/gomega"
 )
 
 func LoadFixture(name string) string {
 	contents, err := os.ReadFile(path.Join("fixtures", name))
-	Expect(err).NotTo(HaveOccurred())
+	g.Expect(err).NotTo(g.HaveOccurred())
 	return string(contents)
 }
 

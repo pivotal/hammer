@@ -22,7 +22,7 @@ func WriteTempFile(lines ...string) (string, error) {
 	}
 
 	for _, l := range lines {
-		if _, err = tempfile.Write([]byte(fmt.Sprintf("%s\n", l))); err != nil {
+		if _, err = fmt.Fprintf(tempfile, "%s\n", l); err != nil {
 			return "", err
 		}
 	}

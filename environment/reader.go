@@ -18,7 +18,7 @@ type Reader struct{}
 
 func (er *Reader) Read(targetConfigPath, environmentName string) (Config, error) {
 	if targetConfigPath == "" {
-		return Config{}, fmt.Errorf("You must specify the target environment config path (--target | -t) flag")
+		return Config{}, fmt.Errorf("You must specify the target environment config path (--target | -t) flag") //nolint:staticcheck
 	}
 	return FromFile(targetConfigPath, environmentName)
 }
