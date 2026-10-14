@@ -6,7 +6,7 @@ require (
 	github.com/hashicorp/go-version v1.9.0
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.14.0
-	github.com/onsi/ginkgo/v2 v2.32.0
+	github.com/onsi/ginkgo/v2 v2.33.1
 	github.com/onsi/gomega v1.44.0
 	gopkg.in/yaml.v2 v2.4.0
 )
